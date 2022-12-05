@@ -1,12 +1,14 @@
 import 'package:dd_study2022_ui/ui/roots/app.dart';
 import 'package:dd_study2022_ui/ui/roots/auth.dart';
 import 'package:dd_study2022_ui/ui/roots/loader.dart';
+import 'package:dd_study2022_ui/ui/roots/profile.dart';
 import 'package:flutter/material.dart';
 
 class NavigationRoutes {
   static const loaderWidget = "/";
   static const auth = "/auth";
   static const app = "/app";
+  static const profile = "/profile";
 }
 
 class AppNavigator {
@@ -27,6 +29,10 @@ class AppNavigator {
         ?.pushNamedAndRemoveUntil(NavigationRoutes.app, ((route) => false));
   }
 
+  static void toProfile() {
+    key.currentState?.pushNamed(NavigationRoutes.profile);
+  }
+
   static Route<dynamic>? onGeneratedRoutes(RouteSettings settings, context) {
     switch (settings.name) {
       case NavigationRoutes.loaderWidget:
@@ -35,8 +41,9 @@ class AppNavigator {
       case NavigationRoutes.auth:
         return PageRouteBuilder(pageBuilder: ((_, __, ___) => Auth.create()));
       case NavigationRoutes.app:
-        return PageRouteBuilder(
-            pageBuilder: ((_, __, ___) => App.create()));
+        return PageRouteBuilder(pageBuilder: ((_, __, ___) => App.create()));
+      case NavigationRoutes.profile:
+        return PageRouteBuilder(pageBuilder: ((_, __, ___) => Profile.create()));
     }
     return null;
   }

@@ -69,14 +69,15 @@ class App extends StatelessWidget {
       ),
       body: Container(
         child: Column(children: [
-          Image(
-                image: AssetImage(
-                  "assets/images/background_wb.png",
-                ),
-                fit: BoxFit.fitHeight,
-              ),
+          const Image(
+            image: AssetImage(
+              "assets/images/background_wb.png",
+            ),
+            fit: BoxFit.fitHeight,
+          ),
         ]),
       ),
+      bottomNavigationBar: const AppBottomAppBar(),
     );
   }
 
@@ -84,6 +85,26 @@ class App extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (BuildContext context) => _ViewModel(context: context),
       child: const App(),
+    );
+  }
+}
+
+class AppBottomAppBar extends StatelessWidget {
+  const AppBottomAppBar({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BottomAppBar(
+      color: Colors.grey,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          IconButton(
+            onPressed: () {AppNavigator.toProfile();},
+            icon: const Icon(Icons.person),
+          )
+        ],
+      ),
     );
   }
 }

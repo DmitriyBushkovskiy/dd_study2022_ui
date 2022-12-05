@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dd_study2022_ui/domain/models/user_profile.dart';
 import 'package:dd_study2022_ui/domain/repository/api_repository.dart';
 import 'package:dd_study2022_ui/internal/config/shared_prefs.dart';
 import 'package:dd_study2022_ui/internal/config/token_storage.dart';
@@ -34,7 +35,7 @@ class AuthService {
     }
   }
 
-    Future<bool> tryGetUser() async {
+  Future<bool> tryGetUser() async {
     try {
       var user = await _api.getUser();
       return true;
@@ -50,6 +51,12 @@ class AuthService {
 
   Future logout() async {
     await TokenStorage.setStoredToken(null);
+  }
+
+  //TODO: перенести в другой сервис?
+  Future<UserProfile?> getUserProfile() async {
+    //TokenStorage.getAccessToken();
+    return await _api.getUserProfile();
   }
 }
 

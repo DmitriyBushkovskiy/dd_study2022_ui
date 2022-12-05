@@ -1,4 +1,5 @@
 import 'package:dd_study2022_ui/domain/models/user.dart';
+import 'package:dd_study2022_ui/domain/models/user_profile.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -12,4 +13,8 @@ abstract class ApiClient {
 
   @GET("/api/User/GetCurrentUser")
   Future<User?> getUser();
+
+    @GET("/api/User/GetCurrentUserData")
+  Future<UserProfile?> getUserProfile();
+
 }
