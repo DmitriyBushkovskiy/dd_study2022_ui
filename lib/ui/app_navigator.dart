@@ -42,8 +42,13 @@ class AppNavigator {
         return PageRouteBuilder(pageBuilder: ((_, __, ___) => Auth.create()));
       case NavigationRoutes.app:
         return PageRouteBuilder(pageBuilder: ((_, __, ___) => App.create()));
-      case NavigationRoutes.profile:
-        return PageRouteBuilder(pageBuilder: ((_, __, ___) => Profile.create()));
+      // case NavigationRoutes.profile:
+      //   return PageRouteBuilder(pageBuilder: ((_, __, ___) => Profile.create()));
+
+              case NavigationRoutes.profile:
+        return PageRouteBuilder(
+    pageBuilder: (_, __, ___) => Profile.create(),
+    transitionsBuilder: (_, a, __, c) => SlideTransition(position: Tween<Offset>(begin: Offset(1, 0), end: Offset.zero).animate(a), child: c));
     }
     return null;
   }
