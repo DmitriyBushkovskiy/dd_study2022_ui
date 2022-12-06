@@ -77,7 +77,7 @@ flutter:
     - assets/icons/1 left.png
     - assets/icons/1.png
     - assets/icons/2.png
-    
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 
@@ -93,6 +93,14 @@ flutter:
     - family: SyneMono
       fonts:
         - asset: fonts/SyneMono-Regular.ttf
+    - family: Fontspring
+      fonts:
+        - asset: fonts/Fontspring-regular.otf
+        - asset: fonts/Fontspring-bold.otf
+    - family: OldSoviet
+      fonts:
+        - asset: fonts/OldSoviet.otf
+
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

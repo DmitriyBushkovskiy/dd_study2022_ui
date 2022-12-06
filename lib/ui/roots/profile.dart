@@ -188,7 +188,7 @@ class Profile extends StatelessWidget {
                         Container(
                           padding: const EdgeInsets.all(6),
                           alignment: Alignment.centerRight,
-                          child: const Text("BirthDate"),
+                          child: const Text("Birthday"),
                         ),
                         Container(
                           padding: const EdgeInsets.all(6),

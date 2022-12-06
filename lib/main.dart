@@ -22,12 +22,13 @@ class MyApp extends StatelessWidget {
         textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           foregroundColor: Colors.black,
-          textStyle: const TextStyle(fontFamily: 'SyneMono')
+          textStyle: const TextStyle(fontFamily: 'OldSoviet')
         ),
       ),
         primarySwatch: Colors.grey,
         primaryColor: Colors.red,
-        fontFamily: 'SyneMono',
+        fontFamily: 'OldSoviet',
+        
         //textTheme: TextTheme(bodyText1: TextStyle(color: Colors.cyanAccent), bodyText2: TextStyle(color: Colors.cyanAccent))
       ),
       home: LoaderWidget.create(),

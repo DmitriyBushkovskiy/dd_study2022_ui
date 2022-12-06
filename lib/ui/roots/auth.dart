@@ -90,6 +90,7 @@ class Auth extends StatelessWidget {
     var viewModel = context.watch<_ViewModel>();
 
     return Scaffold(
+      backgroundColor: Colors.grey,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -99,14 +100,23 @@ class Auth extends StatelessWidget {
               children: [
                 TextField(
                   controller: viewModel.loginTec,
-                  decoration: const InputDecoration(hintText: "Enter Login"),
+                  decoration: const InputDecoration(
+                    hintText: "Enter Login",
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black),
+                    ),
+                  ),
                 ),
                 TextField(
                   controller: viewModel.passwTec,
                   obscureText: viewModel.obscureText,
                   decoration: InputDecoration(
+                    focusedBorder: const UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black),
+                    ),
                     hintText: "Enter Password",
                     suffixIcon: IconButton(
+                      color: Colors.black,
                       onPressed: () {
                         viewModel.hidePassword(!viewModel.obscureText);
                       },

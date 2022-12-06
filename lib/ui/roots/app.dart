@@ -50,32 +50,105 @@ class App extends StatelessWidget {
     var viewModel = context.watch<_ViewModel>();
 
     return Scaffold(
+      backgroundColor: Colors.grey,
       appBar: AppBar(
-        leading: (viewModel.user != null && viewModel.headers != null)
-            ? CircleAvatar(
-                backgroundImage: NetworkImage(
-                    "$baseUrl${viewModel.user!.avatarLink}",
-                    headers: viewModel.headers),
-              )
-            : null,
-        title: Text(viewModel.user == null ? "Hi" : viewModel.user!.username),
-        actions: [
-          IconButton(
-              icon: const Icon(Icons.refresh), onPressed: viewModel._refresh),
-          IconButton(
-              icon: const Icon(Icons.exit_to_app),
-              onPressed: viewModel._logout),
-        ],
+        leadingWidth: 200,
+        leading: PopupMenuButton<_MenuValues>(
+          onSelected: (value) {
+            switch (value) {
+              case _MenuValues.refresh:
+                viewModel._refresh();
+                break;
+              case _MenuValues.logout:
+                viewModel._logout();
+                break;
+            }
+          },
+          color: Colors.grey,
+          position: PopupMenuPosition.under,
+          itemBuilder: (BuildContext context) => [
+            PopupMenuItem(
+              padding: const EdgeInsets.symmetric(horizontal: 6),
+              value: _MenuValues.refresh,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: const [
+                  Text("refresh"),
+                  Icon(Icons.refresh),
+                ],
+              ),
+            ),
+            PopupMenuItem(
+              padding: const EdgeInsets.symmetric(horizontal: 6),
+              value: _MenuValues.logout,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: const [
+                  Text("logout"),
+                  Icon(Icons.exit_to_app),
+                ],
+              ),
+            ),
+          ],
+          child: TextButton(
+            onPressed: null,
+            child: Row(
+              children: const [
+                Text(
+                  'Sadgram',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 25,
+                      fontFamily: "Fontspring",
+                      fontWeight: FontWeight.bold),
+                ),
+                Icon(Icons.keyboard_arrow_down_rounded)
+              ],
+            ),
+          ),
+        ),
       ),
       body: Container(
-        child: Column(children: [
-          const Image(
-            image: AssetImage(
-              "assets/images/background_wb.png",
+        padding: const EdgeInsets.all(15),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Container(
+                  child: (viewModel.user != null && viewModel.headers != null)
+                      ? CircleAvatar(
+                          backgroundColor: Colors.black,
+                          radius: 31,
+                          child: Container(
+                            foregroundDecoration: BoxDecoration(
+                              color: Colors.grey,
+                              backgroundBlendMode: //viewModel.colorAvatar
+                                  false
+                                      ? BlendMode.dstATop
+                                      : BlendMode.saturation,
+                            ),
+                            child: CircleAvatar(
+                              radius: 30,
+                              backgroundImage: viewModel.user == null
+                                  ? null
+                                  : NetworkImage(
+                                      "$baseUrl${viewModel.user!.avatarLink}",
+                                      headers: viewModel.headers),
+                            ),
+                          ),
+                        )
+                      : null,
+                ),
+                Container(
+                  padding: const EdgeInsets.all(15),
+                  child: Text(
+                      viewModel.user == null ? "Hi" : viewModel.user!.username),
+                )
+              ],
             ),
-            fit: BoxFit.fitHeight,
-          ),
-        ]),
+          ],
+        ),
       ),
       bottomNavigationBar: const AppBottomAppBar(),
     );
@@ -100,11 +173,18 @@ class AppBottomAppBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           IconButton(
-            onPressed: () {AppNavigator.toProfile();},
+            onPressed: () {
+              AppNavigator.toProfile();
+            },
             icon: const Icon(Icons.person),
           )
         ],
       ),
     );
   }
+}
+
+enum _MenuValues {
+  refresh,
+  logout,
 }
