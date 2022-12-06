@@ -9,7 +9,6 @@ class UserProfile {
   final String? fullName;
   final String? bio;
   final String? phone;
-  final bool privateAccount;
 
   UserProfile({
     required this.id,
@@ -17,7 +16,6 @@ class UserProfile {
     this.fullName,
     this.bio,
     this.phone,
-    required this.privateAccount,
   });
 
     factory UserProfile.fromJson(Map<String, dynamic> json) => _$UserProfileFromJson(json);

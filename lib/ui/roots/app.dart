@@ -123,10 +123,11 @@ class App extends StatelessWidget {
                           child: Container(
                             foregroundDecoration: BoxDecoration(
                               color: Colors.grey,
-                              backgroundBlendMode: //viewModel.colorAvatar
-                                  false
+                              backgroundBlendMode: viewModel.user == null
+                                  ? null
+                                  : (viewModel.user!.colorAvatar
                                       ? BlendMode.dstATop
-                                      : BlendMode.saturation,
+                                      : BlendMode.saturation),
                             ),
                             child: CircleAvatar(
                               radius: 30,

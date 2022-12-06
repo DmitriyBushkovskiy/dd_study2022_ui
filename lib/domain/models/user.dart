@@ -11,6 +11,8 @@ class User {
   final int postsAmount;
   final int followedAmount;
   final int followersAmount;
+  final bool privateAccount;
+  final bool colorAvatar;
 
   User({
     required this.id,
@@ -20,6 +22,8 @@ class User {
     required this.postsAmount,
     required this.followedAmount,
     required this.followersAmount,
+    required this.privateAccount,
+    required this.colorAvatar,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);

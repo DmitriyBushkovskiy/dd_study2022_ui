@@ -12,7 +12,6 @@ UserProfile _$UserProfileFromJson(Map<String, dynamic> json) => UserProfile(
       fullName: json['fullName'] as String?,
       bio: json['bio'] as String?,
       phone: json['phone'] as String?,
-      privateAccount: json['privateAccount'] as bool,
     );
 
 Map<String, dynamic> _$UserProfileToJson(UserProfile instance) =>
@@ -22,5 +21,4 @@ Map<String, dynamic> _$UserProfileToJson(UserProfile instance) =>
       'fullName': instance.fullName,
       'bio': instance.bio,
       'phone': instance.phone,
-      'privateAccount': instance.privateAccount,
     };

@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       onGenerateRoute: (settings) =>
           AppNavigator.onGeneratedRoutes(settings, context),
       theme: ThemeData(
-        textSelectionTheme: TextSelectionThemeData(selectionColor: Colors.grey[300], selectionHandleColor: Colors.grey[300]),
+        textSelectionTheme: TextSelectionThemeData(selectionColor: Colors.grey[300], selectionHandleColor: Colors.grey[300], cursorColor: Colors.grey[300]),
         textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           foregroundColor: Colors.black,

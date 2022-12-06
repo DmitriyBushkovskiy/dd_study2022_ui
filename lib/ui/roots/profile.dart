@@ -108,9 +108,11 @@ class Profile extends StatelessWidget {
                         child: Container(
                           foregroundDecoration: BoxDecoration(
                             color: Colors.grey,
-                            backgroundBlendMode: viewModel.colorAvatar
-                                ? BlendMode.dstATop
-                                : BlendMode.saturation,
+                            backgroundBlendMode: viewModel.user == null
+                                ? null
+                                : (viewModel.user!.colorAvatar
+                                    ? BlendMode.dstATop
+                                    : BlendMode.saturation),
                           ),
                           child: CircleAvatar(
                             radius: 40,
@@ -388,7 +390,7 @@ class Profile extends StatelessWidget {
                               "Private Account",
                               style: TextStyle(fontSize: 15),
                             ),
-                            value: viewModel.userProfile!.privateAccount,
+                            value: viewModel.user!.privateAccount,
                             onChanged: ((value) {}),
                           ),
                       ],

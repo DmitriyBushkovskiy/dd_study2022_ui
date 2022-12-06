@@ -14,6 +14,8 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       postsAmount: json['postsAmount'] as int,
       followedAmount: json['followedAmount'] as int,
       followersAmount: json['followersAmount'] as int,
+      privateAccount: json['privateAccount'] as bool,
+      colorAvatar: json['colorAvatar'] as bool,
     );
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
@@ -24,4 +26,6 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'postsAmount': instance.postsAmount,
       'followedAmount': instance.followedAmount,
       'followersAmount': instance.followersAmount,
+      'privateAccount': instance.privateAccount,
+      'colorAvatar': instance.colorAvatar,
     };
