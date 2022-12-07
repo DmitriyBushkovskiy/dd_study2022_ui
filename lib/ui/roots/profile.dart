@@ -386,6 +386,7 @@ class Profile extends StatelessWidget {
                       children: [
                         if (viewModel.userProfile != null)
                           CheckboxListTile(
+                            contentPadding: const EdgeInsets.only(left: 0),
                             title: const Text(
                               "Private Account",
                               style: TextStyle(fontSize: 15),
@@ -396,6 +397,15 @@ class Profile extends StatelessWidget {
                       ],
                     ),
                   ),
+                ElevatedButton(
+                  onPressed: () {},
+                  style: ButtonStyle(
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0),
+                              side: BorderSide(color: Colors.black)))),
+                  child: const Text("Save changes"),
+                ),
                 Container(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   alignment: Alignment.topLeft,

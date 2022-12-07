@@ -96,8 +96,11 @@ class Auth extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Center(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                Container(height: 80,),
+                Image.asset("assets/images/sadgram-logo.gif"),
+                Container(height: 170,),
                 TextField(
                   controller: viewModel.loginTec,
                   decoration: const InputDecoration(
