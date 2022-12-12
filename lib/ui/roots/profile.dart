@@ -88,6 +88,7 @@ class Profile extends StatelessWidget {
         },
         child: SingleChildScrollView(
           child: Container(
+            height: MediaQuery.of(context).size.height,
             padding: const EdgeInsets.all(15),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -110,7 +111,7 @@ class Profile extends StatelessWidget {
                             color: Colors.grey,
                             backgroundBlendMode: viewModel.user == null
                                 ? null
-                                : (viewModel.user!.colorAvatar
+                                : (viewModel.user!.colorAvatar == 1//TODO: костыль
                                     ? BlendMode.dstATop
                                     : BlendMode.saturation),
                           ),
@@ -391,7 +392,7 @@ class Profile extends StatelessWidget {
                               "Private Account",
                               style: TextStyle(fontSize: 15),
                             ),
-                            value: viewModel.user!.privateAccount,
+                            value: viewModel.user!.privateAccount == 1, //TODO: костыль
                             onChanged: ((value) {}),
                           ),
                       ],

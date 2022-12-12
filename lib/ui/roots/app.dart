@@ -36,10 +36,6 @@ class _ViewModel extends ChangeNotifier {
   void _logout() async {
     await _authService.logout().then((value) => AppNavigator.toLoader());
   }
-
-  void _refresh() async {
-    await _authService.tryGetUser();
-  }
 }
 
 class App extends StatelessWidget {
@@ -56,9 +52,6 @@ class App extends StatelessWidget {
         leading: PopupMenuButton<_MenuValues>(
           onSelected: (value) {
             switch (value) {
-              case _MenuValues.refresh:
-                viewModel._refresh();
-                break;
               case _MenuValues.logout:
                 viewModel._logout();
                 break;
@@ -67,17 +60,17 @@ class App extends StatelessWidget {
           color: Colors.grey,
           position: PopupMenuPosition.under,
           itemBuilder: (BuildContext context) => [
-            PopupMenuItem(
-              padding: const EdgeInsets.symmetric(horizontal: 6),
-              value: _MenuValues.refresh,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  Text("refresh"),
-                  Icon(Icons.refresh),
-                ],
-              ),
-            ),
+            // PopupMenuItem(
+            //   padding: const EdgeInsets.symmetric(horizontal: 6),
+            //   value: _MenuValues.refresh,
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //     children: const [
+            //       Text("refresh"),
+            //       Icon(Icons.refresh),
+            //     ],
+            //   ),
+            // ),
             PopupMenuItem(
               padding: const EdgeInsets.symmetric(horizontal: 6),
               value: _MenuValues.logout,
@@ -125,7 +118,7 @@ class App extends StatelessWidget {
                               color: Colors.grey,
                               backgroundBlendMode: viewModel.user == null
                                   ? null
-                                  : (viewModel.user!.colorAvatar
+                                  : (viewModel.user!.colorAvatar ==1 //TODO: fix it!
                                       ? BlendMode.dstATop
                                       : BlendMode.saturation),
                             ),
@@ -186,6 +179,5 @@ class AppBottomAppBar extends StatelessWidget {
 }
 
 enum _MenuValues {
-  refresh,
   logout,
 }
