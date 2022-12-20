@@ -1,79 +1,17 @@
 // ignore_for_file: depend_on_referenced_packages
-
-import 'package:dd_study2022_ui/data/services/auth_service.dart';
-import 'package:dd_study2022_ui/domain/models/user.dart';
-import 'package:dd_study2022_ui/domain/models/user_profile.dart';
-import 'package:dd_study2022_ui/internal/config/app_config.dart';
-import 'package:dd_study2022_ui/internal/config/shared_prefs.dart';
-import 'package:dd_study2022_ui/internal/config/token_storage.dart';
+import 'package:dd_study2022_ui/ui/widgets/profile/profile_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:validators/validators.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
-class _ViewModel extends ChangeNotifier {
-  final _authService = AuthService();
-
-  BuildContext context;
-  _ViewModel({required this.context}) {
-    asyncInit();
-  }
-
-  UserProfile? _userProfile;
-  UserProfile? get userProfile => _userProfile;
-  set userProfile(UserProfile? val) {
-    _userProfile = val;
-    notifyListeners();
-  }
-
-  User? _user;
-  User? get user => _user;
-  set user(User? val) {
-    _user = val;
-    notifyListeners();
-  }
-
-  Map<String, String>? headers;
-
-  void asyncInit() async {
-    var token = await TokenStorage.getAccessToken();
-    headers = {"Authorization": "Bearer $token"};
-    user = await SharedPrefs.getStoredUser();
-    userProfile = await _authService.getUserProfile();
-  }
-
-  bool colorAvatar = false;
-
-  void changeAvatarColor() {
-    colorAvatar = !colorAvatar;
-    notifyListeners();
-  }
-
-  String tapChecker = "tapChecker";
-
-  void changeText(String value) {
-    tapChecker = value;
-    notifyListeners();
-  }
-
-  void _showDatePicker() {
-    DateTime currentDate = DateTime.now();
-    showDatePicker(
-        context: context,
-        initialDate:
-            DateTime(currentDate.year - 14, currentDate.month, currentDate.day),
-        firstDate: DateTime(1900),
-        lastDate: DateTime(
-            currentDate.year - 14, currentDate.month, currentDate.day));
-  }
-}
-
-class Profile extends StatelessWidget {
-  const Profile({Key? key}) : super(key: key);
+class ProfileWidget extends StatelessWidget {
+  const ProfileWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var viewModel = context.watch<_ViewModel>();
+    var dtf = DateFormat("dd.MM.yyyy");
+    var viewModel = context.watch<ProfileViewModel>();
 
     return Scaffold(
       backgroundColor: Colors.grey,
@@ -98,7 +36,7 @@ class Profile extends StatelessWidget {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        viewModel.changeAvatarColor();
+                        viewModel.changePhoto();
                       },
                       onLongPress: () {
                         viewModel.changeText("avatar - onLongPress");
@@ -107,23 +45,26 @@ class Profile extends StatelessWidget {
                         backgroundColor: Colors.black,
                         radius: 41,
                         child: Container(
-                          foregroundDecoration: BoxDecoration(
-                            color: Colors.grey,
-                            backgroundBlendMode: viewModel.user == null
-                                ? null
-                                : (viewModel.user!.colorAvatar == 1//TODO: костыль
-                                    ? BlendMode.dstATop
-                                    : BlendMode.saturation),
-                          ),
-                          child: CircleAvatar(
-                            radius: 40,
-                            backgroundImage: viewModel.user == null
-                                ? null
-                                : NetworkImage(
-                                    "$baseUrl${viewModel.user!.avatarLink}",
-                                    headers: viewModel.headers),
-                          ),
-                        ),
+                            foregroundDecoration: BoxDecoration(
+                              color: Colors.grey,
+                              backgroundBlendMode: viewModel.user == null
+                                  ? null
+                                  : (viewModel.user!.colorAvatar
+                                      ? BlendMode.dstATop
+                                      : BlendMode.saturation),
+                            ),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(color: Colors.red, width: 0),
+                              ),
+                              height: 80,
+                              width: 80,
+                              clipBehavior: Clip.hardEdge,
+                              child: viewModel.avatar ??
+                                  const CircularProgressIndicator(),
+                            )
+                            ),
                       ),
                     ),
                     GestureDetector(
@@ -205,10 +146,11 @@ class Profile extends StatelessWidget {
                             padding: const EdgeInsets.all(6),
                             child: GestureDetector(
                               onTap: () {
-                                viewModel._showDatePicker();
+                                viewModel.showDatePickerProfile();
                               },
                               child: viewModel.user != null
-                                  ? Text(DateFormat("yyyy-MM-dd")
+                                  //? Text(DateFormat("yyyy-MM-dd")
+                                  ? Text(dtf
                                       .format(DateTime.parse(
                                               viewModel.user!.birthDate)
                                           .toLocal())
@@ -392,14 +334,14 @@ class Profile extends StatelessWidget {
                               "Private Account",
                               style: TextStyle(fontSize: 15),
                             ),
-                            value: viewModel.user!.privateAccount == 1, //TODO: костыль
+                            value: viewModel.user!.privateAccount,
                             onChanged: ((value) {}),
                           ),
                       ],
                     ),
                   ),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: viewModel.changePhoto,
                   style: ButtonStyle(
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
@@ -423,10 +365,13 @@ class Profile extends StatelessWidget {
     );
   }
 
-  static create() {
+  static create(BuildContext bc) {
     return ChangeNotifierProvider(
-      create: (BuildContext context) => _ViewModel(context: context),
-      child: const Profile(),
+      //create: (context) => ProfileViewModel(context: context),
+      create: (context) {
+        return ProfileViewModel(context: bc);
+      },
+      child: const ProfileWidget(),
     );
   }
 }

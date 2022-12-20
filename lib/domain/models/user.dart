@@ -1,6 +1,7 @@
-import 'package:dd_study2022_ui/domain/db_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:retrofit/http.dart';
+
+import 'package:dd_study2022_ui/domain/db_model.dart';
 
 part 'user.g.dart';
 
@@ -59,4 +60,33 @@ class User implements DbModel {
         'privateAccount': instance.privateAccount ? 1 : 0,
         'colorAvatar': instance.colorAvatar ? 1 : 0,
       };
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+  
+    return other is User &&
+      other.id == id &&
+      other.username == username &&
+      other.birthDate == birthDate &&
+      other.avatarLink == avatarLink &&
+      other.postsAmount == postsAmount &&
+      other.followedAmount == followedAmount &&
+      other.followersAmount == followersAmount &&
+      other.privateAccount == privateAccount &&
+      other.colorAvatar == colorAvatar;
+  }
+
+  @override
+  int get hashCode {
+    return id.hashCode ^
+      username.hashCode ^
+      birthDate.hashCode ^
+      avatarLink.hashCode ^
+      postsAmount.hashCode ^
+      followedAmount.hashCode ^
+      followersAmount.hashCode ^
+      privateAccount.hashCode ^
+      colorAvatar.hashCode;
+  }
 }

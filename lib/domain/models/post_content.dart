@@ -1,5 +1,6 @@
-import 'package:dd_study2022_ui/domain/db_model.dart';
 import 'package:json_annotation/json_annotation.dart';
+
+import 'package:dd_study2022_ui/domain/db_model.dart';
 
 part 'post_content.g.dart';
 
@@ -10,7 +11,7 @@ class PostContent implements DbModel {
   final String name;
   final String mimeType;
   final String contentLink;
-  final String postId;
+  final String? postId;
   final int likes;
   final bool likedByMe;
 
@@ -19,7 +20,7 @@ class PostContent implements DbModel {
     required this.name,
     required this.mimeType,
     required this.contentLink,
-    required this.postId,
+    this.postId,
     required this.likes,
     required this.likedByMe,
   });
@@ -52,4 +53,24 @@ class PostContent implements DbModel {
         'likes': instance.likes,
         'likedByMe': instance.likedByMe ? 1 : 0,
       };
+
+  PostContent copyWith({
+    String? id,
+    String? name,
+    String? mimeType,
+    String? contentLink,
+    String? postId,
+    int? likes,
+    bool? likedByMe,
+  }) {
+    return PostContent(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      mimeType: mimeType ?? this.mimeType,
+      contentLink: contentLink ?? this.contentLink,
+      postId: postId ?? this.postId,
+      likes: likes ?? this.likes,
+      likedByMe: likedByMe ?? this.likedByMe,
+    );
+  }
 }

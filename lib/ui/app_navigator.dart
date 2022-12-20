@@ -1,54 +1,92 @@
-import 'package:dd_study2022_ui/ui/roots/app.dart';
-import 'package:dd_study2022_ui/ui/roots/auth.dart';
-import 'package:dd_study2022_ui/ui/roots/loader.dart';
-import 'package:dd_study2022_ui/ui/roots/profile.dart';
+import 'package:dd_study2022_ui/domain/models/register_user_request.dart';
+import 'package:dd_study2022_ui/ui/widgets/post/create_post_widget.dart';
+import 'package:dd_study2022_ui/ui/widgets/roots/app.dart';
+import 'package:dd_study2022_ui/ui/widgets/roots/auth.dart';
+import 'package:dd_study2022_ui/ui/widgets/roots/chat.dart';
+import 'package:dd_study2022_ui/ui/widgets/roots/chats_list.dart';
+import 'package:dd_study2022_ui/ui/widgets/roots/loader.dart';
+import 'package:dd_study2022_ui/ui/widgets/profile/profile_widget.dart';
+import 'package:dd_study2022_ui/ui/widgets/roots/registration/registration_widget.dart';
 import 'package:flutter/material.dart';
 
 class NavigationRoutes {
   static const loaderWidget = "/";
   static const auth = "/auth";
   static const app = "/app";
-  static const profile = "/profile";
+  static const profile = "/app/profile";
+  static const createPost = "/createPost";
+  static const registerUser = "/registerUser";
+  static const chatsList = "/chatsList";
+  static const chat = "/chat";
 }
 
 class AppNavigator {
   static final key = GlobalKey<NavigatorState>();
 
   static Future toLoader() async {
-    return key.currentState?.pushNamedAndRemoveUntil(
+    return await key.currentState?.pushNamedAndRemoveUntil(
         NavigationRoutes.loaderWidget, ((route) => false));
   }
 
-  static void toAuth() {
-    key.currentState
+  static Future toAuth() async {
+    return await key.currentState
         ?.pushNamedAndRemoveUntil(NavigationRoutes.auth, ((route) => false));
   }
 
-  static void toHome() {
-    key.currentState
+  static Future toHome() async {
+    return await key.currentState
         ?.pushNamedAndRemoveUntil(NavigationRoutes.app, ((route) => false));
   }
 
-  static void toProfile() {
-    key.currentState?.pushNamed(NavigationRoutes.profile);
+  static Future toProfile() async {
+    return await key.currentState?.pushNamed(NavigationRoutes.profile);
+  }
+
+  static Future toCreatePostPage() async {
+    return await key.currentState?.pushNamed(NavigationRoutes.createPost);
+  }
+
+  static Future toChatsList() async {
+    return await key.currentState?.pushNamed(NavigationRoutes.chatsList);
+  }
+
+  static Future toChat() async {
+    return await key.currentState?.pushNamed(NavigationRoutes.chat);
   }
 
   static Route<dynamic>? onGeneratedRoutes(RouteSettings settings, context) {
     switch (settings.name) {
       case NavigationRoutes.loaderWidget:
         return PageRouteBuilder(
-            pageBuilder: ((_, __, ___) => LoaderWidget.create()));
-      case NavigationRoutes.auth:
-        return PageRouteBuilder(pageBuilder: ((_, __, ___) => Auth.create()));
-      case NavigationRoutes.app:
-        return PageRouteBuilder(pageBuilder: ((_, __, ___) => App.create()));
-      // case NavigationRoutes.profile:
-      //   return PageRouteBuilder(pageBuilder: ((_, __, ___) => Profile.create()));
+            pageBuilder: (_, __, ___) => LoaderWidget.create());
 
-              case NavigationRoutes.profile:
+      case NavigationRoutes.auth:
+        return PageRouteBuilder(pageBuilder: (_, __, ___) => Auth.create());
+
+      case NavigationRoutes.app:
+        return PageRouteBuilder(pageBuilder: (_, __, ___) => App.create());
+
+      case NavigationRoutes.createPost:
         return PageRouteBuilder(
-    pageBuilder: (_, __, ___) => Profile.create(),
-    transitionsBuilder: (_, a, __, c) => SlideTransition(position: Tween<Offset>(begin: Offset(1, 0), end: Offset.zero).animate(a), child: c));
+            pageBuilder: (_, __, ___) => CreatePostWidget.create());
+
+      case NavigationRoutes.chatsList:
+        return PageRouteBuilder(
+          pageBuilder: (_, __, ___) => ChatsList.create(),
+          transitionsBuilder: (_, a, __, c) => SlideTransition(
+              position: Tween<Offset>(begin: Offset(1, 0), end: Offset.zero)
+                  .animate(a),
+              child: c),
+        );
+
+      case NavigationRoutes.chat:
+        return PageRouteBuilder(
+          pageBuilder: (_, __, ___) => Chat.create(),
+          transitionsBuilder: (_, a, __, c) => SlideTransition(
+              position: Tween<Offset>(begin: Offset(1, 0), end: Offset.zero)
+                  .animate(a),
+              child: c),
+        );
     }
     return null;
   }

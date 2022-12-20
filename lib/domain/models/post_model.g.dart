@@ -12,6 +12,7 @@ PostModel _$PostModelFromJson(Map<String, dynamic> json) => PostModel(
       created: json['created'] as String,
       changed: json['changed'] as bool,
       likes: json['likes'] as int,
+      likedByMe: json['likedByMe'] as bool,
       author: User.fromJson(json['author'] as Map<String, dynamic>),
       postContent: (json['postContent'] as List<dynamic>)
           .map((e) => PostContent.fromJson(e as Map<String, dynamic>))
@@ -27,6 +28,7 @@ Map<String, dynamic> _$PostModelToJson(PostModel instance) => <String, dynamic>{
       'created': instance.created,
       'changed': instance.changed,
       'likes': instance.likes,
+      'likedByMe': instance.likedByMe,
       'author': instance.author,
       'postContent': instance.postContent,
       'comments': instance.comments,

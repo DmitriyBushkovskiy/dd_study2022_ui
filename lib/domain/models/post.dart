@@ -1,5 +1,6 @@
-import 'package:dd_study2022_ui/domain/db_model.dart';
 import 'package:json_annotation/json_annotation.dart';
+
+import 'package:dd_study2022_ui/domain/db_model.dart';
 
 part 'post.g.dart';
 
@@ -8,7 +9,7 @@ class Post implements DbModel {
   @override
   final String id;
   final String? description;
-  final String authorId;
+  final String? authorId;
   final String created;
   final int likes;
   final bool likedByMe;
@@ -17,7 +18,7 @@ class Post implements DbModel {
   Post({
     required this.id,
     this.description,
-    required this.authorId,
+    this.authorId,
     required this.created,
     required this.likes,
     required this.likedByMe,
@@ -50,4 +51,24 @@ class Post implements DbModel {
       'likedByMe': instance.likedByMe? 1: 0,
       'changed': instance.changed? 1: 0,
     };
+
+  Post copyWith({
+    String? id,
+    String? description,
+    String? authorId,
+    String? created,
+    int? likes,
+    bool? likedByMe,
+    bool? changed,
+  }) {
+    return Post(
+      id: id ?? this.id,
+      description: description ?? this.description,
+      authorId: authorId ?? this.authorId,
+      created: created ?? this.created,
+      likes: likes ?? this.likes,
+      likedByMe: likedByMe ?? this.likedByMe,
+      changed: changed ?? this.changed,
+    );
+  }
 }

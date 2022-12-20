@@ -1,5 +1,6 @@
-import 'package:dd_study2022_ui/domain/db_model.dart';
 import 'package:json_annotation/json_annotation.dart';
+
+import 'package:dd_study2022_ui/domain/db_model.dart';
 
 part 'comment.g.dart';
 
@@ -13,7 +14,7 @@ class Comment implements DbModel {
   final int likes;
   final bool likedByMe;
   final String authorId;
-  final String postId;
+  final String? postId;
 
   Comment({
     required this.id,
@@ -23,7 +24,7 @@ class Comment implements DbModel {
     required this.likes,
     required this.likedByMe,
     required this.authorId,
-    required this.postId,
+    this.postId,
   });
 
   factory Comment.fromJson(Map<String, dynamic> json) =>
@@ -55,4 +56,26 @@ class Comment implements DbModel {
       'authorId': instance.authorId,
       'postId': instance.postId,
     };
+
+  Comment copyWith({
+    String? id,
+    String? commentText,
+    String? created,
+    bool? changed,
+    int? likes,
+    bool? likedByMe,
+    String? authorId,
+    String? postId,
+  }) {
+    return Comment(
+      id: id ?? this.id,
+      commentText: commentText ?? this.commentText,
+      created: created ?? this.created,
+      changed: changed ?? this.changed,
+      likes: likes ?? this.likes,
+      likedByMe: likedByMe ?? this.likedByMe,
+      authorId: authorId ?? this.authorId,
+      postId: postId ?? this.postId,
+    );
+  }
 }

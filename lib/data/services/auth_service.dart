@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:dd_study2022_ui/data/services/data_service.dart';
+import 'package:dd_study2022_ui/data/services/sync_service.dart';
+import 'package:dd_study2022_ui/domain/models/post_model.dart';
 import 'package:dd_study2022_ui/domain/models/user_profile.dart';
 import 'package:dd_study2022_ui/domain/repository/api_repository.dart';
 import 'package:dd_study2022_ui/internal/config/shared_prefs.dart';
@@ -51,7 +53,7 @@ class AuthService {
     return res;
   }
 
-    Future logout() async {
+  Future logout() async {
     await TokenStorage.setStoredToken(null);
   }
 
@@ -59,6 +61,17 @@ class AuthService {
   Future<UserProfile?> getUserProfile() async {
     //TokenStorage.getAccessToken();
     return await _api.getUserProfile();
+  }
+
+  Future<UserProfile?> getChatsList() async {
+    //TokenStorage.getAccessToken();
+    return await _api.getUserProfile();
+  }
+
+  Future<List<PostModel>> getPostFeed(String? lastPostDate) async {
+    var postModels = await _api.getPostFeedByLastPostDate(lastPostDate);
+    SyncService().syncPosts(postModels);
+    return postModels;
   }
 }
 

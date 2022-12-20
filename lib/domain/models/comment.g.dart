@@ -14,7 +14,7 @@ Comment _$CommentFromJson(Map<String, dynamic> json) => Comment(
       likes: json['likes'] as int,
       likedByMe: json['likedByMe'] as bool,
       authorId: json['authorId'] as String,
-      postId: json['postId'] as String,
+      postId: json['postId'] as String?,
     );
 
 Map<String, dynamic> _$CommentToJson(Comment instance) => <String, dynamic>{
