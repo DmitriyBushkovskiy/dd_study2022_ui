@@ -6,9 +6,11 @@ import 'package:flutter/material.dart';
 
 class CamWidget extends StatefulWidget {
   final Function(File) onFile;
+  final CameraShape shape;
   const CamWidget({
     Key? key,
     required this.onFile,
+    required this.shape,
   }) : super(key: key);
 
   @override
@@ -71,30 +73,33 @@ class CamWidgetState extends State<CamWidget> {
               ),
             ),
             ColorFiltered(
-            colorFilter: ColorFilter.mode(
-              Colors.black.withOpacity(0.5),
-              BlendMode.srcOut,
-            ), // This one will create the magic
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-            Container(
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    backgroundBlendMode: BlendMode.dstOut,
-                  ), // This one will handle background + difference out
-                ),
-                Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                    height: MediaQuery.of(context).size.width,
-                    width: MediaQuery.of(context).size.width,
+                colorFilter: ColorFilter.mode(
+                  Colors.black.withOpacity(0.5),
+                  BlendMode.srcOut,
+                ), // This one will create the magic
+                child: Stack(fit: StackFit.expand, children: [
+                  Container(
                     decoration: BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.circular(
-                        MediaQuery.of(context).size.width / 2,
+                      color: Colors.black,
+                      backgroundBlendMode: BlendMode.dstOut,
+                    ), // This one will handle background + difference out
+                  ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Container(
+                      height: MediaQuery.of(context).size.width,
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: widget.shape == CameraShape.circle
+                            ? BorderRadius.circular(
+                                MediaQuery.of(context).size.width / 2,
+                              )
+                            : null,
                       ),
-                    ),),),])),
+                    ),
+                  ),
+                ])),
             Container(
               alignment: Alignment.bottomCenter,
               padding: const EdgeInsets.only(bottom: 10),
@@ -126,3 +131,5 @@ class CamWidgetState extends State<CamWidget> {
     );
   }
 }
+
+enum CameraShape { circle, square }

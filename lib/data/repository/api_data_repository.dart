@@ -3,7 +3,12 @@ import 'dart:io';
 import 'package:dd_study2022_ui/data/clients/api_client.dart';
 import 'package:dd_study2022_ui/data/clients/auth_client.dart';
 import 'package:dd_study2022_ui/domain/models/attach_meta.dart';
+import 'package:dd_study2022_ui/domain/models/change_comment_model.dart';
+import 'package:dd_study2022_ui/domain/models/change_post_description_model.dart';
+import 'package:dd_study2022_ui/domain/models/comment_model.dart';
+import 'package:dd_study2022_ui/domain/models/create_comment_model.dart';
 import 'package:dd_study2022_ui/domain/models/create_post_model.dart';
+import 'package:dd_study2022_ui/domain/models/like_data_model.dart';
 import 'package:dd_study2022_ui/domain/models/post_model.dart';
 import 'package:dd_study2022_ui/domain/models/refresh_token_request.dart';
 import 'package:dd_study2022_ui/domain/models/register_user_request.dart';
@@ -35,8 +40,9 @@ class ApiDataRepository extends ApiRepository {
         refreshToken: refreshToken,
       ));
 
-   @override
-  Future registerUser(RegisterUserRequest body) async => await _auth.registerUser(body);
+  @override
+  Future registerUser(RegisterUserRequest body) async =>
+      await _auth.registerUser(body);
 
   @override
   Future<User?> getUser() => _api.getUser();
@@ -53,6 +59,22 @@ class ApiDataRepository extends ApiRepository {
       _api.getPostFeedByLastPostDate(lastPostDate);
 
   @override
+  Future<PostModel> getPost(String? postId) => _api.getPost(postId);
+
+  @override
+  Future<LikeDataModel> likePost(String? postId) => _api.likePost(postId);
+
+  @override
+  Future<LikeDataModel> likeComment(String? commentId) =>
+      _api.likeComment(commentId);
+
+  @override
+  Future deleteComment(String? commentId) => _api.deleteComment(commentId);
+
+  @override
+  Future createComment(CreateCommentModel model) => _api.createComment(model);
+
+  @override
   Future<List<AttachMeta>> uploadTemp({required List<File> files}) =>
       _api.uploadTemp(files: files);
 
@@ -61,4 +83,30 @@ class ApiDataRepository extends ApiRepository {
 
   @override
   Future createPost(CreatePostModel model) => _api.createPost(model);
+
+  @override
+  Future changePostDescription(ChangePostDescriptionModel model) =>
+      _api.changePostDescription(model);
+
+  @override
+  Future<CommentModel> changeComment(ChangeCommentModel model) =>
+      _api.changeComment(model);
+
+  @override
+  Future<List<CommentModel>> getComments(String postId) =>
+      _api.getComments(postId);
+
+  @override
+  Future deletePost(String postId) => _api.deletePost(postId);
+
+  @override
+  Future<LikeDataModel> likeContent(String contentId) =>
+      _api.likeContent(contentId);
+
+  @override
+  Future deletePostContent(String contentId) =>
+      _api.deletePostContent(contentId);
+
+  @override
+  Future<bool> changeAvatarColor() => _api.changeAvatarColor();
 }

@@ -18,7 +18,7 @@ PostModel _$PostModelFromJson(Map<String, dynamic> json) => PostModel(
           .map((e) => PostContent.fromJson(e as Map<String, dynamic>))
           .toList(),
       comments: (json['comments'] as List<dynamic>)
-          .map((e) => Comment.fromJson(e as Map<String, dynamic>))
+          .map((e) => CommentModel.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 

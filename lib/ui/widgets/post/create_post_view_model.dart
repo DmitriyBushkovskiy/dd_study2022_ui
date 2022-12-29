@@ -2,36 +2,48 @@ import 'dart:io';
 
 import 'package:dd_study2022_ui/domain/models/create_post_model.dart';
 import 'package:dd_study2022_ui/internal/dependencies/repository_module.dart';
+import 'package:dd_study2022_ui/ui/navigation/app_navigator.dart';
 import 'package:dd_study2022_ui/ui/widgets/common/cam_widget.dart';
+import 'package:dd_study2022_ui/ui/widgets/roots/app.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CreatePostViewModel extends ChangeNotifier {
   final _api = RepositoryModule.apiRepository();
   var descriptionTec = TextEditingController();
 
+
   final BuildContext context;
   CreatePostViewModel({required this.context});
 
   Future addPhoto() async {
-    await Navigator.of(context).push(MaterialPageRoute(
+
+    await Navigator.of(AppNavigator.key.currentState!.context).
+    push(MaterialPageRoute(
       builder: (newContext) => Scaffold(
         backgroundColor: Colors.black,
         appBar: AppBar(
           backgroundColor: Colors.grey,
           foregroundColor: Colors.black,
         ),
-        body: SafeArea(
-          child: CamWidget(
-            onFile: (file) {
-              imagesWithPath.add(ImageWithPath(
-                  path: file.path,
-                  image: Image.file(
-                    File(file.path),
-                    fit: BoxFit.cover,
-                  )));
-              notifyListeners();
-              //Navigator.of(newContext).pop();
-            },
+        body: WillPopScope(
+          onWillPop: () async {
+            Navigator.of(newContext).pop();
+            return false;
+          },
+          child: SafeArea(
+            child: CamWidget(
+              shape: CameraShape.square,
+              onFile: (file) {
+                imagesWithPath.add(ImageWithPath(
+                    path: file.path,
+                    image: Image.file(
+                      File(file.path),
+                      fit: BoxFit.cover,
+                    )));
+                notifyListeners();
+              },
+            ),
           ),
         ),
       ),
@@ -60,16 +72,18 @@ class CreatePostViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool checkPostContent() => imagesWithPath.isNotEmpty;
-
   void createPost() async {
     var files = imagesWithPath.map((e) => File(e.path)).toList();
     var attachMeta = await _api.uploadTemp(files: files);
 
     await _api
-        .createPost(
-            CreatePostModel(content: attachMeta, description: descriptionTec.text))
-        .then((value) => Navigator.of(context).pop());
+        .createPost(CreatePostModel(
+            content: attachMeta, description: descriptionTec.text))
+        .then((value) {
+      imagesWithPath.clear();
+      descriptionTec.clear();
+      notifyListeners();
+    });
   }
 }
 

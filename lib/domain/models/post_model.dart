@@ -1,7 +1,9 @@
+import 'package:json_annotation/json_annotation.dart';
+
 import 'package:dd_study2022_ui/domain/models/comment.dart';
+import 'package:dd_study2022_ui/domain/models/comment_model.dart';
 import 'package:dd_study2022_ui/domain/models/post_content.dart';
 import 'package:dd_study2022_ui/domain/models/user.dart';
-import 'package:json_annotation/json_annotation.dart';
 
 part 'post_model.g.dart';
 
@@ -15,7 +17,7 @@ class PostModel {
   bool likedByMe;
   User author;
   List<PostContent> postContent;
-  List<Comment> comments;
+  List<CommentModel> comments;
 
   PostModel({
     required this.id,
@@ -36,7 +38,7 @@ class PostModel {
     likes: 0,
     likedByMe: false,
     postContent: <PostContent>[],
-    comments: <Comment>[],
+    comments: <CommentModel>[],
     author: User(
         id: "",
         username: "",
@@ -51,4 +53,28 @@ class PostModel {
       _$PostModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$PostModelToJson(this);
+
+  PostModel copyWith({
+    String? id,
+    String? description,
+    String? created,
+    bool? changed,
+    int? likes,
+    bool? likedByMe,
+    User? author,
+    List<PostContent>? postContent,
+    List<CommentModel>? comments,
+  }) {
+    return PostModel(
+      id: id ?? this.id,
+      description: description ?? this.description,
+      created: created ?? this.created,
+      changed: changed ?? this.changed,
+      likes: likes ?? this.likes,
+      likedByMe: likedByMe ?? this.likedByMe,
+      author: author ?? this.author,
+      postContent: postContent ?? this.postContent,
+      comments: comments ?? this.comments,
+    );
+  }
 }

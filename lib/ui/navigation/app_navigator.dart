@@ -5,7 +5,8 @@ import 'package:dd_study2022_ui/ui/widgets/roots/auth.dart';
 import 'package:dd_study2022_ui/ui/widgets/roots/chat.dart';
 import 'package:dd_study2022_ui/ui/widgets/roots/chats_list.dart';
 import 'package:dd_study2022_ui/ui/widgets/roots/loader.dart';
-import 'package:dd_study2022_ui/ui/widgets/profile/profile_widget.dart';
+import 'package:dd_study2022_ui/ui/widgets/tab_profile/account/account.dart';
+import 'package:dd_study2022_ui/ui/widgets/tab_profile/profile/profile_widget.dart';
 import 'package:dd_study2022_ui/ui/widgets/roots/registration/registration_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -13,11 +14,11 @@ class NavigationRoutes {
   static const loaderWidget = "/";
   static const auth = "/auth";
   static const app = "/app";
-  static const profile = "/app/profile";
   static const createPost = "/createPost";
   static const registerUser = "/registerUser";
   static const chatsList = "/chatsList";
   static const chat = "/chat";
+  static const account = "/account";
 }
 
 class AppNavigator {
@@ -38,10 +39,6 @@ class AppNavigator {
         ?.pushNamedAndRemoveUntil(NavigationRoutes.app, ((route) => false));
   }
 
-  static Future toProfile() async {
-    return await key.currentState?.pushNamed(NavigationRoutes.profile);
-  }
-
   static Future toCreatePostPage() async {
     return await key.currentState?.pushNamed(NavigationRoutes.createPost);
   }
@@ -52,6 +49,10 @@ class AppNavigator {
 
   static Future toChat() async {
     return await key.currentState?.pushNamed(NavigationRoutes.chat);
+  }
+
+  static Future toAccount() async {
+    return await key.currentState?.pushNamed(NavigationRoutes.account);
   }
 
   static Route<dynamic>? onGeneratedRoutes(RouteSettings settings, context) {
@@ -87,6 +88,10 @@ class AppNavigator {
                   .animate(a),
               child: c),
         );
+
+      case NavigationRoutes.account:
+        return PageRouteBuilder(
+            pageBuilder: (_, __, ___) => AccountWidget.create());
     }
     return null;
   }

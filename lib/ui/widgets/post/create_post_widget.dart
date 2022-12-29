@@ -78,7 +78,8 @@ class CreatePostWidget extends StatelessWidget {
                 },
               ),
             ),
-            Expanded(
+            if (viewModel.imagesWithPath.isNotEmpty)
+            Container(
               child: TextField(
                 controller: viewModel.descriptionTec,
                 maxLength: 2000,
@@ -111,9 +112,10 @@ class CreatePostWidget extends StatelessWidget {
                 ),
               ),
             ),
+            if (viewModel.imagesWithPath.isNotEmpty)
             ElevatedButton(
                 onPressed:
-                    viewModel.checkPostContent() ? viewModel.createPost : null,
+                    viewModel.createPost,
                 child: const Text("Create post"))
           ],
         ),

@@ -4,7 +4,7 @@ import 'package:dd_study2022_ui/data/services/auth_service.dart';
 import 'package:dd_study2022_ui/domain/models/refresh_token_request.dart';
 import 'package:dd_study2022_ui/internal/config/app_config.dart';
 import 'package:dd_study2022_ui/internal/config/token_storage.dart';
-import 'package:dd_study2022_ui/ui/app_navigator.dart';
+import 'package:dd_study2022_ui/ui/navigation/app_navigator.dart';
 import 'package:dio/dio.dart';
 
 

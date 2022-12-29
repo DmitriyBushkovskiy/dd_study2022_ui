@@ -10,7 +10,9 @@ import 'package:dd_study2022_ui/internal/dependencies/repository_module.dart';
 import 'package:dd_study2022_ui/ui/widgets/common/cam_widget.dart';
 import 'package:dd_study2022_ui/data/services/auth_service.dart';
 import 'package:dd_study2022_ui/ui/widgets/roots/app.dart';
+import 'package:dd_study2022_ui/ui/widgets/tab_profile/account/account.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:uuid/uuid.dart';
 import 'package:provider/provider.dart';
 
@@ -21,6 +23,10 @@ class ProfileViewModel extends ChangeNotifier {
   final BuildContext context;
   ProfileViewModel({required this.context}) {
     asyncInit();
+    var appmodel = context.read<AppViewModel>();
+    appmodel.addListener(() {
+      avatar = appmodel.avatar;
+    });
   }
 
   User? _user;
@@ -55,13 +61,13 @@ class ProfileViewModel extends ChangeNotifier {
     user = await SharedPrefs.getStoredUser();
     userProfile = await _api.getUserProfile();
 
-    avatar = (user!.avatarLink == null)
-        ? Image.asset("assets/images/sadgram-logo.gif")
-        : Image.network(
-            "$baseUrl${user!.avatarLink}",
-            key: ValueKey(const Uuid().v4()),
-            fit: BoxFit.cover,
-          );
+    // avatar = (user!.avatarLink == null)
+    //     ? Image.asset("assets/images/sadgram-logo.gif")
+    //     : Image.network(
+    //         "$baseUrl${user!.avatarLink}",
+    //         key: ValueKey(const Uuid().v4()),
+    //         fit: BoxFit.cover,
+    //       );
   }
 
   Future changePhoto() async {
@@ -75,6 +81,7 @@ class ProfileViewModel extends ChangeNotifier {
         ),
         body: SafeArea(
           child: CamWidget(
+            shape: CameraShape.circle,
             onFile: (file) {
               _imagePath = file.path;
               Navigator.of(newContext).pop();
@@ -87,17 +94,17 @@ class ProfileViewModel extends ChangeNotifier {
       var t = await _api.uploadTemp(files: [File(_imagePath!)]);
       if (t.isNotEmpty) {
         await _api.addAvatarToUser(t.first);
-        imageCache.clear();
-        imageCache.clearLiveImages();
       }
     }
 
     var user = await _api.getUser();
-    _syncService
-        .syncUser(); //TODO:check it
-    avatar = Image.network("$baseUrl${user!.avatarLink}",
-        key: ValueKey(const Uuid().v4()), fit: BoxFit.cover);
-    appModel.avatar = avatar;
+    _syncService.syncUser(); //TODO:check it
+    
+    var img = await NetworkAssetBundle(Uri.parse("$baseUrl${user!.avatarLink}"))
+        .load("$baseUrl${user.avatarLink}?v=1");
+    appModel.avatar = Image.memory(
+      img.buffer.asUint8List(), fit: BoxFit.cover,);
+
   }
 
   bool colorAvatar = false;
@@ -123,5 +130,10 @@ class ProfileViewModel extends ChangeNotifier {
         firstDate: DateTime(1900),
         lastDate: DateTime(
             currentDate.year - 14, currentDate.month, currentDate.day));
+  }
+
+      void toAccount() {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (__) => AccountWidget.create()));
   }
 }

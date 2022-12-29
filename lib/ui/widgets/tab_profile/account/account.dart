@@ -1,27 +1,154 @@
-// ignore_for_file: depend_on_referenced_packages
-import 'package:dd_study2022_ui/ui/widgets/profile/profile_view_model.dart';
-import 'package:flutter/material.dart';
-import 'package:validators/validators.dart';
-import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
+import 'dart:io';
 
-class ProfileWidget extends StatelessWidget {
-  const ProfileWidget({Key? key}) : super(key: key);
+import 'package:dd_study2022_ui/data/services/auth_service.dart';
+import 'package:dd_study2022_ui/data/services/sync_service.dart';
+import 'package:dd_study2022_ui/domain/models/user.dart';
+import 'package:dd_study2022_ui/domain/models/user_profile.dart';
+import 'package:dd_study2022_ui/internal/config/app_config.dart';
+import 'package:dd_study2022_ui/internal/config/shared_prefs.dart';
+import 'package:dd_study2022_ui/internal/dependencies/repository_module.dart';
+import 'package:dd_study2022_ui/ui/widgets/common/avatar_widget.dart';
+import 'package:dd_study2022_ui/ui/widgets/common/cam_widget.dart';
+import 'package:dd_study2022_ui/ui/widgets/roots/app.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:validators/validators.dart';
+
+class AccountViewModel extends ChangeNotifier {
+  final _api = RepositoryModule.apiRepository();
+  final SyncService _syncService = SyncService();
+  final AuthService _authService = AuthService();
+
+  final BuildContext context;
+  AccountViewModel({required this.context}) {
+    asyncInit();
+    var appmodel = context.read<AppViewModel>();
+    appmodel.addListener(() {
+      avatar = appmodel.avatar;
+    });
+    avatar = appmodel.avatar;
+  }
+
+  User? _user;
+  User? get user => _user;
+  set user(User? val) {
+    _user = val;
+    notifyListeners();
+  }
+
+  UserProfile? _userProfile;
+  UserProfile? get userProfile => _userProfile;
+  set userProfile(UserProfile? val) {
+    _userProfile = val;
+    notifyListeners();
+  }
+
+  // Map<String, String>? headers;
+
+  String? _imagePath;
+
+  Image? _avatar;
+  Image? get avatar => _avatar;
+  set avatar(Image? val) {
+    _avatar = val;
+    notifyListeners();
+  }
+
+  void asyncInit() async {
+    // var token = await TokenStorage.getAccessToken();
+    // headers = {"Authorization": "Bearer $token"};
+    user = await SharedPrefs.getStoredUser();
+    userProfile = await _api.getUserProfile();
+
+
+    // avatar = (user!.avatarLink == null)
+    //     ? Image.asset("assets/images/sadgram-logo.gif")
+    //     : Image.network(
+    //         "$baseUrl${user!.avatarLink}",
+    //         key: ValueKey(const Uuid().v4()),
+    //         fit: BoxFit.cover,
+    //       );
+  }
+
+  Future changePhoto() async {
+    var appModel = context.read<AppViewModel>();
+    await Navigator.of(context).push(MaterialPageRoute(
+      builder: (newContext) => Scaffold(
+        backgroundColor: Colors.black,
+        appBar: AppBar(
+          backgroundColor: Colors.grey,
+          foregroundColor: Colors.black,
+        ),
+        body: SafeArea(
+          child: CamWidget(
+            shape: CameraShape.circle,
+            onFile: (file) {
+              _imagePath = file.path;
+              Navigator.of(newContext).pop();
+            },
+          ),
+        ),
+      ),
+    ));
+    if (_imagePath != null) {
+      var t = await _api.uploadTemp(files: [File(_imagePath!)]);
+      if (t.isNotEmpty) {
+        await _api.addAvatarToUser(t.first);
+      }
+    }
+
+    var user = await _api.getUser();
+    _syncService.syncUser(); //TODO:check it
+
+    var img = await NetworkAssetBundle(Uri.parse("$baseUrl${user!.avatarLink}"))
+        .load("$baseUrl${user.avatarLink}?v=1");
+    appModel.avatar = Image.memory(
+      img.buffer.asUint8List(),
+      fit: BoxFit.cover,
+    );
+  }
+
+  // bool colorAvatar = false;
+
+  void changeAvatarColor() async {
+    var newColor = await _authService.changeAvatarColor();
+    _syncService.syncUser();
+    user = user!.copyWith(colorAvatar: newColor);
+    notifyListeners();
+  }
+
+  void showDatePickerProfile() {
+    DateTime currentDate = DateTime.now();
+    showDatePicker(
+        context: context,
+        initialDate:
+            DateTime(currentDate.year - 14, currentDate.month, currentDate.day),
+        firstDate: DateTime(1900),
+        lastDate: DateTime(
+            currentDate.year - 14, currentDate.month, currentDate.day));
+  }
+}
+
+class AccountWidget extends StatelessWidget {
+  const AccountWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     var dtf = DateFormat("dd.MM.yyyy");
-    var viewModel = context.watch<ProfileViewModel>();
+    var viewModel = context.watch<AccountViewModel>();
 
     return Scaffold(
       backgroundColor: Colors.grey,
       appBar: AppBar(
           title: Text(viewModel.user == null ? "" : viewModel.user!.username)),
       body: GestureDetector(
+        //TODO: сделать листание вкладок
         onHorizontalDragUpdate: (details) {
           int sensitivity = 8;
           if (details.delta.dx > sensitivity) {
-            Navigator.pop(context);
+            //Navigator.pop(context);
           }
         },
         child: SingleChildScrollView(
@@ -29,103 +156,24 @@ class ProfileWidget extends StatelessWidget {
             height: MediaQuery.of(context).size.height,
             padding: const EdgeInsets.all(15),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        viewModel.changePhoto();
-                      },
-                      onLongPress: () {
-                        viewModel.changeText("avatar - onLongPress");
-                      },
-                      child: CircleAvatar(
-                        backgroundColor: Colors.black,
-                        radius: 41,
-                        child: Container(
-                            foregroundDecoration: BoxDecoration(
-                              color: Colors.grey,
-                              backgroundBlendMode: viewModel.user == null
-                                  ? null
-                                  : (viewModel.user!.colorAvatar
-                                      ? BlendMode.dstATop
-                                      : BlendMode.saturation),
-                            ),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(color: Colors.red, width: 0),
-                              ),
-                              height: 80,
-                              width: 80,
-                              clipBehavior: Clip.hardEdge,
-                              child: viewModel.avatar ??
-                                  const CircularProgressIndicator(),
-                            )
-                            ),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        viewModel.changeText("Posts");
-                      },
-                      child: Center(
-                        child: Column(
-                          children: [
-                            const Text('Posts'),
-                            Text(
-                              viewModel.user?.postsAmount.toString() ??
-                                  "no data",
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        viewModel.changeText("Followers");
-                      },
-                      child: Center(
-                        child: Column(
-                          children: [
-                            const Text('Followers'),
-                            Text(
-                              viewModel.user?.followersAmount.toString() ??
-                                  "no data",
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        viewModel.changeText("Followed");
-                      },
-                      child: Center(
-                        child: Column(
-                          children: [
-                            const Text('Followed'),
-                            Text(
-                              viewModel.user?.followedAmount.toString() ??
-                                  "no data",
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                GestureDetector(
+                    onTap: () {
+                      viewModel.changePhoto();
+                    },
+                    onLongPress: () {
+                      viewModel.changeAvatarColor();
+                    },
+                    child: AvatarWidget(
+                      colorAvatar: viewModel.user!.colorAvatar,
+                      avatar: viewModel.avatar ??
+                          Image.asset(
+                            "assets/icons/default_avatar.png",
+                            fit: BoxFit.cover,
+                          ),
+                      radius: 41,
+                    )),
                 Container(
                   padding: const EdgeInsets.only(top: 16),
                   child: Table(
@@ -349,14 +397,6 @@ class ProfileWidget extends StatelessWidget {
                               side: BorderSide(color: Colors.black)))),
                   child: const Text("Save changes"),
                 ),
-                Container(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    viewModel.tapChecker,
-                    textAlign: TextAlign.left,
-                  ),
-                ),
               ],
             ),
           ),
@@ -365,13 +405,10 @@ class ProfileWidget extends StatelessWidget {
     );
   }
 
-  static create(BuildContext bc) {
+  static create() {
     return ChangeNotifierProvider(
-      //create: (context) => ProfileViewModel(context: context),
-      create: (context) {
-        return ProfileViewModel(context: bc);
-      },
-      child: const ProfileWidget(),
+      create: (context) => AccountViewModel(context: context),
+      child: const AccountWidget(),
     );
   }
 }

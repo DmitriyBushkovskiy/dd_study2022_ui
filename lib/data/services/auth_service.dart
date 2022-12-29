@@ -2,6 +2,11 @@ import 'dart:io';
 
 import 'package:dd_study2022_ui/data/services/data_service.dart';
 import 'package:dd_study2022_ui/data/services/sync_service.dart';
+import 'package:dd_study2022_ui/domain/models/change_comment_model.dart';
+import 'package:dd_study2022_ui/domain/models/change_post_description_model.dart';
+import 'package:dd_study2022_ui/domain/models/comment_model.dart';
+import 'package:dd_study2022_ui/domain/models/create_comment_model.dart';
+import 'package:dd_study2022_ui/domain/models/like_data_model.dart';
 import 'package:dd_study2022_ui/domain/models/post_model.dart';
 import 'package:dd_study2022_ui/domain/models/user_profile.dart';
 import 'package:dd_study2022_ui/domain/repository/api_repository.dart';
@@ -72,6 +77,62 @@ class AuthService {
     var postModels = await _api.getPostFeedByLastPostDate(lastPostDate);
     SyncService().syncPosts(postModels);
     return postModels;
+  }
+
+  Future<PostModel> getPost(String? postId) async {
+    var postModel = await _api.getPost(postId);
+    SyncService().syncPosts([postModel]);
+    return postModel;
+  }
+
+  Future<LikeDataModel> likePost(String? postId) async {
+    var result = await _api.likePost(postId);
+    return result;
+  }
+
+  Future<LikeDataModel> likeComment(String? commentId) async {
+    var result = await _api.likeComment(commentId);
+    return result;
+  }
+
+  Future deleteComment(String? commentId) async {
+    await _api.deleteComment(commentId);
+  }
+
+  Future<CommentModel> changeComment(ChangeCommentModel model) async {
+    var result = await _api.changeComment(model);
+    return result;
+  }
+
+  Future createComment(CreateCommentModel model) async {
+    await _api.createComment(model);
+  }
+
+  Future<List<CommentModel>> getComments(String postId) async {
+    var result = await _api.getComments(postId);
+    return result;
+  }
+
+  Future changePostDescription(ChangePostDescriptionModel model) async {
+    await _api.changePostDescription(model);
+  }
+
+  Future deletePost(String postId) async {
+    await _api.deletePost(postId);
+  }
+
+  Future<LikeDataModel> likeContent(String contentId) async {
+    var result = await _api.likeContent(contentId);
+    return result;
+  }
+
+  Future deletePostContent(String contentId) async {
+    await _api.deletePostContent(contentId);
+  }
+
+  Future<bool> changeAvatarColor() async {
+    var result = await _api.changeAvatarColor();
+    return result;
   }
 }
 

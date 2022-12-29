@@ -89,4 +89,28 @@ class User implements DbModel {
       privateAccount.hashCode ^
       colorAvatar.hashCode;
   }
+
+  User copyWith({
+    String? id,
+    String? username,
+    String? birthDate,
+    String? avatarLink,
+    int? postsAmount,
+    int? followedAmount,
+    int? followersAmount,
+    bool? privateAccount,
+    bool? colorAvatar,
+  }) {
+    return User(
+      id: id ?? this.id,
+      username: username ?? this.username,
+      birthDate: birthDate ?? this.birthDate,
+      avatarLink: avatarLink ?? this.avatarLink,
+      postsAmount: postsAmount ?? this.postsAmount,
+      followedAmount: followedAmount ?? this.followedAmount,
+      followersAmount: followersAmount ?? this.followersAmount,
+      privateAccount: privateAccount ?? this.privateAccount,
+      colorAvatar: colorAvatar ?? this.colorAvatar,
+    );
+  }
 }

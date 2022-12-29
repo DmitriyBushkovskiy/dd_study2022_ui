@@ -1,4 +1,4 @@
-import 'package:dd_study2022_ui/ui/app_navigator.dart';
+import 'package:dd_study2022_ui/ui/navigation/app_navigator.dart';
 import 'package:dd_study2022_ui/ui/widgets/roots/loader.dart';
 import 'package:flutter/material.dart';
 import 'data/services/database.dart';

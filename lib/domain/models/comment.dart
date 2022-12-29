@@ -1,3 +1,4 @@
+import 'package:dd_study2022_ui/domain/models/comment_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import 'package:dd_study2022_ui/domain/db_model.dart';
