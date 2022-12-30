@@ -22,7 +22,10 @@ abstract class ApiClient {
   factory ApiClient(Dio dio, {String? baseUrl}) = _ApiClient;
 
   @GET("/api/User/GetCurrentUser")
-  Future<User?> getUser();
+  Future<User?> getCurrentUser();
+
+  @GET("/api/User/GetUser/{targetUserId}")
+  Future<User?> getUser(@Path("targetUserId") String targetUserId);
 
   @GET("/api/User/GetCurrentUserData")
   Future<UserProfile?> getUserProfile();
@@ -76,8 +79,8 @@ abstract class ApiClient {
   Future<LikeDataModel> likeContent(@Path("contentId") String contentId);
 
   @DELETE("/api/Post/DeletePostContent/{contentId}")
-  Future deletePostContent (@Path("contentId") String contentId);
-  
+  Future deletePostContent(@Path("contentId") String contentId);
+
   @PUT("/api/User/ChangeAvatarColor")
-  Future<bool> changeAvatarColor ();
+  Future<bool> changeAvatarColor();
 }

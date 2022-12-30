@@ -113,4 +113,13 @@ class DataService {
       return null;
     }
   }
+
+  Future<User?> getUser(String userId) async {
+    var user = await DB.instance.get<User>(userId);
+    if (user != null) {
+      return user;
+    } else {
+      return null;
+    }
+  }
 }

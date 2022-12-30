@@ -18,7 +18,8 @@ class NavigationRoutes {
   static const registerUser = "/registerUser";
   static const chatsList = "/chatsList";
   static const chat = "/chat";
-  static const account = "/account";
+  // static const account = "/account";
+  static const profile = "/profile";
 }
 
 class AppNavigator {
@@ -51,8 +52,11 @@ class AppNavigator {
     return await key.currentState?.pushNamed(NavigationRoutes.chat);
   }
 
-  static Future toAccount() async {
-    return await key.currentState?.pushNamed(NavigationRoutes.account);
+  // static Future toAccount() async {
+  //   return await key.currentState?.pushNamed(NavigationRoutes.account);
+  // }
+  static Future toProfile(String userId) async {
+    return await key.currentState?.pushNamed(NavigationRoutes.profile, arguments: userId);
   }
 
   static Route<dynamic>? onGeneratedRoutes(RouteSettings settings, context) {
@@ -89,9 +93,14 @@ class AppNavigator {
               child: c),
         );
 
-      case NavigationRoutes.account:
-        return PageRouteBuilder(
-            pageBuilder: (_, __, ___) => AccountWidget.create());
+      // case NavigationRoutes.profile:
+      // final arguments = (ModalRoute.of(context)?.settings.arguments) as String;
+      //   return PageRouteBuilder(
+      //       pageBuilder: (_, __, ___) => ProfileWidget.create(arg: arguments));
+
+      // case NavigationRoutes.account:
+      //   return PageRouteBuilder(
+      //       pageBuilder: (_, __, ___) => AccountWidget.create());
     }
     return null;
   }

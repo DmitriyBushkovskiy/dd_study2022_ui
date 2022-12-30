@@ -17,7 +17,7 @@ class ProfileWidget extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.grey,
       appBar: AppBar(
-          title: Text(viewModel.user == null ? "" : viewModel.user!.username)),
+          title: Text(viewModel.targetUser == null ? "" : viewModel.targetUser!.username)),
       body: GestureDetector(
         onHorizontalDragUpdate: (details) {
           int sensitivity = 8;
@@ -61,7 +61,7 @@ class ProfileWidget extends StatelessWidget {
                           children: [
                             const Text('Posts'),
                             Text(
-                              viewModel.user?.postsAmount.toString() ??
+                              viewModel.targetUser?.postsAmount.toString() ??
                                   "no data",
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
@@ -80,7 +80,7 @@ class ProfileWidget extends StatelessWidget {
                           children: [
                             const Text('Followers'),
                             Text(
-                              viewModel.user?.followersAmount.toString() ??
+                              viewModel.targetUser?.followersAmount.toString() ??
                                   "no data",
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
@@ -99,7 +99,7 @@ class ProfileWidget extends StatelessWidget {
                           children: [
                             const Text('Followed'),
                             Text(
-                              viewModel.user?.followedAmount.toString() ??
+                              viewModel.targetUser?.followedAmount.toString() ??
                                   "no data",
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
@@ -112,7 +112,7 @@ class ProfileWidget extends StatelessWidget {
                   ],
                 ),
                 ElevatedButton(onPressed: () => viewModel.toAccount() , child: Text("Account")),
-                
+
               ],
             ),
           ),
@@ -121,11 +121,22 @@ class ProfileWidget extends StatelessWidget {
     );
   }
 
-  static create() {
+  // static create() {
+  //   return ChangeNotifierProvider(
+  //     //create: (context) => ProfileViewModel(context: context),
+  //     create: (context) {
+  //       return ProfileViewModel(context: context);
+  //     },
+  //     child: const ProfileWidget(),
+  //   );
+  // }
+
+    static create({BuildContext? bc, Object? arg}) {
+      String? targetUserId;
+      if (arg != null && arg is String) targetUserId = arg;
     return ChangeNotifierProvider(
-      //create: (context) => ProfileViewModel(context: context),
       create: (context) {
-        return ProfileViewModel(context: context);
+        return ProfileViewModel(context: bc ?? context, targetUserId: targetUserId);
       },
       child: const ProfileWidget(),
     );

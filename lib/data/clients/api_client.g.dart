@@ -19,7 +19,7 @@ class _ApiClient implements ApiClient {
   String? baseUrl;
 
   @override
-  Future<User?> getUser() async {
+  Future<User?> getCurrentUser() async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
@@ -33,6 +33,29 @@ class _ApiClient implements ApiClient {
             .compose(
               _dio.options,
               '/api/User/GetCurrentUser',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = _result.data == null ? null : User.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<User?> getUser(targetUserId) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result =
+        await _dio.fetch<Map<String, dynamic>?>(_setStreamType<User>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/api/User/GetUser/${targetUserId}',
               queryParameters: queryParameters,
               data: _data,
             )

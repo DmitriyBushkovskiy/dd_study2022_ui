@@ -45,7 +45,10 @@ class ApiDataRepository extends ApiRepository {
       await _auth.registerUser(body);
 
   @override
-  Future<User?> getUser() => _api.getUser();
+  Future<User?> getCurrentUser() => _api.getCurrentUser();
+
+  @override
+  Future<User?> getUser(String targetUserId) => _api.getUser(targetUserId);
 
   @override
   Future<UserProfile?> getUserProfile() => _api.getUserProfile();

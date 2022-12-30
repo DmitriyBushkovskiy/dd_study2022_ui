@@ -96,14 +96,13 @@ class HomeViewModel extends ChangeNotifier {
     postFeed ??= await _dataService.getPosts();
     postFeed = await _authService.getPostFeed(null);
     postFeed!.insert(0, PostModel.emptyPostModel());
-    //avatar =
-    // = (user!.avatarLink == null)
-    //     ? Image.asset("assets/images/sadgram-logo.gif")
-    //     : Image.network(
-    //         "$baseUrl${user!.avatarLink}",
-    //         key: ValueKey(const Uuid().v4()),
-    //         fit: BoxFit.cover,
-    //       );
+    avatar = (user!.avatarLink == null)
+        ? Image.asset("assets/icons/default_avatar.png")
+        : Image.network(
+            "$baseUrl${user!.avatarLink}",
+            key: ValueKey(const Uuid().v4()),
+            fit: BoxFit.cover,
+          );
     //TODO: check work without internet
   }
 
@@ -125,8 +124,8 @@ class HomeViewModel extends ChangeNotifier {
   //       duration: const Duration(seconds: 1), curve: Curves.easeInCubic);
   // }
 
-  void toPostDetail(String postId) {
-    Navigator.of(context)
+  Future toPostDetail(String postId) async {
+    await Navigator.of(context)
         .pushNamed(TabNavigatorRoutes.postDetails, arguments: postId);
   }
 }
@@ -238,7 +237,9 @@ class PostInFeedWidget extends StatelessWidget {
     if (posts != null) {
       var post = posts[listIndex];
       result = GestureDetector(
-        onTap: () => viewModel.toPostDetail(post.id),
+        onTap: () => viewModel.toPostDetail(post.id).then((value) async {
+          viewModel.asyncInit();
+        }),
         child: Container(
           //padding: const EdgeInsets.all(10),
           //height: size.width,
@@ -308,7 +309,11 @@ class FirstInFeedWidget extends StatelessWidget {
         children: [
           viewModel.user != null
               ? AvatarWidget(
-                  avatar: viewModel.avatar!,
+                  avatar: viewModel.avatar ??
+                      Image.asset(
+                        "assets/icons/default_avatar.png",
+                        fit: BoxFit.cover,
+                      ),
                   padding: 10,
                   radius: 31,
                   colorAvatar: false, // TODO: viewmodel.user

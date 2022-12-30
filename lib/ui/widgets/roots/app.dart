@@ -125,13 +125,18 @@ class AppViewModel extends ChangeNotifier {
     // );
 
     if (user!.avatarLink != null) {
-      var img =
-          await NetworkAssetBundle(Uri.parse("$baseUrl${user!.avatarLink}"))
-              .load("$baseUrl${user!.avatarLink}?v=1");
-      avatar = Image.memory(
-        img.buffer.asUint8List(),
-        fit: BoxFit.cover,
-      );
+      Image.network(
+            "$baseUrl${user!.avatarLink}",
+            key: ValueKey(const Uuid().v4()),
+            fit: BoxFit.cover,
+          );
+      // var img =
+      //     await NetworkAssetBundle(Uri.parse("$baseUrl${user!.avatarLink}"))
+      //         .load("$baseUrl${user!.avatarLink}?v=1");
+      // avatar = Image.memory(
+      //   img.buffer.asUint8List(),
+      //   fit: BoxFit.cover,
+      // );
     }
   }
 

@@ -10,10 +10,17 @@ class SyncService {
   final _api = RepositoryModule.apiRepository();
   final _dataService = DataService();
 
-  Future syncUser() async {
-    var user = await _api.getUser();
+  Future syncCurrentUser() async {
+    var user = await _api.getCurrentUser();
     if (user != null) {
       await SharedPrefs.setStoredUser(user);
+      await _dataService.cuUser(user);
+    }
+  }
+
+  Future syncUser(String targetUserId) async {
+    var user = await _api.getUser(targetUserId);
+    if (user != null) {
       await _dataService.cuUser(user);
     }
   }
@@ -36,7 +43,7 @@ class SyncService {
         .expand(
             (x) => x.comments.map((e) => e.toComment().copyWith(postId: x.id)))
         .toList();
-        
+
     await _dataService.rangeUpdateEntities(commentsAuthors);
     await _dataService.rangeUpdateEntities(authors);
     await _dataService.rangeUpdateEntities(posts);

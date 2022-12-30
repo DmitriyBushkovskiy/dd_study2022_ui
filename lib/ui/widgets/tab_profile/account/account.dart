@@ -7,6 +7,7 @@ import 'package:dd_study2022_ui/domain/models/user_profile.dart';
 import 'package:dd_study2022_ui/internal/config/app_config.dart';
 import 'package:dd_study2022_ui/internal/config/shared_prefs.dart';
 import 'package:dd_study2022_ui/internal/dependencies/repository_module.dart';
+import 'package:dd_study2022_ui/ui/navigation/app_navigator.dart';
 import 'package:dd_study2022_ui/ui/widgets/common/avatar_widget.dart';
 import 'package:dd_study2022_ui/ui/widgets/common/cam_widget.dart';
 import 'package:dd_study2022_ui/ui/widgets/roots/app.dart';
@@ -14,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 import 'package:validators/validators.dart';
 
 class AccountViewModel extends ChangeNotifier {
@@ -28,7 +30,7 @@ class AccountViewModel extends ChangeNotifier {
     appmodel.addListener(() {
       avatar = appmodel.avatar;
     });
-    avatar = appmodel.avatar;
+    //avatar = appmodel.avatar;
   }
 
   User? _user;
@@ -56,25 +58,38 @@ class AccountViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  bool _disposed = false;
+
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
+  }
+
+  @override
+  void notifyListeners() {
+    if (!_disposed) {
+      super.notifyListeners();
+    }
+  }
+
   void asyncInit() async {
     // var token = await TokenStorage.getAccessToken();
     // headers = {"Authorization": "Bearer $token"};
     user = await SharedPrefs.getStoredUser();
     userProfile = await _api.getUserProfile();
-
-
-    // avatar = (user!.avatarLink == null)
-    //     ? Image.asset("assets/images/sadgram-logo.gif")
-    //     : Image.network(
-    //         "$baseUrl${user!.avatarLink}",
-    //         key: ValueKey(const Uuid().v4()),
-    //         fit: BoxFit.cover,
-    //       );
+    
+    var img = await NetworkAssetBundle(Uri.parse("$baseUrl${user!.avatarLink}"))
+        .load("$baseUrl${user!.avatarLink}?v=1");
+    avatar = Image.memory(
+      img.buffer.asUint8List(),
+      fit: BoxFit.cover,
+    );
   }
 
   Future changePhoto() async {
     var appModel = context.read<AppViewModel>();
-    await Navigator.of(context).push(MaterialPageRoute(
+      await Navigator.of(AppNavigator.key.currentState!.context).push(MaterialPageRoute(
       builder: (newContext) => Scaffold(
         backgroundColor: Colors.black,
         appBar: AppBar(
@@ -99,22 +114,31 @@ class AccountViewModel extends ChangeNotifier {
       }
     }
 
-    var user = await _api.getUser();
-    _syncService.syncUser(); //TODO:check it
+    var user = await _api.getCurrentUser();
+    _syncService.syncCurrentUser(); //TODO:check it
 
-    var img = await NetworkAssetBundle(Uri.parse("$baseUrl${user!.avatarLink}"))
-        .load("$baseUrl${user.avatarLink}?v=1");
-    appModel.avatar = Image.memory(
-      img.buffer.asUint8List(),
-      fit: BoxFit.cover,
-    );
+imageCache.clear();
+ imageCache.clearLiveImages();
+    appModel.avatar = (user!.avatarLink == null)
+        ? Image.asset("assets/images/sadgram-logo.gif")
+        : Image.network(
+            "$baseUrl${user!.avatarLink}",
+            key: ValueKey(const Uuid().v4()),
+            fit: BoxFit.cover,
+          );
+    // var img = await NetworkAssetBundle(Uri.parse("$baseUrl${user!.avatarLink}"))
+    //     .load("$baseUrl${user.avatarLink}?v=1");
+    // appModel.avatar = Image.memory(
+    //   img.buffer.asUint8List(),
+    //   fit: BoxFit.cover,
+    // );
   }
 
   // bool colorAvatar = false;
 
   void changeAvatarColor() async {
     var newColor = await _authService.changeAvatarColor();
-    _syncService.syncUser();
+    _syncService.syncCurrentUser();
     user = user!.copyWith(colorAvatar: newColor);
     notifyListeners();
   }
@@ -166,7 +190,7 @@ class AccountWidget extends StatelessWidget {
                       viewModel.changeAvatarColor();
                     },
                     child: AvatarWidget(
-                      colorAvatar: viewModel.user!.colorAvatar,
+                      colorAvatar: viewModel.user?.colorAvatar ?? true,
                       avatar: viewModel.avatar ??
                           Image.asset(
                             "assets/icons/default_avatar.png",

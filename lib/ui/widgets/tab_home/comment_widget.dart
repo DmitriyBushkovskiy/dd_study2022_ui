@@ -7,8 +7,10 @@ import 'package:dd_study2022_ui/domain/models/post_model.dart';
 import 'package:dd_study2022_ui/domain/models/user.dart';
 import 'package:dd_study2022_ui/internal/config/app_config.dart';
 import 'package:dd_study2022_ui/internal/config/shared_prefs.dart';
+import 'package:dd_study2022_ui/ui/navigation/app_navigator.dart';
 import 'package:dd_study2022_ui/ui/widgets/common/avatar_widget.dart';
 import 'package:dd_study2022_ui/ui/widgets/tab_home/post_detail.dart';
+import 'package:dd_study2022_ui/ui/widgets/tab_profile/profile/profile_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -138,6 +140,19 @@ class _CommentWidgetState extends State<CommentWidget> {
     commentModel!.likedByMe = likeModel.likedByMe;
   }
 
+  // void toProfile(String userId) async {
+  //       Navigator.of(context)
+  //       .pushNamed(await AppNavigator.toProfile(userId));
+  // }
+
+    void toProfile(BuildContext bc, String userId) {
+      Navigator.of(context)
+        .push(MaterialPageRoute(builder: (__) => ProfileWidget.create(bc: bc, arg: userId)));
+
+      // await Navigator.of(AppNavigator.key.currentState!.context).push(MaterialPageRoute(
+      // builder: (newContext) => ProfileWidget.create(arg: userId)));
+  }
+
   @override
   Widget build(BuildContext context) {
     return commentModel == null
@@ -168,10 +183,13 @@ class _CommentWidgetState extends State<CommentWidget> {
                         children: [
                           Padding(
                             padding: const EdgeInsets.only(right: 10),
-                            child: Text(
-                              commentModel!.author.username,
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold),
+                            child: GestureDetector(
+                              onTap: () => toProfile(context, commentModel!.author.id),
+                              child: Text(
+                                commentModel!.author.username,
+                                style:
+                                    const TextStyle(fontWeight: FontWeight.bold),
+                              ),
                             ),
                           ),
                           Text(

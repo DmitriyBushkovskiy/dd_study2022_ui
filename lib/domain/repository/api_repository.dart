@@ -21,7 +21,9 @@ abstract class ApiRepository {
 
   Future registerUser(RegisterUserRequest body);
 
-  Future<User?> getUser();
+  Future<User?> getCurrentUser();
+
+  Future<User?> getUser(String targetUserId);
 
   Future<UserProfile?> getUserProfile();
 

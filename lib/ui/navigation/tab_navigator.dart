@@ -1,11 +1,13 @@
 import 'package:dd_study2022_ui/domain/enums/tab_item.dart';
 import 'package:dd_study2022_ui/ui/widgets/tab_home/post_detail.dart';
+import 'package:dd_study2022_ui/ui/widgets/tab_profile/account/account.dart';
 //import 'package:dd_study2022_ui/ui/widgets/tab_home/post_detail.dart';
 import 'package:flutter/material.dart';
 
 class TabNavigatorRoutes {
   static const String root = '/app/';
   static const String postDetails = "/app/postDetails";
+  static const String account = "/app/account";
 }
 
 class TabNavigator extends StatelessWidget {
@@ -25,8 +27,8 @@ class TabNavigator extends StatelessWidget {
             SafeArea(
               child: Text(tabItem.name),
             ),
-        TabNavigatorRoutes.postDetails: (context) => PostDetail.create(arg), 
-       
+        TabNavigatorRoutes.postDetails: (context) => PostDetail.create(arg),
+        TabNavigatorRoutes.account: (context) => AccountWidget.create(),
       };
 
   @override

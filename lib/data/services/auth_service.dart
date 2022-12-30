@@ -8,6 +8,7 @@ import 'package:dd_study2022_ui/domain/models/comment_model.dart';
 import 'package:dd_study2022_ui/domain/models/create_comment_model.dart';
 import 'package:dd_study2022_ui/domain/models/like_data_model.dart';
 import 'package:dd_study2022_ui/domain/models/post_model.dart';
+import 'package:dd_study2022_ui/domain/models/user.dart';
 import 'package:dd_study2022_ui/domain/models/user_profile.dart';
 import 'package:dd_study2022_ui/domain/repository/api_repository.dart';
 import 'package:dd_study2022_ui/internal/config/shared_prefs.dart';
@@ -25,7 +26,7 @@ class AuthService {
         var token = await _api.getToken(login: login, password: password);
         if (token != null) {
           await TokenStorage.setStoredToken(token);
-          var user = await _api.getUser();
+          var user = await _api.getCurrentUser();
           if (user != null) {
             SharedPrefs.setStoredUser(user);
           }
@@ -48,7 +49,7 @@ class AuthService {
     var res = false;
 
     if (await TokenStorage.getAccessToken() != null) {
-      var user = await _api.getUser();
+      var user = await _api.getCurrentUser();
       if (user != null) {
         await SharedPrefs.setStoredUser(user);
         await _dataService.cuUser(user);
@@ -64,14 +65,20 @@ class AuthService {
 
   //TODO: перенести в другой сервис?
   Future<UserProfile?> getUserProfile() async {
-    //TokenStorage.getAccessToken();
+    //TODO: save data to DB
     return await _api.getUserProfile();
   }
 
-  Future<UserProfile?> getChatsList() async {
-    //TokenStorage.getAccessToken();
-    return await _api.getUserProfile();
+    Future<User?> getUser(String targetUserId) async {
+    var targetUser =  await _api.getUser(targetUserId);
+    SyncService().syncUser(targetUserId);
+    return targetUser; // TODO: get user from backend 2 times: here an in sync service
   }
+
+  // Future<UserProfile?> getChatsList() async {
+  //   //TokenStorage.getAccessToken();
+  //   return await _api.getUserProfile();
+  // }
 
   Future<List<PostModel>> getPostFeed(String? lastPostDate) async {
     var postModels = await _api.getPostFeedByLastPostDate(lastPostDate);

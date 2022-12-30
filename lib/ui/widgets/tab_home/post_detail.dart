@@ -239,6 +239,7 @@ class PostDetailViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+
   void likePost() async {
     var likeData = await _authService.likePost(postId);
     post!.likedByMe = likeData.likedByMe;
