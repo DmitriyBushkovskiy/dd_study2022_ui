@@ -44,6 +44,9 @@ abstract class ApiClient {
   Future<List<PostModel>> getPostsByLastPostDate(
       @Body() GetPostsRequestModel model);
 
+  @PUT("/api/Post/GetFavoritePosts")
+  Future<List<PostModel>> getFavoritePosts(@Body() GetPostsRequestModel model);
+
   @PUT("/api/Post/ChangePostDescription")
   Future changePostDescription(@Body() ChangePostDescriptionModel model);
 
@@ -79,7 +82,8 @@ abstract class ApiClient {
   Future<String> getMyRelationState(@Path("targetUserId") String targetUserId);
 
   @GET("/api/Relation/GetRelationToMeState/{targetUserId}")
-  Future<String> getRelationToMeState(@Path("targetUserId") String targetUserId);
+  Future<String> getRelationToMeState(
+      @Path("targetUserId") String targetUserId);
 
   @PUT("/api/Relation/Follow/{targetUserId}")
   Future<String> follow(@Path("targetUserId") String targetUserId);

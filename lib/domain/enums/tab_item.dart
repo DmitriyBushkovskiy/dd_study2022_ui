@@ -1,4 +1,5 @@
 import 'package:dd_study2022_ui/ui/widgets/post/create_post_widget.dart';
+import 'package:dd_study2022_ui/ui/widgets/tab_favorites/favorites_widget.dart';
 import 'package:dd_study2022_ui/ui/widgets/tab_home/home.dart';
 import 'package:dd_study2022_ui/ui/widgets/tab_profile/profile/profile_widget.dart';
 import 'package:flutter/material.dart';
@@ -20,5 +21,6 @@ class TabEnums {
     TabItemEnum.home: Home.create(),
     TabItemEnum.newPost: CreatePostWidget.create(),
     TabItemEnum.profile: ProfileWidget.create(),
+    TabItemEnum.favorites: FavoritesWidget.create(),
   };
 }

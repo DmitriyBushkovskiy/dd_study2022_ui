@@ -94,6 +94,12 @@ class AuthService {
     return postModels;
   }
 
+  Future<List<PostModel>> getFavoritePosts(GetPostsRequestModel model) async {
+    var postModels = await _api.getFavoritePosts(model);
+    SyncService().syncPosts(postModels);
+    return postModels;
+  }
+
   Future<PostModel> getPost(String? postId) async {
     var postModel = await _api.getPost(postId);
     SyncService().syncPosts([postModel]);

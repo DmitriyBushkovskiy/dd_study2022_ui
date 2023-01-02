@@ -6,6 +6,7 @@ import 'package:dd_study2022_ui/domain/models/change_post_description_model.dart
 import 'package:dd_study2022_ui/domain/models/create_comment_model.dart';
 import 'package:dd_study2022_ui/internal/config/shared_prefs.dart';
 import 'package:dd_study2022_ui/ui/navigation/tab_navigator.dart';
+import 'package:dd_study2022_ui/ui/widgets/tab_favorites/favorites_view_model.dart';
 import 'package:dd_study2022_ui/ui/widgets/tab_home/comment_widget.dart';
 import 'package:dd_study2022_ui/ui/widgets/tab_home/home.dart';
 import 'package:flutter/material.dart';
@@ -249,6 +250,7 @@ class PostDetailViewModel extends ChangeNotifier {
     _syncService.syncPosts([post!]);
     notifyListeners();
   }
+
 
   final ScrollController _controller = ScrollController();
   void _scrollDown() {

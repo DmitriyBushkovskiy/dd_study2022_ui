@@ -67,6 +67,10 @@ class ApiDataRepository extends ApiRepository {
       _api.getPostsByLastPostDate(model);
 
   @override
+  Future<List<PostModel>> getFavoritePosts(GetPostsRequestModel model) =>
+      _api.getFavoritePosts(model);
+
+  @override
   Future<PostModel> getPost(String? postId) => _api.getPost(postId);
 
   @override

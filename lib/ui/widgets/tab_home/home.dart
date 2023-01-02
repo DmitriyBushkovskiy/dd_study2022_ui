@@ -1,4 +1,5 @@
 import 'package:dd_study2022_ui/data/services/sync_service.dart';
+import 'package:dd_study2022_ui/ui/widgets/tab_favorites/favorites_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
@@ -99,6 +100,7 @@ class HomeViewModel extends ChangeNotifier {
     }
     notifyListeners();
   }
+
 
     void likePostContent(int listIndex, int postContentIndex) async {
     var content = postFeed![listIndex].postContent[postContentIndex];

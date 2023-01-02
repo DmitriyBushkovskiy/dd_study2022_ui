@@ -34,6 +34,8 @@ abstract class ApiRepository {
 
   Future<List<PostModel>> getPostsByLastPostDate(GetPostsRequestModel model);
 
+  Future<List<PostModel>> getFavoritePosts(GetPostsRequestModel model);
+
   Future<PostModel> getPost(String? postId);
 
   Future<LikeDataModel> likePost(String? postId);
