@@ -1,8 +1,8 @@
 import 'package:dd_study2022_ui/data/services/sync_service.dart';
-import 'package:dd_study2022_ui/ui/widgets/tab_favorites/favorites_view_model.dart';
+import 'package:dd_study2022_ui/ui/widgets/common/avatar_with_name_widget.dart';
+import 'package:dd_study2022_ui/ui/widgets/tab_profile/profile/profile_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:uuid/uuid.dart';
 
 import 'package:dd_study2022_ui/data/services/auth_service.dart';
 import 'package:dd_study2022_ui/data/services/data_service.dart';
@@ -36,6 +36,7 @@ class HomeViewModel extends ChangeNotifier {
     var appModel = context.read<AppViewModel>();
     appModel.addListener(() {
       avatar = appModel.avatar;
+      user = appModel.user;
     });
     _lvc.addListener(() {
       var max = _lvc.position.maxScrollExtent;
@@ -69,6 +70,11 @@ class HomeViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void toProfile(BuildContext bc, String userId) {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (__) => ProfileWidget.create(bc: bc, arg: userId)));
+  }
+
   Image? _avatar;
   Image? get avatar => _avatar;
   set avatar(Image? val) {
@@ -95,14 +101,14 @@ class HomeViewModel extends ChangeNotifier {
     if (updatedPost == null) {
       postFeed!.remove(postFeed!.firstWhere((element) => element.id == postId));
     } else {
-      var index = postFeed!.indexOf(postFeed!.firstWhere((element) => element.id == postId));
+      var index = postFeed!
+          .indexOf(postFeed!.firstWhere((element) => element.id == postId));
       postFeed![index] = updatedPost;
     }
     notifyListeners();
   }
 
-
-    void likePostContent(int listIndex, int postContentIndex) async {
+  void likePostContent(int listIndex, int postContentIndex) async {
     var content = postFeed![listIndex].postContent[postContentIndex];
     var likeDataModel = await _authService.likeContent(content.id);
     postFeed![listIndex].postContent[postContentIndex] = content.copyWith(
@@ -124,7 +130,7 @@ class HomeViewModel extends ChangeNotifier {
         ? Image.asset("assets/icons/default_avatar.png")
         : Image.network(
             "$baseUrl${user!.avatarLink}",
-            key: ValueKey(const Uuid().v4()),
+            //key: ValueKey(const Uuid().v4()),
             fit: BoxFit.cover,
           );
     //TODO: check work without internet
@@ -173,7 +179,11 @@ class Home extends StatelessWidget {
                     controller: viewModel._lvc,
                     itemBuilder: (_, listIndex) {
                       if (listIndex == 0) {
-                        return FirstInFeedWidget(viewModel: viewModel);
+                        return AvatarWithNameWidget(
+                          viewModel: viewModel,
+                          avatarRadius: 34,
+                          user: viewModel.user,
+                        );
                       } else {
                         return PostInFeedWidget(
                           viewModel: viewModel,
@@ -222,13 +232,12 @@ class PostInFeedWidget extends StatelessWidget {
             .toPostDetail(post.id)
             .then((value) => viewModel.updatePost(post.id)),
         child: Container(
-          
           //padding: const EdgeInsets.all(10),
           //height: size.width,
           color: Colors.yellow,
           child: Column(
             children: [
-              Text(post.author.username),
+              AvatarWithNameWidget(viewModel: viewModel, avatarRadius: 20, user: post.author,),
               Stack(alignment: AlignmentDirectional.bottomCenter, children: [
                 SizedBox(
                   height: size.width,
@@ -240,108 +249,84 @@ class PostInFeedWidget extends StatelessWidget {
                       height: size.width,
                       //color: Colors.yellow,
                       child: GestureDetector(
-                                    onTap: () {
-                                    viewModel.likePostContent(listIndex, pageIndex);
+                        onTap: () {
+                          viewModel.likePostContent(listIndex, pageIndex);
 
-                                    //TODO: make method like image
-                                  },
-                                  child: Stack(
-                                      alignment:
-                                          AlignmentDirectional.bottomStart,
-                                      children: [
-                                        Container(
-                                          foregroundDecoration: BoxDecoration(
-                                            color: Colors.grey,
-                                            backgroundBlendMode: (
-                                                    post!
-                                                    .postContent[pageIndex]
-                                                    .likedByMe
-                                                ? BlendMode.dstATop
-                                                : BlendMode.saturation),
-                                          ),
-                                          width: size.width,
-                                          height: size.width,
-                                          child: Image(
-                                            fit: BoxFit.cover,
-                                            image: NetworkImage(
-                                                "$baseUrl${post!.postContent[pageIndex].contentLink}",
-                                                headers: viewModel.headers),
-                                          ),
-                                        ),
-                                        Row(
+                          //TODO: make method like image
+                        },
+                        child: Stack(
+                            alignment: AlignmentDirectional.bottomStart,
+                            children: [
+                              Container(
+                                foregroundDecoration: BoxDecoration(
+                                  color: Colors.grey,
+                                  backgroundBlendMode:
+                                      (post!.postContent[pageIndex].likedByMe
+                                          ? BlendMode.dstATop
+                                          : BlendMode.saturation),
+                                ),
+                                width: size.width,
+                                height: size.width,
+                                child: Image(
+                                  fit: BoxFit.cover,
+                                  image: NetworkImage(
+                                      "$baseUrl${post!.postContent[pageIndex].contentLink}",
+                                      headers: viewModel.headers),
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  Container(
+                                      //color: Colors.amber,
+                                      height: 35,
+                                      width: 35,
+                                      child: Stack(
+                                          alignment:
+                                              AlignmentDirectional.center,
                                           children: [
-                                            Container(
-                                                //color: Colors.amber,
-                                                height: 35,
-                                                width: 35,
-                                                child: Stack(
-                                                    alignment:
-                                                        AlignmentDirectional
-                                                            .center,
-                                                    children: [
-                                                      const Icon(
-                                                        Icons.favorite_sharp,
-                                                        size: 30,
-                                                      ),
-                                                      Icon(
-                                                        
-                                                                post!
-                                                                .postContent[
-                                                                    pageIndex]
-                                                                .likedByMe
-                                                            ? Icons
-                                                                .favorite_sharp
-                                                            : Icons
-                                                                .heart_broken_sharp,
-                                                        color: Colors.white,
-                                                      )
-                                                    ])),
-                                            
-                                                        post!
-                                                        .postContent[pageIndex]
-                                                        .likes ==
-                                                    0
-                                                ? SizedBox.shrink()
-                                                : Stack(
-                                                    children: <Widget>[
-                                                      // Stroked text as border.
-                                                      Text(
-                                                        
-                                                            post!
-                                                            .postContent[
-                                                                pageIndex]
-                                                            .likes
-                                                            .toString(),
-                                                        style: TextStyle(
-                                                          fontSize: 16,
-                                                          foreground: Paint()
-                                                            ..style =
-                                                                PaintingStyle
-                                                                    .stroke
-                                                            ..strokeWidth = 4
-                                                            ..color =
-                                                                Colors.black,
-                                                        ),
-                                                      ),
-                                                      // Solid text as fill.
-                                                      Text(
-                                                        
-                                                            post!
-                                                            .postContent[
-                                                                pageIndex]
-                                                            .likes
-                                                            .toString(),
-                                                        style: TextStyle(
-                                                          fontSize: 16,
-                                                          color: Colors.white,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  )
+                                            const Icon(
+                                              Icons.favorite_sharp,
+                                              size: 30,
+                                            ),
+                                            Icon(
+                                              post!.postContent[pageIndex]
+                                                      .likedByMe
+                                                  ? Icons.favorite_sharp
+                                                  : Icons.heart_broken_sharp,
+                                              color: Colors.white,
+                                            )
+                                          ])),
+                                  post!.postContent[pageIndex].likes == 0
+                                      ? SizedBox.shrink()
+                                      : Stack(
+                                          children: <Widget>[
+                                            // Stroked text as border.
+                                            Text(
+                                              post!.postContent[pageIndex].likes
+                                                  .toString(),
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                foreground: Paint()
+                                                  ..style = PaintingStyle.stroke
+                                                  ..strokeWidth = 4
+                                                  ..color = Colors.black,
+                                              ),
+                                            ),
+                                            // Solid text as fill.
+                                            Text(
+                                              post!.postContent[pageIndex].likes
+                                                  .toString(),
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                color: Colors.white,
+                                              ),
+                                            ),
                                           ],
                                         )
-                                      ]),
-                                ),
+                                ],
+                              )
+                            ]),
+                      ),
                     ),
                   ),
                 ),
@@ -369,69 +354,3 @@ class PostInFeedWidget extends StatelessWidget {
     return result;
   }
 }
-
-class FirstInFeedWidget extends StatelessWidget {
-  final HomeViewModel viewModel;
-
-  const FirstInFeedWidget({Key? key, required this.viewModel})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.grey,
-      child: Row(
-        children: [
-          viewModel.user != null
-              ? AvatarWidget(
-                  avatar: viewModel.avatar ??
-                      Image.asset(
-                        "assets/icons/default_avatar.png",
-                        fit: BoxFit.cover,
-                      ),
-                  padding: 10,
-                  radius: 31,
-                  colorAvatar: false, // TODO: viewmodel.user
-                )
-              : const CircularProgressIndicator(),
-          Container(
-            padding: const EdgeInsets.only(left: 10),
-            child: GestureDetector(
-              onTap: viewModel._logout, //TODO: remove
-              child: Text(viewModel.user == null
-                  ? "no data"
-                  : viewModel.user!.username),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-}
-
-// class PageIndicator extends StatelessWidget {
-//   //TODO: remove to own file
-//   final int count;
-//   final int? current;
-//   final double width;
-//   const PageIndicator(
-//       {Key? key, required this.count, required this.current, this.width = 10})
-//       : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     List<Widget> widgets = <Widget>[];
-//     for (var i = 0; i < count; i++) {
-//       widgets.add(
-//         Icon(
-//           Icons.circle,
-//           size: i == (current ?? 0) ? width * 1.4 : width,
-//         ),
-//       );
-//     }
-//     return Row(
-//       mainAxisAlignment: MainAxisAlignment.center,
-//       children: [...widgets],
-//     );
-//   }
-// }
