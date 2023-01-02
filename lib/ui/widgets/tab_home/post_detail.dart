@@ -5,6 +5,7 @@ import 'package:dd_study2022_ui/domain/models/change_comment_model.dart';
 import 'package:dd_study2022_ui/domain/models/change_post_description_model.dart';
 import 'package:dd_study2022_ui/domain/models/create_comment_model.dart';
 import 'package:dd_study2022_ui/internal/config/shared_prefs.dart';
+import 'package:dd_study2022_ui/ui/navigation/tab_navigator.dart';
 import 'package:dd_study2022_ui/ui/widgets/tab_home/comment_widget.dart';
 import 'package:dd_study2022_ui/ui/widgets/tab_home/home.dart';
 import 'package:flutter/material.dart';
@@ -80,7 +81,6 @@ class PostDetailViewModel extends ChangeNotifier {
   void changeDescription() {
     descriptionTec.text = post!.description!;
     isChanging = true;
-    //setState(() {});
   }
 
   void saveChanges() {
@@ -92,9 +92,7 @@ class PostDetailViewModel extends ChangeNotifier {
       post = await _authService.getPost(postId);
       _syncService.syncPosts([post!]);
       isChanging = false;
-    }); //TODO: обновление поста в ленте
-    // var appmodel = context.read<HomeViewModel>();
-    // appmodel.postFeed?.firstWhere((element) => element.id == post!.id).description = post!.description;
+    });
   }
 
   void canselChanges() {
@@ -102,10 +100,8 @@ class PostDetailViewModel extends ChangeNotifier {
   }
 
   void deletePost() {
-    //TODO; make this method private
-    Navigator.of(context).pop();
     _authService.deletePost(postId!);
-    isChanging = false; //TODO: remove post from
+    Navigator.of(context).pop();
   }
 
   Future<void> showAlertDialogConfirmDeletingPost() {
@@ -114,7 +110,6 @@ class PostDetailViewModel extends ChangeNotifier {
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Colors.grey,
-          //title: const Text('Basic dialog title'),
           content: const Text("Delete this post?"),
           actions: [
             TextButton(
@@ -123,8 +118,8 @@ class PostDetailViewModel extends ChangeNotifier {
               ),
               child: const Text('Delete'),
               onPressed: () {
-                Navigator.of(context).pop();
                 deletePost();
+                Navigator.of(context).pop();
               },
             ),
             TextButton(
@@ -221,15 +216,23 @@ class PostDetailViewModel extends ChangeNotifier {
     }
   }
 
-  void deleteComment(String id) {
-    if (post!.comments.any((element) => element.id == id)) {
-      var comments = post!.comments;
-      var comment = comments.firstWhere((element) => element.id == id);
-      comments.remove(comment);
-      post = post!.copyWith(comments: comments);
-      //post = post; //TODO: kostil
+  void deleteComment(String commentId) async {
+    if (post!.comments.any((element) => element.id == commentId)) {
+      _authService.deleteComment(commentId);
+      post!.comments = await _authService.getComments(post!.id);
+      await _syncService.syncComments(post!.comments, post!.id);
       notifyListeners();
     }
+  }
+
+  void createComment() async {
+    var newComment =
+        CreateCommentModel(postId: post!.id, commentText: newCommentTec.text);
+    await _authService.createComment(newComment);
+    post!.comments = await _authService.getComments(post!.id);
+    await _syncService.syncComments(post!.comments, post!.id);
+    newCommentTec.clear();
+    //notifyListeners();
   }
 
   Map<int, int> pager = <int, int>{};
@@ -239,21 +242,12 @@ class PostDetailViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-
   void likePost() async {
     var likeData = await _authService.likePost(postId);
     post!.likedByMe = likeData.likedByMe;
     post!.likes = likeData.likesAmount;
+    _syncService.syncPosts([post!]);
     notifyListeners();
-  }
-
-  void createComment() async {
-    var newComment =
-        CreateCommentModel(postId: post!.id, commentText: newCommentTec.text);
-    await _authService.createComment(newComment);
-    post!.comments = await _authService.getComments(post!.id);
-    newCommentTec.clear();
-    //notifyListeners();
   }
 
   final ScrollController _controller = ScrollController();
@@ -270,6 +264,7 @@ class PostDetailViewModel extends ChangeNotifier {
     var likeDataModel = await _authService.likeContent(content.id);
     post!.postContent[postContentIndex] = content.copyWith(
         likedByMe: likeDataModel.likedByMe, likes: likeDataModel.likesAmount);
+    _syncService.syncPosts([post!]);
     notifyListeners();
   }
 
@@ -281,7 +276,6 @@ class PostDetailViewModel extends ChangeNotifier {
   }
 
   void downloadFile() {}
-  
 }
 
 class PostDetail extends StatelessWidget {

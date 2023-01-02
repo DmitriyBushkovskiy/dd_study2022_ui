@@ -1,4 +1,6 @@
 //import 'package:dd_study2022_ui/domain/models/comment.dart';
+import 'package:dd_study2022_ui/domain/models/comment.dart';
+import 'package:dd_study2022_ui/domain/models/comment_model.dart';
 import 'package:dd_study2022_ui/domain/models/post.dart';
 import 'package:dd_study2022_ui/domain/models/post_model.dart';
 //import 'package:dd_study2022_ui/domain/models/user.dart';
@@ -49,5 +51,14 @@ class SyncService {
     await _dataService.rangeUpdateEntities(posts);
     await _dataService.rangeUpdateEntities(postContents);
     await _dataService.rangeUpdateEntities(comments);
+  }
+
+  Future syncComments(List<CommentModel> commentModels, String postId) async {
+    var oldComments = await _dataService.getComments(postId);
+    var newComments = commentModels
+        .map((e) => e.toComment().copyWith(postId: postId))
+        .toList();
+    await _dataService.rangeDeleteEntities(oldComments);
+    await _dataService.rangeUpdateEntities(newComments);
   }
 }

@@ -16,6 +16,10 @@ class DataService {
     await DB.instance.createUpdateRange(elems);
   }
 
+  Future rangeDeleteEntities<T extends DbModel>(Iterable<T> elems) async {
+    await DB.instance.deleteRange(elems);
+  }
+
   Future<List<PostModel>> getPosts() async {
     //TODO: rename to getPostFeed
     var res = <PostModel>[];
@@ -121,5 +125,28 @@ class DataService {
     } else {
       return null;
     }
+  }
+
+  Future deletePost(String postId) async {
+    var post = await DB.instance.get<Post>(postId);
+    if (post != null) {
+      DB.instance.delete<Post>(post);
+      var contents =
+          (await DB.instance.getAll<PostContent>(whereMap: {"postId": post.id}))
+              .toList(); //TODO: add comments, add comment model
+      DB.instance.deleteRange(contents);
+      var comments =
+          (await DB.instance.getAll<Comment>(whereMap: {"postId": post.id}))
+              .toList();
+      DB.instance.deleteRange(comments);
+    }
+  }
+
+  Future<List<Comment>> getComments(String postId) async {
+    var comments =
+        (await DB.instance.getAll<Comment>(whereMap: {"postId": postId}))
+            .toList();
+    comments.sort((a, b) => a.created.compareTo(b.created));
+    return comments;
   }
 }

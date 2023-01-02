@@ -103,7 +103,6 @@ class _CommentWidgetState extends State<CommentWidget> {
   void deleteComment() async {
     var postDetailModel = context.read<PostDetailViewModel>();
     postDetailModel.deleteComment(commentModel!.id);
-    _authService.deleteComment(commentModel!.id);
   }
 
   void changeComment() {

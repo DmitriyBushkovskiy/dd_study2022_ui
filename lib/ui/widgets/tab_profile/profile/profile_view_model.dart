@@ -2,6 +2,9 @@ import 'dart:io';
 
 import 'package:dd_study2022_ui/data/services/data_service.dart';
 import 'package:dd_study2022_ui/data/services/sync_service.dart';
+import 'package:dd_study2022_ui/domain/enums/relation_state.dart';
+import 'package:dd_study2022_ui/domain/models/get_posts_request_model.dart';
+import 'package:dd_study2022_ui/domain/models/post_model.dart';
 import 'package:dd_study2022_ui/domain/models/user.dart';
 import 'package:dd_study2022_ui/domain/models/user_profile.dart';
 import 'package:dd_study2022_ui/internal/config/app_config.dart';
@@ -23,15 +26,45 @@ class ProfileViewModel extends ChangeNotifier {
   final SyncService _syncService = SyncService();
   final DataService _dataService = DataService();
   final AuthService _authService = AuthService();
+  final lvc = ScrollController();
 
   final BuildContext context;
-  final String? targetUserId;
+  String? targetUserId;
   ProfileViewModel({required this.context, this.targetUserId}) {
     asyncInit();
+
+    lvc.addListener(() {
+      var max = lvc.position.maxScrollExtent;
+      var current = lvc.offset;
+      var distanceToEnd = max - current;
+      if (distanceToEnd < 1000) {
+        if (!isLoading) {
+          isLoading = true;
+          var newPosts = <PostModel>[];
+          _authService
+              .getPosts(GetPostsRequestModel(
+                  userId: targetUserId,
+                  postsAmount: 10,
+                  lastPostDate: postFeed!.last.created))
+              .then((value) => newPosts = value);
+          Future.delayed(const Duration(seconds: 1)).then((value) {
+            postFeed = <PostModel>[...postFeed!, ...newPosts];
+            isLoading = false;
+          });
+        }
+      }
+    });
     var appmodel = context.read<AppViewModel>();
     appmodel.addListener(() {
       avatar = appmodel.avatar;
     });
+  }
+
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+  set isLoading(bool val) {
+    _isLoading = val;
+    notifyListeners();
   }
 
   User? _user;
@@ -45,6 +78,13 @@ class ProfileViewModel extends ChangeNotifier {
   User? get targetUser => _targetUser;
   set targetUser(User? val) {
     _targetUser = val;
+    notifyListeners();
+  }
+
+  List<PostModel>? _postFeed;
+  List<PostModel>? get postFeed => _postFeed;
+  set postFeed(List<PostModel>? val) {
+    _postFeed = val;
     notifyListeners();
   }
 
@@ -75,6 +115,8 @@ class ProfileViewModel extends ChangeNotifier {
 
   String? _imagePath;
 
+  Map<int, int> pager = <int, int>{};
+
   Image? _avatar;
   Image? get avatar => _avatar;
   set avatar(Image? val) {
@@ -82,13 +124,31 @@ class ProfileViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  RelationStateEnum? _myRelationState;
+  RelationStateEnum? get myRelationState => _myRelationState;
+  set myRelationState(RelationStateEnum? val) {
+    _myRelationState = val;
+    notifyListeners();
+  }
+
+  RelationStateEnum? _relationToMeState;
+  RelationStateEnum? get relationToMeState => _relationToMeState;
+  set relationToMeState(RelationStateEnum? val) {
+    _relationToMeState = val;
+    notifyListeners();
+  }
+
   void asyncInit() async {
     var token = await TokenStorage.getAccessToken();
     headers = {"Authorization": "Bearer $token"};
     user = await SharedPrefs.getStoredUser();
-    targetUser = await _dataService
-        .getUser(targetUserId ?? user!.id); //TODO: is it good idea?
+    targetUserId ??= user!.id;
+    targetUser =
+        await _dataService.getUser(targetUserId!); //TODO: is it good idea?
+    myRelationState = await _authService.getMyRelationState(targetUserId!);
+    relationToMeState = await _authService.getRelationToMeState(targetUserId!);
     targetUser = await _authService.getUser(targetUserId ?? user!.id);
+
     var t = 1;
     //userProfile = await _api.getUserProfile();
 
@@ -99,6 +159,20 @@ class ProfileViewModel extends ChangeNotifier {
             key: ValueKey(const Uuid().v4()),
             fit: BoxFit.cover,
           );
+
+    //postFeed ??= await _dataService.getPosts(); //TODO: get post current user
+    postFeed = await _authService
+        .getPosts(GetPostsRequestModel(userId: targetUserId, postsAmount: 10));
+    //postFeed!.insert(0, PostModel.emptyPostModel());
+  }
+
+  void likePostContent(int listIndex, int postContentIndex) async {
+    var content = postFeed![listIndex].postContent[postContentIndex];
+    var likeDataModel = await _authService.likeContent(content.id);
+    postFeed![listIndex].postContent[postContentIndex] = content.copyWith(
+        likedByMe: likeDataModel.likedByMe, likes: likeDataModel.likesAmount);
+    _syncService.syncPosts([postFeed![listIndex]]);
+    notifyListeners();
   }
 
   Future changePhoto() async {
@@ -139,6 +213,38 @@ class ProfileViewModel extends ChangeNotifier {
     );
   }
 
+  Future follow() async {
+    myRelationState = await _authService.follow(targetUserId!);
+    notifyListeners();
+  }
+
+  Future ban() async {
+    relationToMeState = await _authService.ban(targetUserId!);
+    notifyListeners();
+  }
+
+  Future unban() async {
+    relationToMeState = await _authService.unban(targetUserId!);
+    notifyListeners();
+  }
+
+  Future toPostDetail(String postId) async {
+    await Navigator.of(context)
+        .pushNamed(TabNavigatorRoutes.postDetails, arguments: postId);
+  }
+
+  void updatePost(String postId) async {
+    var updatedPost = await _dataService.getPost(postId);
+    if (updatedPost == null) {
+      postFeed!.remove(postFeed!.firstWhere((element) => element.id == postId));
+    } else {
+      var index = postFeed!
+          .indexOf(postFeed!.firstWhere((element) => element.id == postId));
+      postFeed![index] = updatedPost;
+    }
+    notifyListeners();
+  }
+
   bool colorAvatar = false;
 
   void changeAvatarColor() {
@@ -150,6 +256,11 @@ class ProfileViewModel extends ChangeNotifier {
 
   void changeText(String value) {
     tapChecker = value;
+    notifyListeners();
+  }
+
+  void onPageChanged(int listIndex, int pageIndex) {
+    pager[listIndex] = pageIndex;
     notifyListeners();
   }
 

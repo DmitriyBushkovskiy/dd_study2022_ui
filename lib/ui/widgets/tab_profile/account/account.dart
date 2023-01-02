@@ -78,7 +78,7 @@ class AccountViewModel extends ChangeNotifier {
     // headers = {"Authorization": "Bearer $token"};
     user = await SharedPrefs.getStoredUser();
     userProfile = await _api.getUserProfile();
-    
+
     var img = await NetworkAssetBundle(Uri.parse("$baseUrl${user!.avatarLink}"))
         .load("$baseUrl${user!.avatarLink}?v=1");
     avatar = Image.memory(
@@ -89,7 +89,8 @@ class AccountViewModel extends ChangeNotifier {
 
   Future changePhoto() async {
     var appModel = context.read<AppViewModel>();
-      await Navigator.of(AppNavigator.key.currentState!.context).push(MaterialPageRoute(
+    await Navigator.of(AppNavigator.key.currentState!.context)
+        .push(MaterialPageRoute(
       builder: (newContext) => Scaffold(
         backgroundColor: Colors.black,
         appBar: AppBar(
@@ -117,12 +118,12 @@ class AccountViewModel extends ChangeNotifier {
     var user = await _api.getCurrentUser();
     _syncService.syncCurrentUser(); //TODO:check it
 
-imageCache.clear();
- imageCache.clearLiveImages();
+    imageCache.clear();
+    imageCache.clearLiveImages();
     appModel.avatar = (user!.avatarLink == null)
         ? Image.asset("assets/images/sadgram-logo.gif")
         : Image.network(
-            "$baseUrl${user!.avatarLink}",
+            "$baseUrl${user.avatarLink}",
             key: ValueKey(const Uuid().v4()),
             fit: BoxFit.cover,
           );

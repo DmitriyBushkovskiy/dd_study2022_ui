@@ -2,10 +2,12 @@ import 'dart:io';
 
 import 'package:dd_study2022_ui/data/services/data_service.dart';
 import 'package:dd_study2022_ui/data/services/sync_service.dart';
+import 'package:dd_study2022_ui/domain/enums/relation_state.dart';
 import 'package:dd_study2022_ui/domain/models/change_comment_model.dart';
 import 'package:dd_study2022_ui/domain/models/change_post_description_model.dart';
 import 'package:dd_study2022_ui/domain/models/comment_model.dart';
 import 'package:dd_study2022_ui/domain/models/create_comment_model.dart';
+import 'package:dd_study2022_ui/domain/models/get_posts_request_model.dart';
 import 'package:dd_study2022_ui/domain/models/like_data_model.dart';
 import 'package:dd_study2022_ui/domain/models/post_model.dart';
 import 'package:dd_study2022_ui/domain/models/user.dart';
@@ -69,8 +71,8 @@ class AuthService {
     return await _api.getUserProfile();
   }
 
-    Future<User?> getUser(String targetUserId) async {
-    var targetUser =  await _api.getUser(targetUserId);
+  Future<User?> getUser(String targetUserId) async {
+    var targetUser = await _api.getUser(targetUserId);
     SyncService().syncUser(targetUserId);
     return targetUser; // TODO: get user from backend 2 times: here an in sync service
   }
@@ -82,6 +84,12 @@ class AuthService {
 
   Future<List<PostModel>> getPostFeed(String? lastPostDate) async {
     var postModels = await _api.getPostFeedByLastPostDate(lastPostDate);
+    SyncService().syncPosts(postModels);
+    return postModels;
+  }
+
+  Future<List<PostModel>> getPosts(GetPostsRequestModel model) async {
+    var postModels = await _api.getPostsByLastPostDate(model);
     SyncService().syncPosts(postModels);
     return postModels;
   }
@@ -140,6 +148,36 @@ class AuthService {
   Future<bool> changeAvatarColor() async {
     var result = await _api.changeAvatarColor();
     return result;
+  }
+
+  Future<RelationStateEnum> getMyRelationState(String targetUserId) async {
+    return await _api.getMyRelationState(targetUserId).then((value) =>
+        RelationStateEnum.values.firstWhere(
+            (e) => e.toString() == 'RelationStateEnum.${value.toLowerCase()}'));
+  }
+
+  Future<RelationStateEnum> getRelationToMeState(String targetUserId) async {
+    return await _api.getRelationToMeState(targetUserId).then((value) =>
+        RelationStateEnum.values.firstWhere(
+            (e) => e.toString() == 'RelationStateEnum.${value.toLowerCase()}'));
+  }
+
+  Future<RelationStateEnum> follow(String targetUserId) async {
+    return await _api.follow(targetUserId).then((value) =>
+        RelationStateEnum.values.firstWhere(
+            (e) => e.toString() == 'RelationStateEnum.${value.toLowerCase()}'));
+  }
+
+  Future<RelationStateEnum> ban(String targetUserId) async {
+    return await _api.ban(targetUserId).then((value) => RelationStateEnum.values
+        .firstWhere(
+            (e) => e.toString() == 'RelationStateEnum.${value.toLowerCase()}'));
+  }
+
+  Future<RelationStateEnum> unban(String targetUserId) async {
+    return await _api.unban(targetUserId).then((value) =>
+        RelationStateEnum.values.firstWhere(
+            (e) => e.toString() == 'RelationStateEnum.${value.toLowerCase()}'));
   }
 }
 

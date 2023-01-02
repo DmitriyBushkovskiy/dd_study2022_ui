@@ -109,7 +109,7 @@ class DB {
 
   Future inserRange<T extends DbModel>(Iterable<T> values) async {
     var batch = _db.batch();
-    for (var row in values) { 
+    for (var row in values) {
       var data = row.toMap();
       if (row.id == "") {
         data["id"] = const Uuid().v4();
@@ -136,7 +136,16 @@ class DB {
         batch.update(_dbName(T), data, where: "id = ?", whereArgs: [row.id]);
       }
     }
-
     await batch.commit(noResult: true);
+  }
+
+  Future<void> deleteRange<T extends DbModel>(Iterable<T> values,
+      {bool Function(T oldItem, T newItem)? updateCond}) async {
+    for (var row in values) {
+      var dbItem = await get<T>(row.id);
+      if (dbItem != null) {
+        await delete<T>(dbItem);
+      }
+    }
   }
 }

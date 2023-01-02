@@ -6,6 +6,7 @@ import 'package:dd_study2022_ui/domain/models/change_post_description_model.dart
 import 'package:dd_study2022_ui/domain/models/comment_model.dart';
 import 'package:dd_study2022_ui/domain/models/create_comment_model.dart';
 import 'package:dd_study2022_ui/domain/models/create_post_model.dart';
+import 'package:dd_study2022_ui/domain/models/get_posts_request_model.dart';
 import 'package:dd_study2022_ui/domain/models/like_data_model.dart';
 import 'package:dd_study2022_ui/domain/models/post_model.dart';
 import 'package:dd_study2022_ui/domain/models/register_user_request.dart';
@@ -27,9 +28,11 @@ abstract class ApiRepository {
 
   Future<UserProfile?> getUserProfile();
 
-  Future<List<PostModel>> getPostFeed(int skip, int take);
+  // Future<List<PostModel>> getPostFeed(int skip, int take);
 
   Future<List<PostModel>> getPostFeedByLastPostDate(String? lastPostDate);
+
+  Future<List<PostModel>> getPostsByLastPostDate(GetPostsRequestModel model);
 
   Future<PostModel> getPost(String? postId);
 
@@ -60,4 +63,14 @@ abstract class ApiRepository {
   Future deletePostContent(String contentId);
 
   Future<bool> changeAvatarColor();
+
+  Future<String> getMyRelationState(String targetUserId);
+
+  Future<String> getRelationToMeState(String targetUserId);
+
+  Future<String> follow(String targetUserId);
+
+  Future<String> ban(String targetUserId);
+
+  Future<String> unban(String targetUserId);
 }

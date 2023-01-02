@@ -8,6 +8,7 @@ import 'package:dd_study2022_ui/domain/models/change_post_description_model.dart
 import 'package:dd_study2022_ui/domain/models/comment_model.dart';
 import 'package:dd_study2022_ui/domain/models/create_comment_model.dart';
 import 'package:dd_study2022_ui/domain/models/create_post_model.dart';
+import 'package:dd_study2022_ui/domain/models/get_posts_request_model.dart';
 import 'package:dd_study2022_ui/domain/models/like_data_model.dart';
 import 'package:dd_study2022_ui/domain/models/post_model.dart';
 import 'package:dd_study2022_ui/domain/models/refresh_token_request.dart';
@@ -53,13 +54,17 @@ class ApiDataRepository extends ApiRepository {
   @override
   Future<UserProfile?> getUserProfile() => _api.getUserProfile();
 
-  @override
-  Future<List<PostModel>> getPostFeed(int skip, int take) =>
-      _api.getPostFeed(skip, take);
+  // @override
+  // Future<List<PostModel>> getPostFeed(int skip, int take) =>
+  //     _api.getPostFeed(skip, take);
 
   @override
   Future<List<PostModel>> getPostFeedByLastPostDate(String? lastPostDate) =>
       _api.getPostFeedByLastPostDate(lastPostDate);
+
+  @override
+  Future<List<PostModel>> getPostsByLastPostDate(GetPostsRequestModel model) =>
+      _api.getPostsByLastPostDate(model);
 
   @override
   Future<PostModel> getPost(String? postId) => _api.getPost(postId);
@@ -112,4 +117,21 @@ class ApiDataRepository extends ApiRepository {
 
   @override
   Future<bool> changeAvatarColor() => _api.changeAvatarColor();
+
+  @override
+  Future<String> getMyRelationState(String targetUserId) =>
+      _api.getMyRelationState(targetUserId);
+
+  @override
+  Future<String> getRelationToMeState(String targetUserId) =>
+      _api.getRelationToMeState(targetUserId);
+
+  @override
+  Future<String> follow(String targetUserId) => _api.follow(targetUserId);
+
+  @override
+  Future<String> ban(String targetUserId) => _api.ban(targetUserId);
+
+  @override
+  Future<String> unban(String targetUserId) => _api.unban(targetUserId);
 }
