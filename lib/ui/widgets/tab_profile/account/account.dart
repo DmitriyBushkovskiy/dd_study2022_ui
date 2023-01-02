@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dd_study2022_ui/data/services/auth_service.dart';
+import 'package:dd_study2022_ui/data/services/data_service.dart';
 import 'package:dd_study2022_ui/data/services/sync_service.dart';
 import 'package:dd_study2022_ui/domain/models/user.dart';
 import 'package:dd_study2022_ui/domain/models/user_profile.dart';
@@ -22,6 +23,7 @@ class AccountViewModel extends ChangeNotifier {
   final _api = RepositoryModule.apiRepository();
   final SyncService _syncService = SyncService();
   final AuthService _authService = AuthService();
+  final DataService _dataService = DataService();
 
   final BuildContext context;
   AccountViewModel({required this.context}) {
@@ -29,6 +31,7 @@ class AccountViewModel extends ChangeNotifier {
     var appmodel = context.read<AppViewModel>();
     appmodel.addListener(() {
       avatar = appmodel.avatar;
+      user = appmodel.user;
     });
     //avatar = appmodel.avatar;
   }
@@ -120,13 +123,16 @@ class AccountViewModel extends ChangeNotifier {
 
     imageCache.clear();
     imageCache.clearLiveImages();
-    appModel.avatar = (user!.avatarLink == null)
-        ? Image.asset("assets/images/sadgram-logo.gif")
-        : Image.network(
-            "$baseUrl${user.avatarLink}",
-            key: ValueKey(const Uuid().v4()),
-            fit: BoxFit.cover,
-          );
+    appModel.user = user;
+    // appModel.avatar = (user!.avatarLink == null)
+    //     ? Image.asset("assets/images/sadgram-logo.gif")
+    //     : Image.network(
+    //         "$baseUrl${user.avatarLink}",
+    //         key: ValueKey(const Uuid().v4()),
+    //         fit: BoxFit.cover,
+    //       );
+
+
     // var img = await NetworkAssetBundle(Uri.parse("$baseUrl${user!.avatarLink}"))
     //     .load("$baseUrl${user.avatarLink}?v=1");
     // appModel.avatar = Image.memory(
@@ -139,8 +145,10 @@ class AccountViewModel extends ChangeNotifier {
 
   void changeAvatarColor() async {
     var newColor = await _authService.changeAvatarColor();
-    _syncService.syncCurrentUser();
     user = user!.copyWith(colorAvatar: newColor);
+    await _syncService.syncCurrentUser();
+    var appModel = context.read<AppViewModel>();
+    appModel.user = user;
     notifyListeners();
   }
 
@@ -190,15 +198,21 @@ class AccountWidget extends StatelessWidget {
                     onLongPress: () {
                       viewModel.changeAvatarColor();
                     },
-                    child: AvatarWidget(
-                      colorAvatar: viewModel.user?.colorAvatar ?? true,
-                      avatar: viewModel.avatar ??
-                          Image.asset(
-                            "assets/icons/default_avatar.png",
-                            fit: BoxFit.cover,
-                          ),
+                    child: UserAvatarWidget(
+                      user: viewModel.user,
                       radius: 41,
-                    )),
+                    )
+                    // AvatarWidget(
+                    //   colorAvatar: viewModel.user?.colorAvatar ?? true,
+                    //   avatar: viewModel.avatar ??
+                    //       Image.asset(
+                    //         "assets/icons/default_avatar.png",
+                    //         fit: BoxFit.cover,
+                    //       ),
+                    //   radius: 41,
+                    // )
+                    ),
+                    Text(viewModel.user?.colorAvatar.toString() ?? ""),
                 Container(
                   padding: const EdgeInsets.only(top: 16),
                   child: Table(

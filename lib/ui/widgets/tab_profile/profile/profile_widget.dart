@@ -26,153 +26,167 @@ class ProfileWidget extends StatelessWidget {
           title: Text(viewModel.targetUser == null
               ? ""
               : viewModel.targetUser!.username)),
-      body: GestureDetector(
-        onHorizontalDragUpdate: (details) {
-          int sensitivity = 8;
-          if (details.delta.dx > sensitivity) {
-            Navigator.pop(context);
-          }
-        },
-        child: SingleChildScrollView(
-          child: Container(
-            height: MediaQuery.of(context).size.height,
-            //padding: const EdgeInsets.all(15),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: viewModel.user == null
+          ? const SizedBox.shrink()
+          : GestureDetector(
+              onHorizontalDragUpdate: (details) {
+                int sensitivity = 8;
+                if (details.delta.dx > sensitivity) {
+                  Navigator.pop(context);
+                }
+              },
+              child: SingleChildScrollView(
+                child: Container(
+                  height: MediaQuery.of(context).size.height,
+                  //padding: const EdgeInsets.all(15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      GestureDetector(
-                          onTap: () {
-                            viewModel.changePhoto();
-                          },
-                          onLongPress: () {
-                            viewModel.colorAvatar;
-                            viewModel.changeText("longpress");
-                          },
-                          child: AvatarWidget(
-                            avatar: viewModel.targetUser!.avatarLink == null
-                                ? Image.asset("assets/icons/default_avatar.png")
-                                : Image.network(
-                                    "$baseUrl${viewModel.targetUser!.avatarLink}",
-                                    key: ValueKey(const Uuid().v4()),
-                                    fit: BoxFit.cover,
-                                  ),
-                            radius: 41,
-                            colorAvatar: false, // TODO: viewmodel.user
-                          )),
-                      GestureDetector(
-                        onTap: () {
-                          viewModel.changeText("Posts");
-                        },
-                        child: Center(
-                          child: Column(
-                            children: [
-                              const Text('Posts'),
-                              Text(
-                                viewModel.targetUser?.postsAmount.toString() ??
-                                    "no data",
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
+                      Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            GestureDetector(
+                                onTap: () {
+                                  viewModel.changePhoto();
+                                },
+                                onLongPress: () {
+                                  viewModel.colorAvatar;
+                                  viewModel.changeText("longpress");
+                                },
+                                child: UserAvatarWidget(
+                                  user: viewModel.targetUser,
+                                  radius: 41,
+                                )
+                                // AvatarWidget(
+                                //   avatar: viewModel.targetUser!.avatarLink == null
+                                //       ? Image.asset("assets/icons/default_avatar.png")
+                                //       : Image.network(
+                                //           "$baseUrl${viewModel.targetUser!.avatarLink}",
+                                //           key: ValueKey(const Uuid().v4()),
+                                //           fit: BoxFit.cover,
+                                //         ),
+                                //   radius: 41,
+                                //   colorAvatar: false, // TODO: viewmodel.user
+                                // )
+
+                                ),
+                            GestureDetector(
+                              onTap: () {
+                                viewModel.changeText("Posts");
+                              },
+                              child: Center(
+                                child: Column(
+                                  children: [
+                                    const Text('Posts'),
+                                    Text(
+                                      viewModel.targetUser?.postsAmount
+                                              .toString() ??
+                                          "no data",
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          viewModel.changeText("Followers");
-                        },
-                        child: Center(
-                          child: Column(
-                            children: [
-                              const Text('Followers'),
-                              Text(
-                                viewModel.targetUser?.followersAmount
-                                        .toString() ??
-                                    "no data",
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                viewModel.changeText("Followers");
+                              },
+                              child: Center(
+                                child: Column(
+                                  children: [
+                                    const Text('Followers'),
+                                    Text(
+                                      viewModel.targetUser?.followersAmount
+                                              .toString() ??
+                                          "no data",
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          viewModel.changeText("Followed");
-                        },
-                        child: Center(
-                          child: Column(
-                            children: [
-                              const Text('Followed'),
-                              Text(
-                                viewModel.targetUser?.followedAmount
-                                        .toString() ??
-                                    "no data",
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                viewModel.changeText("Followed");
+                              },
+                              child: Center(
+                                child: Column(
+                                  children: [
+                                    const Text('Followed'),
+                                    Text(
+                                      viewModel.targetUser?.followedAmount
+                                              .toString() ??
+                                          "no data",
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
+                      Text(viewModel.targetUserId.toString()),
+                      Text(
+                          "myRelation ${viewModel.myRelationState.toString()}"),
+                      Text(
+                          "RelationToMe ${viewModel.myRelationState.toString()}"),
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 15),
+                        child: viewModel.targetUserId != viewModel.user!.id
+                            ? Row(
+                                children: [
+                                  FollowButtonWidget(
+                                      relationState:
+                                          viewModel.myRelationState!),
+                                  BanButtonWidget(
+                                      relationToMeState:
+                                          viewModel.relationToMeState!)
+                                ],
+                              )
+                            : Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  ElevatedButton(
+                                      onPressed: () => viewModel.toAccount(),
+                                      child: Text("Account")),
+                                ],
+                              ),
+                      ),
+                      Expanded(
+                        child: viewModel.postFeed == null
+                            ? const Center(child: CircularProgressIndicator())
+                            : ListView.separated(
+                                controller: viewModel.lvc,
+                                itemBuilder: (_, listIndex) => PostInFeedWidget(
+                                  viewModel: viewModel,
+                                  listIndex: listIndex,
+                                ),
+                                separatorBuilder: (context, index) =>
+                                    const Divider(
+                                  color: Colors.black,
+                                ),
+                                itemCount: itemCount,
+                              ),
+                      ),
+                      Container(
+                        color: Colors.red,
+                        height: 120,
+                      )
                     ],
                   ),
                 ),
-                Text(viewModel.targetUserId.toString()),
-                Text("myRelation ${viewModel.myRelationState.toString()}"),
-                Text("RelationToMe ${viewModel.myRelationState.toString()}"),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 15),
-                  child: viewModel.targetUserId != viewModel.user!.id
-                      ? Row(
-                          children: [
-                            FollowButtonWidget(
-                                relationState: viewModel.myRelationState!),
-                            BanButtonWidget(relationToMeState: viewModel.relationToMeState!)
-                          ],
-                        )
-                      : Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            ElevatedButton(
-                                onPressed: () => viewModel.toAccount(),
-                                child: Text("Account")),
-                          ],
-                        ),
-                ),
-                Expanded(
-                  child: viewModel.postFeed == null
-                      ? const Center(child: CircularProgressIndicator())
-                      : ListView.separated(
-                          controller: viewModel.lvc,
-                          itemBuilder: (_, listIndex) => PostInFeedWidget(
-                            viewModel: viewModel,
-                            listIndex: listIndex,
-                          ),
-                          separatorBuilder: (context, index) => Container(
-                            height: 20,
-                            color: Colors.green,
-                          ),
-                          itemCount: itemCount,
-                        ),
-                ),
-                Container(
-                  color: Colors.red,
-                  height: 120,
-                )
-              ],
+              ),
             ),
-          ),
-        ),
-      ),
     );
   }
 

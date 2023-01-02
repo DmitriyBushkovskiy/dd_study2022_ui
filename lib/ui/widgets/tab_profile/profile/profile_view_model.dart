@@ -16,6 +16,7 @@ import 'package:dd_study2022_ui/ui/widgets/common/cam_widget.dart';
 import 'package:dd_study2022_ui/data/services/auth_service.dart';
 import 'package:dd_study2022_ui/ui/widgets/roots/app.dart';
 import 'package:dd_study2022_ui/ui/widgets/tab_profile/account/account.dart';
+import 'package:dd_study2022_ui/ui/widgets/tab_profile/profile/profile_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:uuid/uuid.dart';
@@ -57,6 +58,7 @@ class ProfileViewModel extends ChangeNotifier {
     var appmodel = context.read<AppViewModel>();
     appmodel.addListener(() {
       avatar = appmodel.avatar;
+      user = appmodel.user;
     });
   }
 
@@ -231,6 +233,11 @@ class ProfileViewModel extends ChangeNotifier {
   Future toPostDetail(String postId) async {
     await Navigator.of(context)
         .pushNamed(TabNavigatorRoutes.postDetails, arguments: postId);
+  }
+
+    void toProfile(BuildContext bc, String userId) {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (__) => ProfileWidget.create(bc: bc, arg: userId)));
   }
 
   void updatePost(String postId) async {

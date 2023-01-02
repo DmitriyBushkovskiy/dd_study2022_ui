@@ -144,12 +144,9 @@ class _CommentWidgetState extends State<CommentWidget> {
   //       .pushNamed(await AppNavigator.toProfile(userId));
   // }
 
-    void toProfile(BuildContext bc, String userId) {
-      Navigator.of(context)
-        .push(MaterialPageRoute(builder: (__) => ProfileWidget.create(bc: bc, arg: userId)));
-
-      // await Navigator.of(AppNavigator.key.currentState!.context).push(MaterialPageRoute(
-      // builder: (newContext) => ProfileWidget.create(arg: userId)));
+  void toProfile(BuildContext bc, String userId) {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (__) => ProfileWidget.create(bc: bc, arg: userId)));
   }
 
   @override
@@ -159,17 +156,9 @@ class _CommentWidgetState extends State<CommentWidget> {
         : Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              AvatarWidget(
-                avatar: commentModel!.author.avatarLink == null
-                    ? Image.asset(
-                        "assets/icons/default_avatar.png",
-                        fit: BoxFit.cover,
-                      )
-                    : Image.network(
-                        "$baseUrl${commentModel!.author.avatarLink}"),
-                radius: 20,
-                padding: 8,
-                colorAvatar: commentModel!.author.colorAvatar,
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: UserAvatarWidget(user: commentModel!.author, radius: 20),
               ),
               Expanded(
                 child: Column(
@@ -183,11 +172,12 @@ class _CommentWidgetState extends State<CommentWidget> {
                           Padding(
                             padding: const EdgeInsets.only(right: 10),
                             child: GestureDetector(
-                              onTap: () => toProfile(context, commentModel!.author.id),
+                              onTap: () =>
+                                  toProfile(context, commentModel!.author.id),
                               child: Text(
                                 commentModel!.author.username,
-                                style:
-                                    const TextStyle(fontWeight: FontWeight.bold),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
                               ),
                             ),
                           ),

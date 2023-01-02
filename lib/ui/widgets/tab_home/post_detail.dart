@@ -6,9 +6,11 @@ import 'package:dd_study2022_ui/domain/models/change_post_description_model.dart
 import 'package:dd_study2022_ui/domain/models/create_comment_model.dart';
 import 'package:dd_study2022_ui/internal/config/shared_prefs.dart';
 import 'package:dd_study2022_ui/ui/navigation/tab_navigator.dart';
+import 'package:dd_study2022_ui/ui/widgets/common/avatar_with_name_widget.dart';
 import 'package:dd_study2022_ui/ui/widgets/tab_favorites/favorites_view_model.dart';
 import 'package:dd_study2022_ui/ui/widgets/tab_home/comment_widget.dart';
 import 'package:dd_study2022_ui/ui/widgets/tab_home/home.dart';
+import 'package:dd_study2022_ui/ui/widgets/tab_profile/profile/profile_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
@@ -243,6 +245,11 @@ class PostDetailViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void toProfile(BuildContext bc, String userId) {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (__) => ProfileWidget.create(bc: bc, arg: userId)));
+  }
+
   void likePost() async {
     var likeData = await _authService.likePost(postId);
     post!.likedByMe = likeData.likedByMe;
@@ -250,7 +257,6 @@ class PostDetailViewModel extends ChangeNotifier {
     _syncService.syncPosts([post!]);
     notifyListeners();
   }
-
 
   final ScrollController _controller = ScrollController();
   void _scrollDown() {
@@ -297,19 +303,9 @@ class PostDetail extends StatelessWidget {
                   controller: viewModel._controller,
                   shrinkWrap: true,
                   children: <Widget>[
-                    AuthorAvatarAndNameWidget(
-                      avatarWidget: AvatarWidget(
-                        avatar: viewModel.post!.author.avatarLink == null
-                            ? Image.asset(
-                                "assets/icons/default_avatar.png",
-                                fit: BoxFit.cover,
-                              )
-                            : Image.network(
-                                "$baseUrl${viewModel.post!.author.avatarLink}"),
-                        radius: 20,
-                        colorAvatar: viewModel.post!.author.colorAvatar,
-                        padding: 10,
-                      ),
+                    AvatarWithNameWidget(
+                      viewModel: viewModel,
+                      avatarRadius: 20,
                       user: viewModel.post!.author,
                     ),
                     Stack(
@@ -621,7 +617,7 @@ class PostDetail extends StatelessWidget {
 
                 //Text(viewModel.postId ?? "empty"),
               )
-            : const Center(child: Text("Post not found!")));
+            : const Center(child: CircularProgressIndicator()));
   }
 
   static create(Object? arg) {
@@ -638,7 +634,7 @@ class PostDetail extends StatelessWidget {
 class AuthorAvatarAndNameWidget extends StatelessWidget {
   //final HomeViewModel viewModel;
   final User user;
-  final AvatarWidget avatarWidget;
+  final UserAvatarWidget avatarWidget;
 
   const AuthorAvatarAndNameWidget(
       {Key? key, required this.avatarWidget, required this.user})

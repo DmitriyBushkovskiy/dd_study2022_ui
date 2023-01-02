@@ -1,36 +1,33 @@
+import 'package:dd_study2022_ui/domain/models/user.dart';
+import 'package:dd_study2022_ui/internal/config/app_config.dart';
 import 'package:flutter/material.dart';
 
-class AvatarWidget extends StatelessWidget {
-  final Image avatar;
-  final double? padding;
+class UserAvatarWidget extends StatelessWidget {
+  final User? user;
   final double radius;
-  final bool colorAvatar;
 
-  const AvatarWidget(
-      {Key? key,
-      required this.avatar,
-      this.padding,
-      required this.radius,
-      required this.colorAvatar})
+  const UserAvatarWidget({Key? key, required this.user, required this.radius})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(padding ?? 0),
-      child: CircleAvatar(
-        backgroundColor: Colors.black,
-        radius: radius,
-        child: Container(
-          foregroundDecoration: BoxDecoration(
-            color: Colors.grey,
-            backgroundBlendMode:
-                (colorAvatar ? BlendMode.dstATop : BlendMode.saturation),
-          ),
-          child: CircleAvatar(
-            radius: radius - 1,
-            backgroundImage: avatar.image,
-          ),
+    return CircleAvatar(
+      backgroundColor: Colors.black,
+      radius: radius,
+      child: Container(
+        foregroundDecoration: BoxDecoration(
+          color: Colors.grey,
+          backgroundBlendMode:
+              (user?.colorAvatar ?? false ? BlendMode.dstATop : BlendMode.saturation),
+        ),
+        child: CircleAvatar(
+          radius: radius - 1,
+          backgroundImage: (user?.avatarLink == null)
+              ? Image.asset("assets/icons/default_avatar.png").image
+              : Image.network(
+                  "$baseUrl${user!.avatarLink}",
+                  fit: BoxFit.cover,
+                ).image,
         ),
       ),
     );

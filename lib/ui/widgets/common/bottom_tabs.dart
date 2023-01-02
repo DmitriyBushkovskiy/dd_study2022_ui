@@ -43,11 +43,14 @@ class BottomTabs extends StatelessWidget {
       size: isCurrent ? 35 : 30,
     );
     if (tabItem == TabItemEnum.profile) {
-      icon = AvatarWidget(
-        avatar: appmodel.avatar ?? Image.asset("assets/icons/default_avatar.png", fit: BoxFit.cover,),
-        radius: isCurrent ? 17 : 15,
-        colorAvatar: false, // TODO: viewmodel.user
-      );
+      icon = 
+      UserAvatarWidget(user: appmodel.user, radius: isCurrent ? 17 : 15)
+      // AvatarWidget(
+      //   avatar: appmodel.avatar ?? Image.asset("assets/icons/default_avatar.png", fit: BoxFit.cover,),
+      //   radius: isCurrent ? 17 : 15,
+      //   colorAvatar: false, // TODO: viewmodel.user
+      // )
+      ;
 
       // CircleAvatar(
       //   maxRadius: isCurrent ? 17 : 15,
