@@ -63,7 +63,6 @@ class ChatPreview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var viewModel = context.watch<_ViewModel>();
-    print(index);
     return Container(
       //height: 106,
       color: Colors.grey,

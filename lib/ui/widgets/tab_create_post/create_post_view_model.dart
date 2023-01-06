@@ -4,22 +4,23 @@ import 'package:dd_study2022_ui/domain/models/create_post_model.dart';
 import 'package:dd_study2022_ui/internal/dependencies/repository_module.dart';
 import 'package:dd_study2022_ui/ui/navigation/app_navigator.dart';
 import 'package:dd_study2022_ui/ui/widgets/common/cam_widget.dart';
-import 'package:dd_study2022_ui/ui/widgets/roots/app.dart';
+import 'package:dd_study2022_ui/ui/widgets/common/image_with_path.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class CreatePostViewModel extends ChangeNotifier {
   final _api = RepositoryModule.apiRepository();
   var descriptionTec = TextEditingController();
 
-
   final BuildContext context;
   CreatePostViewModel({required this.context});
 
-  Future addPhoto() async {
+  List<ImageWithPath> selectedImages = [];
 
-    await Navigator.of(AppNavigator.key.currentState!.context).
-    push(MaterialPageRoute(
+  List<ImageWithPath> imagesWithPath = [];
+
+  Future addPhoto() async {
+    await Navigator.of(AppNavigator.key.currentState!.context)
+        .push(MaterialPageRoute(
       builder: (newContext) => Scaffold(
         backgroundColor: Colors.black,
         appBar: AppBar(
@@ -50,8 +51,6 @@ class CreatePostViewModel extends ChangeNotifier {
     ));
   }
 
-  List<ImageWithPath> selectedImages = [];
-
   void selectImage(ImageWithPath image) {
     selectedImages.add(image);
     notifyListeners();
@@ -61,8 +60,6 @@ class CreatePostViewModel extends ChangeNotifier {
     selectedImages.remove(image);
     notifyListeners();
   }
-
-  List<ImageWithPath> imagesWithPath = [];
 
   void removeSelected() {
     for (var image in selectedImages) {
@@ -85,24 +82,4 @@ class CreatePostViewModel extends ChangeNotifier {
       notifyListeners();
     });
   }
-}
-
-class ImageWithPath {
-  String path;
-  Image image;
-
-  ImageWithPath({
-    required this.path,
-    required this.image,
-  });
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is ImageWithPath && other.path == path && other.image == image;
-  }
-
-  @override
-  int get hashCode => path.hashCode ^ image.hashCode;
 }

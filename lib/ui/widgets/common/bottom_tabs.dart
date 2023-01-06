@@ -1,6 +1,7 @@
 import 'package:dd_study2022_ui/domain/enums/tab_item.dart';
 import 'package:dd_study2022_ui/ui/widgets/common/avatar_widget.dart';
-import 'package:dd_study2022_ui/ui/widgets/roots/app.dart';
+import 'package:dd_study2022_ui/ui/widgets/roots/app/app.dart';
+import 'package:dd_study2022_ui/ui/widgets/roots/app/app_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -44,18 +45,7 @@ class BottomTabs extends StatelessWidget {
     );
     if (tabItem == TabItemEnum.profile) {
       icon = 
-      UserAvatarWidget(user: appmodel.user, radius: isCurrent ? 17 : 15)
-      // AvatarWidget(
-      //   avatar: appmodel.avatar ?? Image.asset("assets/icons/default_avatar.png", fit: BoxFit.cover,),
-      //   radius: isCurrent ? 17 : 15,
-      //   colorAvatar: false, // TODO: viewmodel.user
-      // )
-      ;
-
-      // CircleAvatar(
-      //   maxRadius: isCurrent ? 17 : 15,
-      //   backgroundImage: appmodel.avatar?.image,
-      // );
+      UserAvatarWidget(user: appmodel.user, radius: isCurrent ? 17 : 15);
     }
     return BottomNavigationBarItem(label: tabItem.name, icon: icon);
   }

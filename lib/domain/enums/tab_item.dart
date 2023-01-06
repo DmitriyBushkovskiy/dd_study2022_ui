@@ -1,7 +1,9 @@
-import 'package:dd_study2022_ui/ui/widgets/post/create_post_widget.dart';
+import 'package:dd_study2022_ui/ui/widgets/tab_create_post/create_post_widget.dart';
 import 'package:dd_study2022_ui/ui/widgets/tab_favorites/favorites_widget.dart';
-import 'package:dd_study2022_ui/ui/widgets/tab_home/home.dart';
+import 'package:dd_study2022_ui/ui/widgets/tab_home/home/home_widget.dart';
 import 'package:dd_study2022_ui/ui/widgets/tab_profile/profile/profile_widget.dart';
+import 'package:dd_study2022_ui/ui/widgets/tab_search/search_view_model.dart';
+import 'package:dd_study2022_ui/ui/widgets/tab_search/search_widget.dart';
 import 'package:flutter/material.dart';
 
 enum TabItemEnum { home, search, newPost, favorites, profile }
@@ -18,7 +20,8 @@ class TabEnums {
   };
 
   static Map<TabItemEnum, Widget> tabRoots = {
-    TabItemEnum.home: Home.create(),
+    TabItemEnum.home: HomeWidget.create(),
+    TabItemEnum.search: SearchWidget.create(),
     TabItemEnum.newPost: CreatePostWidget.create(),
     TabItemEnum.profile: ProfileWidget.create(),
     TabItemEnum.favorites: FavoritesWidget.create(),

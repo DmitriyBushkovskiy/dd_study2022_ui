@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class PageIndicator extends StatelessWidget {
-  //TODO: remove to own file
   final int count;
   final int? current;
   final double width;
@@ -14,15 +13,25 @@ class PageIndicator extends StatelessWidget {
     List<Widget> widgets = <Widget>[];
     for (var i = 0; i < count; i++) {
       widgets.add(
-        Icon(
-          Icons.circle,
-          size: i == (current ?? 0) ? width * 1.4 : width,
-        ),
+        Stack(alignment: AlignmentDirectional.center, children: [
+          if (i == (current ?? 0))
+            const Icon(
+              Icons.circle,
+              color: Colors.white,
+              size: 14,
+            ),
+          const Icon(
+            Icons.circle,
+            size: 10,
+          ),
+        ]),
       );
     }
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [...widgets],
-    );
+    return count == 1
+        ? const SizedBox.shrink()
+        : Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [...widgets],
+          );
   }
 }

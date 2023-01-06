@@ -20,20 +20,17 @@ class DataService {
     await DB.instance.deleteRange(elems);
   }
 
-  Future<List<PostModel>> getPosts() async {
-    //TODO: rename to getPostFeed
+  Future<List<PostModel>> getPosts() async { //TODO: rename to getPostFeed
     var res = <PostModel>[];
     var posts = await DB.instance.getAll<Post>(); //TODO: itterations
     for (var post in posts) {
       var author = await DB.instance.get<User>(post.authorId);
       var contents =
           (await DB.instance.getAll<PostContent>(whereMap: {"postId": post.id}))
-              .toList(); //TODO: add comments, add comment model
-
+              .toList();
       var comments =
           (await DB.instance.getAll<Comment>(whereMap: {"postId": post.id}))
               .toList();
-
       var commentModels = <CommentModel>[];
       for (var comment in comments) {
         var commentAuthor = await DB.instance.get<User>(comment.authorId);
@@ -52,7 +49,6 @@ class DataService {
 
       if (author != null) {
         res.add(PostModel(
-          //TODO: make constructor - from Post
           id: post.id,
           description: post.description,
           created: post.created,
@@ -78,12 +74,10 @@ class DataService {
       }
       var contents =
           (await DB.instance.getAll<PostContent>(whereMap: {"postId": post.id}))
-              .toList(); //TODO: add comments, add comment model
-
+              .toList();
       var comments =
           (await DB.instance.getAll<Comment>(whereMap: {"postId": post.id}))
               .toList();
-
       var commentModels = <CommentModel>[];
       for (var comment in comments) {
         var commentAuthor = await DB.instance.get<User>(comment.authorId);
@@ -101,7 +95,6 @@ class DataService {
       }
 
       var result = PostModel(
-        //TODO: make constructor - from Post
         id: post.id,
         description: post.description,
         created: post.created,
@@ -133,7 +126,7 @@ class DataService {
       DB.instance.delete<Post>(post);
       var contents =
           (await DB.instance.getAll<PostContent>(whereMap: {"postId": post.id}))
-              .toList(); //TODO: add comments, add comment model
+              .toList();
       DB.instance.deleteRange(contents);
       var comments =
           (await DB.instance.getAll<Comment>(whereMap: {"postId": post.id}))

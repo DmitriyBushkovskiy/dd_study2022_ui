@@ -1,13 +1,9 @@
-import 'package:dd_study2022_ui/domain/models/register_user_request.dart';
-import 'package:dd_study2022_ui/ui/widgets/post/create_post_widget.dart';
-import 'package:dd_study2022_ui/ui/widgets/roots/app.dart';
-import 'package:dd_study2022_ui/ui/widgets/roots/auth.dart';
+import 'package:dd_study2022_ui/ui/widgets/tab_create_post/create_post_widget.dart';
+import 'package:dd_study2022_ui/ui/widgets/roots/app/app.dart';
+import 'package:dd_study2022_ui/ui/widgets/roots/auth/auth.dart';
 import 'package:dd_study2022_ui/ui/widgets/roots/chat.dart';
 import 'package:dd_study2022_ui/ui/widgets/roots/chats_list.dart';
-import 'package:dd_study2022_ui/ui/widgets/roots/loader.dart';
-import 'package:dd_study2022_ui/ui/widgets/tab_profile/account/account.dart';
-import 'package:dd_study2022_ui/ui/widgets/tab_profile/profile/profile_widget.dart';
-import 'package:dd_study2022_ui/ui/widgets/roots/registration/registration_widget.dart';
+import 'package:dd_study2022_ui/ui/widgets/roots/loader/loader_widget.dart';
 import 'package:flutter/material.dart';
 
 class NavigationRoutes {
@@ -18,8 +14,6 @@ class NavigationRoutes {
   static const registerUser = "/registerUser";
   static const chatsList = "/chatsList";
   static const chat = "/chat";
-  // static const account = "/account";
-  static const profile = "/profile";
 }
 
 class AppNavigator {
@@ -52,13 +46,6 @@ class AppNavigator {
     return await key.currentState?.pushNamed(NavigationRoutes.chat);
   }
 
-  // static Future toAccount() async {
-  //   return await key.currentState?.pushNamed(NavigationRoutes.account);
-  // }
-  static Future toProfile(String userId) async {
-    return await key.currentState?.pushNamed(NavigationRoutes.profile, arguments: userId);
-  }
-
   static Route<dynamic>? onGeneratedRoutes(RouteSettings settings, context) {
     switch (settings.name) {
       case NavigationRoutes.loaderWidget:
@@ -66,7 +53,7 @@ class AppNavigator {
             pageBuilder: (_, __, ___) => LoaderWidget.create());
 
       case NavigationRoutes.auth:
-        return PageRouteBuilder(pageBuilder: (_, __, ___) => Auth.create());
+        return PageRouteBuilder(pageBuilder: (_, __, ___) => AuthWidget.create());
 
       case NavigationRoutes.app:
         return PageRouteBuilder(pageBuilder: (_, __, ___) => App.create());
@@ -92,15 +79,6 @@ class AppNavigator {
                   .animate(a),
               child: c),
         );
-
-      // case NavigationRoutes.profile:
-      // final arguments = (ModalRoute.of(context)?.settings.arguments) as String;
-      //   return PageRouteBuilder(
-      //       pageBuilder: (_, __, ___) => ProfileWidget.create(arg: arguments));
-
-      // case NavigationRoutes.account:
-      //   return PageRouteBuilder(
-      //       pageBuilder: (_, __, ___) => AccountWidget.create());
     }
     return null;
   }

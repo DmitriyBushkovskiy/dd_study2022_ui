@@ -7,9 +7,12 @@ import 'package:dd_study2022_ui/domain/models/change_comment_model.dart';
 import 'package:dd_study2022_ui/domain/models/change_post_description_model.dart';
 import 'package:dd_study2022_ui/domain/models/comment_model.dart';
 import 'package:dd_study2022_ui/domain/models/create_comment_model.dart';
+import 'package:dd_study2022_ui/domain/models/data_by_userid_request.dart';
 import 'package:dd_study2022_ui/domain/models/get_posts_request_model.dart';
 import 'package:dd_study2022_ui/domain/models/like_data_model.dart';
 import 'package:dd_study2022_ui/domain/models/post_model.dart';
+import 'package:dd_study2022_ui/domain/models/relation_state_model.dart';
+import 'package:dd_study2022_ui/domain/models/search_users_request.dart';
 import 'package:dd_study2022_ui/domain/models/user.dart';
 import 'package:dd_study2022_ui/domain/models/user_profile.dart';
 import 'package:dd_study2022_ui/domain/repository/api_repository.dart';
@@ -65,22 +68,13 @@ class AuthService {
     await TokenStorage.setStoredToken(null);
   }
 
-  //TODO: перенести в другой сервис?
-  Future<UserProfile?> getUserProfile() async {
-    //TODO: save data to DB
-    return await _api.getUserProfile();
-  }
 
-  Future<User?> getUser(String targetUserId) async {
-    var targetUser = await _api.getUser(targetUserId);
-    SyncService().syncUser(targetUserId);
-    return targetUser; // TODO: get user from backend 2 times: here an in sync service
+//Post
+  Future<PostModel> getPost(String? postId) async {
+    var postModel = await _api.getPost(postId);
+    SyncService().syncPosts([postModel]);
+    return postModel;
   }
-
-  // Future<UserProfile?> getChatsList() async {
-  //   //TokenStorage.getAccessToken();
-  //   return await _api.getUserProfile();
-  // }
 
   Future<List<PostModel>> getPostFeed(String? lastPostDate) async {
     var postModels = await _api.getPostFeedByLastPostDate(lastPostDate);
@@ -100,14 +94,30 @@ class AuthService {
     return postModels;
   }
 
-  Future<PostModel> getPost(String? postId) async {
-    var postModel = await _api.getPost(postId);
-    SyncService().syncPosts([postModel]);
-    return postModel;
+  Future changePostDescription(ChangePostDescriptionModel model) async {
+    await _api.changePostDescription(model);
   }
 
   Future<LikeDataModel> likePost(String? postId) async {
     var result = await _api.likePost(postId);
+    return result;
+  }
+
+  Future deletePost(String postId) async {
+    await _api.deletePost(postId);
+  }
+
+  Future createComment(CreateCommentModel model) async {
+    await _api.createComment(model);
+  }
+
+  Future<List<CommentModel>> getComments(String postId) async {
+    var result = await _api.getComments(postId);
+    return result;
+  }
+
+  Future<CommentModel> changeComment(ChangeCommentModel model) async {
+    var result = await _api.changeComment(model);
     return result;
   }
 
@@ -120,28 +130,6 @@ class AuthService {
     await _api.deleteComment(commentId);
   }
 
-  Future<CommentModel> changeComment(ChangeCommentModel model) async {
-    var result = await _api.changeComment(model);
-    return result;
-  }
-
-  Future createComment(CreateCommentModel model) async {
-    await _api.createComment(model);
-  }
-
-  Future<List<CommentModel>> getComments(String postId) async {
-    var result = await _api.getComments(postId);
-    return result;
-  }
-
-  Future changePostDescription(ChangePostDescriptionModel model) async {
-    await _api.changePostDescription(model);
-  }
-
-  Future deletePost(String postId) async {
-    await _api.deletePost(postId);
-  }
-
   Future<LikeDataModel> likeContent(String contentId) async {
     var result = await _api.likeContent(contentId);
     return result;
@@ -151,21 +139,11 @@ class AuthService {
     await _api.deletePostContent(contentId);
   }
 
-  Future<bool> changeAvatarColor() async {
-    var result = await _api.changeAvatarColor();
+//Relation
+
+  Future<RelationStateModel> getRelations(String targetUserId) async {
+    var result = await _api.getRelations(targetUserId);
     return result;
-  }
-
-  Future<RelationStateEnum> getMyRelationState(String targetUserId) async {
-    return await _api.getMyRelationState(targetUserId).then((value) =>
-        RelationStateEnum.values.firstWhere(
-            (e) => e.toString() == 'RelationStateEnum.${value.toLowerCase()}'));
-  }
-
-  Future<RelationStateEnum> getRelationToMeState(String targetUserId) async {
-    return await _api.getRelationToMeState(targetUserId).then((value) =>
-        RelationStateEnum.values.firstWhere(
-            (e) => e.toString() == 'RelationStateEnum.${value.toLowerCase()}'));
   }
 
   Future<RelationStateEnum> follow(String targetUserId) async {
@@ -184,6 +162,55 @@ class AuthService {
     return await _api.unban(targetUserId).then((value) =>
         RelationStateEnum.values.firstWhere(
             (e) => e.toString() == 'RelationStateEnum.${value.toLowerCase()}'));
+  }
+
+  Future<List<User>> searchUsers(SearchUserRequest model) async {
+    var result = _api.searchUsers(model);
+    return result;
+  }
+
+  Future<RelationStateEnum> acceptRequest(String targetUserId) async {
+    return await _api.acceptRequest(targetUserId).then((value) =>
+        RelationStateEnum.values.firstWhere(
+            (e) => e.toString() == 'RelationStateEnum.${value.toLowerCase()}'));
+  }
+
+  Future<List<User>> getFollowers(DataByUserIdRequest model) async {
+    var result = _api.getFollowers(model);
+    return result;
+  }
+
+  Future<List<User>> getBanned(DataByUserIdRequest model) async {
+    var result = _api.getBanned(model);
+    return result;
+  }
+
+  Future<List<User>> getFollowed(DataByUserIdRequest model) async {
+    var result = _api.getFollowed(model);
+    return result;
+  }
+
+  Future<List<User>> getFollowersRequests(DataByUserIdRequest model) async {
+    var result = _api.getFollowersRequests(model);
+    return result;
+  }
+
+  //User
+
+  Future<bool> changeAvatarColor() async {
+    var result = await _api.changeAvatarColor();
+    return result;
+  }
+
+  Future<User?> getUser(String targetUserId) async {
+    var targetUser = await _api.getUser(targetUserId);
+    SyncService().syncUser(targetUserId);
+    return targetUser; // TODO: get user from backend 2 times: here an in sync service
+  }
+
+  Future<UserProfile?> getUserProfile() async {
+    //TODO: save data to DB
+    return await _api.getUserProfile();
   }
 }
 

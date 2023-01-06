@@ -6,9 +6,12 @@ import 'package:dd_study2022_ui/domain/models/change_post_description_model.dart
 import 'package:dd_study2022_ui/domain/models/comment_model.dart';
 import 'package:dd_study2022_ui/domain/models/create_comment_model.dart';
 import 'package:dd_study2022_ui/domain/models/create_post_model.dart';
+import 'package:dd_study2022_ui/domain/models/data_by_userid_request.dart';
 import 'package:dd_study2022_ui/domain/models/get_posts_request_model.dart';
 import 'package:dd_study2022_ui/domain/models/like_data_model.dart';
 import 'package:dd_study2022_ui/domain/models/post_model.dart';
+import 'package:dd_study2022_ui/domain/models/relation_state_model.dart';
+import 'package:dd_study2022_ui/domain/models/search_users_request.dart';
 import 'package:dd_study2022_ui/domain/models/user.dart';
 import 'package:dd_study2022_ui/domain/models/user_profile.dart';
 import 'package:dio/dio.dart';
@@ -78,11 +81,8 @@ abstract class ApiClient {
   Future deletePostContent(@Path("contentId") String contentId);
 
 //Relation
-  @GET("/api/Relation/GetMyRelationState/{targetUserId}")
-  Future<String> getMyRelationState(@Path("targetUserId") String targetUserId);
-
-  @GET("/api/Relation/GetRelationToMeState/{targetUserId}")
-  Future<String> getRelationToMeState(
+  @GET("/api/Relation/GetRelations/{targetUserId}")
+  Future<RelationStateModel> getRelations(
       @Path("targetUserId") String targetUserId);
 
   @PUT("/api/Relation/Follow/{targetUserId}")
@@ -93,6 +93,24 @@ abstract class ApiClient {
 
   @PUT("/api/Relation/Unban/{targetUserId}")
   Future<String> unban(@Path("targetUserId") String targetUserId);
+
+  @PUT("/api/Relation/SearchUsers")
+  Future<List<User>> searchUsers(@Body() SearchUserRequest model);
+
+  @PUT("/api/Relation/AcceptRequest/{targetUserId}")
+  Future<String> acceptRequest(@Path("targetUserId") String targetUserId);
+
+  @PUT("/api/Relation/GetFollowers")
+  Future<List<User>> getFollowers(@Body() DataByUserIdRequest model);
+
+  @PUT("/api/Relation/GetBanned")
+  Future<List<User>> getBanned(@Body() DataByUserIdRequest model);
+
+  @PUT("/api/Relation/GetFollowed")
+  Future<List<User>> getFollowed(@Body() DataByUserIdRequest model);
+
+  @PUT("/api/Relation/GetFollowersRequests")
+  Future<List<User>> getFollowersRequests(@Body() DataByUserIdRequest model);
 
 //User
 
@@ -110,8 +128,4 @@ abstract class ApiClient {
 
   @GET("/api/User/GetCurrentUserData")
   Future<UserProfile?> getUserProfile();
-
-  // @GET("/api/Post/GetPostFeed") //TODO: remove?
-  // Future<List<PostModel>> getPostFeed(
-  //     @Query("skip") int skip, @Query("take") int take);
 }

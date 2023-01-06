@@ -1,6 +1,7 @@
 import 'package:dd_study2022_ui/domain/models/register_user_request.dart';
 import 'package:dd_study2022_ui/internal/dependencies/repository_module.dart';
-import 'package:dd_study2022_ui/ui/widgets/roots/auth.dart';
+import 'package:dd_study2022_ui/ui/widgets/roots/auth/auth.dart';
+import 'package:dd_study2022_ui/ui/widgets/roots/auth/auth_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -56,7 +57,7 @@ class RegistratinViewModel extends ChangeNotifier {
 
   final _api = RepositoryModule.apiRepository();
 
-  bool validUsername = false; //TODO:remove to asyncInit()?
+  bool validUsername = false;
   bool validEmail = false;
   bool validPassword = false;
 

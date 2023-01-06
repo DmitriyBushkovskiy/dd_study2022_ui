@@ -7,8 +7,6 @@ import 'package:dd_study2022_ui/internal/config/token_storage.dart';
 import 'package:dd_study2022_ui/ui/navigation/app_navigator.dart';
 import 'package:dio/dio.dart';
 
-
-
 class ApiModule {
   static AuthClient? _authClient;
   static ApiClient? _apiClient;
@@ -51,16 +49,15 @@ class ApiModule {
               }
             } catch (e) {
               var service = AuthService();
-              // if (await service.checkAuth()) {
+              if (await service.checkAuth()) {
                  await service.logout();
                  AppNavigator.toLoader();
-              // }
+              }
               return handler
                   .resolve(Response(statusCode: 400, requestOptions: options));
             } finally {
               dio.unlock();
             }
-
             return handler.resolve(await dio.fetch(options));
           } else {
             return handler.next(e);
@@ -68,7 +65,6 @@ class ApiModule {
         },
       ),
     );
-
     return dio;
   }
 }

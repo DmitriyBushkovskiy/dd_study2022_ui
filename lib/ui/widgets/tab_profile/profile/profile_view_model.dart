@@ -2,11 +2,10 @@ import 'dart:io';
 
 import 'package:dd_study2022_ui/data/services/data_service.dart';
 import 'package:dd_study2022_ui/data/services/sync_service.dart';
-import 'package:dd_study2022_ui/domain/enums/relation_state.dart';
 import 'package:dd_study2022_ui/domain/models/get_posts_request_model.dart';
 import 'package:dd_study2022_ui/domain/models/post_model.dart';
+import 'package:dd_study2022_ui/domain/models/relation_state_model.dart';
 import 'package:dd_study2022_ui/domain/models/user.dart';
-import 'package:dd_study2022_ui/domain/models/user_profile.dart';
 import 'package:dd_study2022_ui/internal/config/app_config.dart';
 import 'package:dd_study2022_ui/internal/config/shared_prefs.dart';
 import 'package:dd_study2022_ui/internal/config/token_storage.dart';
@@ -14,12 +13,11 @@ import 'package:dd_study2022_ui/internal/dependencies/repository_module.dart';
 import 'package:dd_study2022_ui/ui/navigation/tab_navigator.dart';
 import 'package:dd_study2022_ui/ui/widgets/common/cam_widget.dart';
 import 'package:dd_study2022_ui/data/services/auth_service.dart';
-import 'package:dd_study2022_ui/ui/widgets/roots/app.dart';
-import 'package:dd_study2022_ui/ui/widgets/tab_profile/account/account.dart';
+import 'package:dd_study2022_ui/ui/widgets/roots/app/app.dart';
+import 'package:dd_study2022_ui/ui/widgets/roots/app/app_view_model.dart';
 import 'package:dd_study2022_ui/ui/widgets/tab_profile/profile/profile_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:uuid/uuid.dart';
 import 'package:provider/provider.dart';
 
 class ProfileViewModel extends ChangeNotifier {
@@ -33,7 +31,13 @@ class ProfileViewModel extends ChangeNotifier {
   String? targetUserId;
   ProfileViewModel({required this.context, this.targetUserId}) {
     asyncInit();
-
+    var appModel = context.read<AppViewModel>();
+    appModel.addListener(() {
+      user = appModel.user;
+      if(user!.id == targetUserId){
+        targetUser = appModel.user;
+      }
+    });
     lvc.addListener(() {
       var max = lvc.position.maxScrollExtent;
       var current = lvc.offset;
@@ -54,11 +58,6 @@ class ProfileViewModel extends ChangeNotifier {
           });
         }
       }
-    });
-    var appmodel = context.read<AppViewModel>();
-    appmodel.addListener(() {
-      avatar = appmodel.avatar;
-      user = appmodel.user;
     });
   }
 
@@ -90,14 +89,6 @@ class ProfileViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  // UserProfile? _userProfile;
-  // UserProfile? get userProfile => _userProfile;
-  // set userProfile(UserProfile? val) {
-  //   _userProfile = val;
-
-  //   notifyListeners();
-  // }
-
   bool _disposed = false;
 
   @override
@@ -119,24 +110,10 @@ class ProfileViewModel extends ChangeNotifier {
 
   Map<int, int> pager = <int, int>{};
 
-  Image? _avatar;
-  Image? get avatar => _avatar;
-  set avatar(Image? val) {
-    _avatar = val;
-    notifyListeners();
-  }
-
-  RelationStateEnum? _myRelationState;
-  RelationStateEnum? get myRelationState => _myRelationState;
-  set myRelationState(RelationStateEnum? val) {
-    _myRelationState = val;
-    notifyListeners();
-  }
-
-  RelationStateEnum? _relationToMeState;
-  RelationStateEnum? get relationToMeState => _relationToMeState;
-  set relationToMeState(RelationStateEnum? val) {
-    _relationToMeState = val;
+  RelationStateModel? _relationStateModel;
+  RelationStateModel? get relationStateModel => _relationStateModel;
+  set relationStateModel(RelationStateModel? val) {
+    _relationStateModel = val;
     notifyListeners();
   }
 
@@ -146,26 +123,11 @@ class ProfileViewModel extends ChangeNotifier {
     user = await SharedPrefs.getStoredUser();
     targetUserId ??= user!.id;
     targetUser =
-        await _dataService.getUser(targetUserId!); //TODO: is it good idea?
-    myRelationState = await _authService.getMyRelationState(targetUserId!);
-    relationToMeState = await _authService.getRelationToMeState(targetUserId!);
+        await _dataService.getUser(targetUserId!);
+    relationStateModel = await _authService.getRelations(targetUserId!);
     targetUser = await _authService.getUser(targetUserId ?? user!.id);
-
-    var t = 1;
-    //userProfile = await _api.getUserProfile();
-
-    avatar = (user!.avatarLink == null)
-        ? Image.asset("assets/images/sadgram-logo.gif")
-        : Image.network(
-            "$baseUrl${user!.avatarLink}",
-            key: ValueKey(const Uuid().v4()),
-            fit: BoxFit.cover,
-          );
-
-    //postFeed ??= await _dataService.getPosts(); //TODO: get post current user
     postFeed = await _authService
         .getPosts(GetPostsRequestModel(userId: targetUserId, postsAmount: 10));
-    //postFeed!.insert(0, PostModel.emptyPostModel());
   }
 
   void likePostContent(int listIndex, int postContentIndex) async {
@@ -205,7 +167,7 @@ class ProfileViewModel extends ChangeNotifier {
     }
 
     var user = await _api.getCurrentUser();
-    _syncService.syncCurrentUser(); //TODO:check it
+    _syncService.syncCurrentUser();
 
     var img = await NetworkAssetBundle(Uri.parse("$baseUrl${user!.avatarLink}"))
         .load("$baseUrl${user.avatarLink}?v=1");
@@ -216,17 +178,26 @@ class ProfileViewModel extends ChangeNotifier {
   }
 
   Future follow() async {
-    myRelationState = await _authService.follow(targetUserId!);
+    relationStateModel = relationStateModel!
+        .copyWith(relationAsFollower: await _authService.follow(targetUserId!));
     notifyListeners();
   }
 
   Future ban() async {
-    relationToMeState = await _authService.ban(targetUserId!);
+    relationStateModel = relationStateModel!
+        .copyWith(relationAsFollowed: await _authService.ban(targetUserId!));
     notifyListeners();
   }
 
   Future unban() async {
-    relationToMeState = await _authService.unban(targetUserId!);
+    relationStateModel = relationStateModel!
+        .copyWith(relationAsFollowed: await _authService.unban(targetUserId!));
+    notifyListeners();
+  }
+
+  Future acceptRequest() async {
+    relationStateModel = relationStateModel!.copyWith(
+        relationAsFollowed: await _authService.acceptRequest(targetUserId!));
     notifyListeners();
   }
 
@@ -235,7 +206,7 @@ class ProfileViewModel extends ChangeNotifier {
         .pushNamed(TabNavigatorRoutes.postDetails, arguments: postId);
   }
 
-    void toProfile(BuildContext bc, String userId) {
+  void toProfile(BuildContext bc, String userId) {
     Navigator.of(context).push(MaterialPageRoute(
         builder: (__) => ProfileWidget.create(bc: bc, arg: userId)));
   }
@@ -249,20 +220,6 @@ class ProfileViewModel extends ChangeNotifier {
           .indexOf(postFeed!.firstWhere((element) => element.id == postId));
       postFeed![index] = updatedPost;
     }
-    notifyListeners();
-  }
-
-  bool colorAvatar = false;
-
-  void changeAvatarColor() {
-    colorAvatar = !colorAvatar;
-    notifyListeners();
-  }
-
-  String tapChecker = "tapChecker";
-
-  void changeText(String value) {
-    tapChecker = value;
     notifyListeners();
   }
 
@@ -282,12 +239,11 @@ class ProfileViewModel extends ChangeNotifier {
             currentDate.year - 14, currentDate.month, currentDate.day));
   }
 
-  // void toAccount() {
-  //   Navigator.of(context)
-  //       .push(MaterialPageRoute(builder: (__) => AccountWidget.create()));
-  // }
-
   void toAccount() {
     Navigator.of(context).pushNamed(TabNavigatorRoutes.account);
+  }
+
+  void toRelations() {
+    Navigator.of(context).pushNamed(TabNavigatorRoutes.relations, arguments: targetUserId);
   }
 }

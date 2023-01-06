@@ -2,14 +2,12 @@ import 'package:dd_study2022_ui/data/services/auth_service.dart';
 import 'package:dd_study2022_ui/data/services/data_service.dart';
 import 'package:dd_study2022_ui/domain/models/change_comment_model.dart';
 import 'package:dd_study2022_ui/domain/models/comment_model.dart';
-import 'package:dd_study2022_ui/domain/models/post.dart';
 import 'package:dd_study2022_ui/domain/models/post_model.dart';
 import 'package:dd_study2022_ui/domain/models/user.dart';
-import 'package:dd_study2022_ui/internal/config/app_config.dart';
 import 'package:dd_study2022_ui/internal/config/shared_prefs.dart';
-import 'package:dd_study2022_ui/ui/navigation/app_navigator.dart';
 import 'package:dd_study2022_ui/ui/widgets/common/avatar_widget.dart';
-import 'package:dd_study2022_ui/ui/widgets/tab_home/post_detail.dart';
+import 'package:dd_study2022_ui/ui/widgets/tab_home/post_detail/post_detail.dart';
+import 'package:dd_study2022_ui/ui/widgets/tab_home/post_detail/post_detail_view_model.dart';
 import 'package:dd_study2022_ui/ui/widgets/tab_profile/profile/profile_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -108,7 +106,6 @@ class _CommentWidgetState extends State<CommentWidget> {
   void changeComment() {
     commentTec.text = commentModel!.commentText;
     isChanging = true;
-    //setState(() {});
   }
 
   void saveChanges() {
@@ -129,7 +126,6 @@ class _CommentWidgetState extends State<CommentWidget> {
 
   void canselChanges() {
     isChanging = false;
-    //setState(() {});
   }
 
   Future asyncMeth() async {

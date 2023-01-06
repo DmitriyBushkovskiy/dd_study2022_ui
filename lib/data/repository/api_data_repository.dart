@@ -8,11 +8,14 @@ import 'package:dd_study2022_ui/domain/models/change_post_description_model.dart
 import 'package:dd_study2022_ui/domain/models/comment_model.dart';
 import 'package:dd_study2022_ui/domain/models/create_comment_model.dart';
 import 'package:dd_study2022_ui/domain/models/create_post_model.dart';
+import 'package:dd_study2022_ui/domain/models/data_by_userid_request.dart';
 import 'package:dd_study2022_ui/domain/models/get_posts_request_model.dart';
 import 'package:dd_study2022_ui/domain/models/like_data_model.dart';
 import 'package:dd_study2022_ui/domain/models/post_model.dart';
 import 'package:dd_study2022_ui/domain/models/refresh_token_request.dart';
 import 'package:dd_study2022_ui/domain/models/register_user_request.dart';
+import 'package:dd_study2022_ui/domain/models/relation_state_model.dart';
+import 'package:dd_study2022_ui/domain/models/search_users_request.dart';
 import 'package:dd_study2022_ui/domain/models/user.dart';
 import 'package:dd_study2022_ui/domain/models/user_profile.dart';
 import 'package:dd_study2022_ui/domain/repository/api_repository.dart';
@@ -45,18 +48,21 @@ class ApiDataRepository extends ApiRepository {
   Future registerUser(RegisterUserRequest body) async =>
       await _auth.registerUser(body);
 
-  @override
-  Future<User?> getCurrentUser() => _api.getCurrentUser();
+//Attach
 
   @override
-  Future<User?> getUser(String targetUserId) => _api.getUser(targetUserId);
+  Future<List<AttachMeta>> uploadTemp({required List<File> files}) =>
+      _api.uploadTemp(files: files);
+
+//Chat
+
+//Post
 
   @override
-  Future<UserProfile?> getUserProfile() => _api.getUserProfile();
+  Future createPost(CreatePostModel model) => _api.createPost(model);
 
-  // @override
-  // Future<List<PostModel>> getPostFeed(int skip, int take) =>
-  //     _api.getPostFeed(skip, take);
+  @override
+  Future<PostModel> getPost(String? postId) => _api.getPost(postId);
 
   @override
   Future<List<PostModel>> getPostFeedByLastPostDate(String? lastPostDate) =>
@@ -71,10 +77,25 @@ class ApiDataRepository extends ApiRepository {
       _api.getFavoritePosts(model);
 
   @override
-  Future<PostModel> getPost(String? postId) => _api.getPost(postId);
+  Future changePostDescription(ChangePostDescriptionModel model) =>
+      _api.changePostDescription(model);
 
   @override
   Future<LikeDataModel> likePost(String? postId) => _api.likePost(postId);
+
+  @override
+  Future deletePost(String postId) => _api.deletePost(postId);
+
+  @override
+  Future createComment(CreateCommentModel model) => _api.createComment(model);
+
+  @override
+  Future<List<CommentModel>> getComments(String postId) =>
+      _api.getComments(postId);
+
+  @override
+  Future<CommentModel> changeComment(ChangeCommentModel model) =>
+      _api.changeComment(model);
 
   @override
   Future<LikeDataModel> likeComment(String? commentId) =>
@@ -84,34 +105,6 @@ class ApiDataRepository extends ApiRepository {
   Future deleteComment(String? commentId) => _api.deleteComment(commentId);
 
   @override
-  Future createComment(CreateCommentModel model) => _api.createComment(model);
-
-  @override
-  Future<List<AttachMeta>> uploadTemp({required List<File> files}) =>
-      _api.uploadTemp(files: files);
-
-  @override
-  Future addAvatarToUser(AttachMeta model) => _api.addAvatarToUser(model);
-
-  @override
-  Future createPost(CreatePostModel model) => _api.createPost(model);
-
-  @override
-  Future changePostDescription(ChangePostDescriptionModel model) =>
-      _api.changePostDescription(model);
-
-  @override
-  Future<CommentModel> changeComment(ChangeCommentModel model) =>
-      _api.changeComment(model);
-
-  @override
-  Future<List<CommentModel>> getComments(String postId) =>
-      _api.getComments(postId);
-
-  @override
-  Future deletePost(String postId) => _api.deletePost(postId);
-
-  @override
   Future<LikeDataModel> likeContent(String contentId) =>
       _api.likeContent(contentId);
 
@@ -119,16 +112,11 @@ class ApiDataRepository extends ApiRepository {
   Future deletePostContent(String contentId) =>
       _api.deletePostContent(contentId);
 
-  @override
-  Future<bool> changeAvatarColor() => _api.changeAvatarColor();
+//Relation
 
   @override
-  Future<String> getMyRelationState(String targetUserId) =>
-      _api.getMyRelationState(targetUserId);
-
-  @override
-  Future<String> getRelationToMeState(String targetUserId) =>
-      _api.getRelationToMeState(targetUserId);
+  Future<RelationStateModel> getRelations(String targetUserId) =>
+      _api.getRelations(targetUserId);
 
   @override
   Future<String> follow(String targetUserId) => _api.follow(targetUserId);
@@ -138,4 +126,45 @@ class ApiDataRepository extends ApiRepository {
 
   @override
   Future<String> unban(String targetUserId) => _api.unban(targetUserId);
+
+  @override
+  Future<List<User>> searchUsers(SearchUserRequest model) =>
+      _api.searchUsers(model);
+
+  @override
+  Future<String> acceptRequest(String targetUserId) =>
+      _api.acceptRequest(targetUserId);
+
+  @override
+  Future<List<User>> getFollowers(DataByUserIdRequest model) =>
+      _api.getFollowers(model);
+
+  @override
+  Future<List<User>> getBanned(DataByUserIdRequest model) =>
+      _api.getBanned(model);
+
+  @override
+  Future<List<User>> getFollowed(DataByUserIdRequest model) =>
+      _api.getFollowed(model);
+
+  @override
+  Future<List<User>> getFollowersRequests(DataByUserIdRequest model) =>
+      _api.getFollowersRequests(model);
+
+//User
+
+  @override
+  Future addAvatarToUser(AttachMeta model) => _api.addAvatarToUser(model);
+
+  @override
+  Future<bool> changeAvatarColor() => _api.changeAvatarColor();
+
+  @override
+  Future<User?> getUser(String targetUserId) => _api.getUser(targetUserId);
+
+  @override
+  Future<User?> getCurrentUser() => _api.getCurrentUser();
+
+  @override
+  Future<UserProfile?> getUserProfile() => _api.getUserProfile();
 }
