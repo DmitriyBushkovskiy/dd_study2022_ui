@@ -13,7 +13,6 @@ import 'package:dd_study2022_ui/internal/dependencies/repository_module.dart';
 import 'package:dd_study2022_ui/ui/navigation/tab_navigator.dart';
 import 'package:dd_study2022_ui/ui/widgets/common/cam_widget.dart';
 import 'package:dd_study2022_ui/data/services/auth_service.dart';
-import 'package:dd_study2022_ui/ui/widgets/roots/app/app.dart';
 import 'package:dd_study2022_ui/ui/widgets/roots/app/app_view_model.dart';
 import 'package:dd_study2022_ui/ui/widgets/tab_profile/profile/profile_widget.dart';
 import 'package:flutter/material.dart';

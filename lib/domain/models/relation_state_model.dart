@@ -1,5 +1,3 @@
-import 'package:json_annotation/json_annotation.dart';
-
 import 'package:dd_study2022_ui/domain/enums/relation_state.dart';
 import 'package:dd_study2022_ui/domain/models/user.dart';
 

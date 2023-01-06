@@ -66,7 +66,7 @@ class AppNavigator {
         return PageRouteBuilder(
           pageBuilder: (_, __, ___) => ChatsList.create(),
           transitionsBuilder: (_, a, __, c) => SlideTransition(
-              position: Tween<Offset>(begin: Offset(1, 0), end: Offset.zero)
+              position: Tween<Offset>(begin: const Offset(1, 0), end: Offset.zero)
                   .animate(a),
               child: c),
         );
@@ -75,7 +75,7 @@ class AppNavigator {
         return PageRouteBuilder(
           pageBuilder: (_, __, ___) => Chat.create(),
           transitionsBuilder: (_, a, __, c) => SlideTransition(
-              position: Tween<Offset>(begin: Offset(1, 0), end: Offset.zero)
+              position: Tween<Offset>(begin: const Offset(1, 0), end: Offset.zero)
                   .animate(a),
               child: c),
         );

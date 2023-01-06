@@ -1,6 +1,5 @@
 import 'package:dd_study2022_ui/domain/models/user.dart';
 import 'package:dd_study2022_ui/ui/widgets/common/avatar_with_name_widget.dart';
-import 'package:dd_study2022_ui/ui/widgets/tab_profile/relations/relations_view_model.dart';
 import 'package:flutter/material.dart';
 
 class UsersListWidget extends StatefulWidget {

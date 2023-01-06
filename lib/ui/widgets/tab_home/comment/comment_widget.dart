@@ -6,7 +6,6 @@ import 'package:dd_study2022_ui/domain/models/post_model.dart';
 import 'package:dd_study2022_ui/domain/models/user.dart';
 import 'package:dd_study2022_ui/internal/config/shared_prefs.dart';
 import 'package:dd_study2022_ui/ui/widgets/common/avatar_widget.dart';
-import 'package:dd_study2022_ui/ui/widgets/tab_home/post_detail/post_detail.dart';
 import 'package:dd_study2022_ui/ui/widgets/tab_home/post_detail/post_detail_view_model.dart';
 import 'package:dd_study2022_ui/ui/widgets/tab_profile/profile/profile_widget.dart';
 import 'package:flutter/material.dart';
@@ -66,7 +65,6 @@ class _CommentWidgetState extends State<CommentWidget> {
   void initState() {
     super.initState();
     commentModel = widget.comment;
-    isChanging = false; //TODO:remove
     changedCommentText = commentModel!.commentText;
     commentTec.addListener(() {
       changedCommentText = commentTec.text;
@@ -76,7 +74,6 @@ class _CommentWidgetState extends State<CommentWidget> {
   }
 
   String howLongAgoCreated() {
-    //var createdAgo = DateTime.now(); //TODO:remove to state?
     if (commentModel != null) {
       var now = DateTime.now().toUtc();
       var created = DateTime.parse(commentModel!.created).toUtc();
@@ -129,16 +126,10 @@ class _CommentWidgetState extends State<CommentWidget> {
   }
 
   Future asyncMeth() async {
-    //TODO: refactoring
     var likeModel = await _authService.likeComment(commentModel!.id);
     commentModel!.likes = likeModel.likesAmount;
     commentModel!.likedByMe = likeModel.likedByMe;
   }
-
-  // void toProfile(String userId) async {
-  //       Navigator.of(context)
-  //       .pushNamed(await AppNavigator.toProfile(userId));
-  // }
 
   void toProfile(BuildContext bc, String userId) {
     Navigator.of(context).push(MaterialPageRoute(

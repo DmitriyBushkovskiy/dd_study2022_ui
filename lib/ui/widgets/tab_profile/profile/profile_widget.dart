@@ -91,7 +91,6 @@ class ProfileWidget extends StatelessWidget {
                         ],
                       ),
                     ),
-                    Text(viewModel.targetUserId.toString()),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 15),
                       child: viewModel.targetUserId != viewModel.user!.id

@@ -79,7 +79,7 @@ class CamWidgetState extends State<CamWidget> {
                 ), // This one will create the magic
                 child: Stack(fit: StackFit.expand, children: [
                   Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: Colors.black,
                       backgroundBlendMode: BlendMode.dstOut,
                     ), // This one will handle background + difference out
@@ -114,7 +114,7 @@ class CamWidgetState extends State<CamWidget> {
                   height: 60,
                   child: IconButton(
                     padding: EdgeInsets.zero,
-                    icon: Icon(Icons.camera),
+                    icon: const Icon(Icons.camera),
                     color: Colors.white,
                     iconSize: 54,
                     onPressed: () async {

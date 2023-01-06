@@ -1,5 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:retrofit/http.dart';
 
 import 'package:dd_study2022_ui/domain/db_model.dart';
 

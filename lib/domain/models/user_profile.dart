@@ -20,5 +20,5 @@ class UserProfile {
 
     factory UserProfile.fromJson(Map<String, dynamic> json) => _$UserProfileFromJson(json);
 
-  Map<String, dynamic> toJson() => _$UserProfileToJson(this); //TODO: add to map fromMap methods?
+  Map<String, dynamic> toJson() => _$UserProfileToJson(this);
 }

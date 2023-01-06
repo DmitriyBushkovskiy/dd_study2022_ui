@@ -1,4 +1,3 @@
-import 'package:dd_study2022_ui/data/services/auth_service.dart';
 import 'package:dd_study2022_ui/domain/models/user.dart';
 import 'package:dd_study2022_ui/internal/config/app_config.dart';
 import 'package:dd_study2022_ui/internal/config/shared_prefs.dart';
@@ -9,7 +8,6 @@ import 'package:provider/provider.dart';
 
 class _ViewModel extends ChangeNotifier {
   BuildContext context;
-  final _authService = AuthService();
 
   _ViewModel({required this.context}) {
     asyncInit();
@@ -59,7 +57,7 @@ class Chat extends StatelessWidget {
                 reverse: true,
               ),
             ),
-            Bottom()
+            const Bottom()
             //SizedBox(height: 50, width: double.infinity, child: TextField()),
           ],
         ),
@@ -84,14 +82,13 @@ class Message extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var viewModel = context.watch<_ViewModel>();
-    print(index);
     return Container(
       height: 106,
       color: Colors.red,
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Container(
         height: 86,
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         //color: Colors.blue,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -111,7 +108,7 @@ class Message extends StatelessWidget {
                     )
                   : null,
             ),
-            SizedBox(
+            const SizedBox(
               width: 8,
             ),
             Expanded(
@@ -121,11 +118,11 @@ class Message extends StatelessWidget {
                 children: [
                   Container(
                     //color: Colors.yellow,
-                    padding: EdgeInsets.only(bottom: 5),
+                    padding: const EdgeInsets.only(bottom: 5),
                     child: Text(
                       "Name ${index.toString()}",
                       style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                          const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
                     ),
                   ),
                   Expanded(
@@ -150,12 +147,11 @@ class Message extends StatelessWidget {
                           .format(DateTime.parse(viewModel.user!.birthDate)
                               .toLocal())
                           .toString(),
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 12,
-                        //backgroundColor: Colors.red,
                       ),
                     )
-                  : Text("no data"),
+                  : const Text("no data"),
             ),
           ],
         ),
@@ -169,7 +165,7 @@ class Bottom extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       height: 50,
       child: Row(

@@ -3,25 +3,25 @@ import 'package:dd_study2022_ui/ui/navigation/app_navigator.dart';
 import 'package:dd_study2022_ui/ui/widgets/roots/registration/registration_widget.dart';
 import 'package:flutter/material.dart';
 
-class _ViewModelState {
+class ViewModelState {
   final String? login;
   final String? password;
   final bool isLoading;
   final String? errorText;
-  const _ViewModelState({
+  const ViewModelState({
     this.login,
     this.password,
     this.isLoading = false,
     this.errorText,
   });
 
-  _ViewModelState copyWith({
+  ViewModelState copyWith({
     String? login,
     String? password,
     bool? isLoading = false,
     String? errorText,
   }) {
-    return _ViewModelState(
+    return ViewModelState(
       login: login ?? this.login,
       password: password ?? this.password,
       isLoading: isLoading ?? this.isLoading,
@@ -46,9 +46,9 @@ class AuthViewModel extends ChangeNotifier {
     });
   }
 
-  var _state = const _ViewModelState();
-  _ViewModelState get state => _state;
-  set state(_ViewModelState val) {
+  var _state = const ViewModelState();
+  ViewModelState get state => _state;
+  set state(ViewModelState val) {
     _state = val;
     notifyListeners();
   }

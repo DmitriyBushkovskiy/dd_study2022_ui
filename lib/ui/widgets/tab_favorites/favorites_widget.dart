@@ -1,5 +1,4 @@
 import 'package:dd_study2022_ui/ui/widgets/tab_favorites/favorites_view_model.dart';
-import 'package:dd_study2022_ui/ui/widgets/tab_home/home/home_widget.dart';
 import 'package:dd_study2022_ui/ui/widgets/tab_home/post_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -24,9 +23,9 @@ class FavoritesWidget extends StatelessWidget {
                 viewModel: viewModel,
                 listIndex: listIndex,
               ),
-              separatorBuilder: (context, index) => Container(
-                height: 20,
-                color: Colors.green,
+              separatorBuilder: (context, index) => const Divider(
+                color: Colors.black,
+                height: 0,
               ),
               itemCount: itemCount,
             ),

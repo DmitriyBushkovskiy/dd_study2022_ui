@@ -30,7 +30,7 @@ class PostContentWidget extends StatelessWidget {
         height: size.width,
         child: Image(
           fit: BoxFit.cover,
-          image: NetworkImage("$baseUrl${contentLink}", headers: headers),
+          image: NetworkImage("$baseUrl$contentLink", headers: headers),
         ),
       ),
       ContentLikeCounter(likedByMe: likedByMe, likesAmount: likesAmount),

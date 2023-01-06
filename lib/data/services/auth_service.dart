@@ -205,11 +205,10 @@ class AuthService {
   Future<User?> getUser(String targetUserId) async {
     var targetUser = await _api.getUser(targetUserId);
     SyncService().syncUser(targetUserId);
-    return targetUser; // TODO: get user from backend 2 times: here an in sync service
+    return targetUser;
   }
 
-  Future<UserProfile?> getUserProfile() async {
-    //TODO: save data to DB
+  Future<UserProfile?> getUserProfile() async { //TODO: save data to DB
     return await _api.getUserProfile();
   }
 }

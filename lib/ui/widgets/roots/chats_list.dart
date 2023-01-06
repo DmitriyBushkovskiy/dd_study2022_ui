@@ -1,4 +1,3 @@
-import 'package:dd_study2022_ui/data/services/auth_service.dart';
 import 'package:dd_study2022_ui/domain/models/user.dart';
 import 'package:dd_study2022_ui/internal/config/app_config.dart';
 import 'package:dd_study2022_ui/internal/config/shared_prefs.dart';
@@ -9,7 +8,6 @@ import 'package:provider/provider.dart';
 
 class _ViewModel extends ChangeNotifier {
   BuildContext context;
-  final _authService = AuthService();
 
   _ViewModel({required this.context}) {
     asyncInit();
@@ -40,7 +38,7 @@ class ChatsList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Chats"),
+          title: const Text("Chats"),
         ),
         body: ListView.builder(itemBuilder: (context, index) {
           return ChatPreview(index);
@@ -69,7 +67,7 @@ class ChatPreview extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Container(
         height: 86,
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         //color: Colors.blue,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -89,7 +87,7 @@ class ChatPreview extends StatelessWidget {
                     )
                   : null,
             ),
-            SizedBox(
+            const SizedBox(
               width: 8,
             ),
             Expanded(
@@ -99,11 +97,11 @@ class ChatPreview extends StatelessWidget {
                 children: [
                   Container(
                     //color: Colors.yellow,
-                    padding: EdgeInsets.only(bottom: 5),
+                    padding: const EdgeInsets.only(bottom: 5),
                     child: Text(
                       "Name ${index.toString()}",
                       style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                          const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
                     ),
                   ),
                   Expanded(

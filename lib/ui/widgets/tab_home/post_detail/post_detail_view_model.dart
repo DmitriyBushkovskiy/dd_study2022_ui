@@ -166,7 +166,6 @@ class PostDetailViewModel extends ChangeNotifier {
   }
 
   String howLongAgoCreated() {
-    //var createdAgo = DateTime.now(); //TODO:remove to state?
     if (post != null) {
       var now = DateTime.now().toUtc();
       var created = DateTime.parse(post!.created).toUtc();

@@ -1,6 +1,5 @@
 import 'package:dd_study2022_ui/domain/enums/tab_item.dart';
 import 'package:dd_study2022_ui/ui/widgets/common/avatar_widget.dart';
-import 'package:dd_study2022_ui/ui/widgets/roots/app/app.dart';
 import 'package:dd_study2022_ui/ui/widgets/roots/app/app_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

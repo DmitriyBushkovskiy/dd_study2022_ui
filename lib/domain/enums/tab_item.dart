@@ -2,7 +2,6 @@ import 'package:dd_study2022_ui/ui/widgets/tab_create_post/create_post_widget.da
 import 'package:dd_study2022_ui/ui/widgets/tab_favorites/favorites_widget.dart';
 import 'package:dd_study2022_ui/ui/widgets/tab_home/home/home_widget.dart';
 import 'package:dd_study2022_ui/ui/widgets/tab_profile/profile/profile_widget.dart';
-import 'package:dd_study2022_ui/ui/widgets/tab_search/search_view_model.dart';
 import 'package:dd_study2022_ui/ui/widgets/tab_search/search_widget.dart';
 import 'package:flutter/material.dart';
 
