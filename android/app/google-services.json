@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "216647436430",
+    "project_id": "dd-stydy-2022",
+    "storage_bucket": "dd-stydy-2022.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:216647436430:android:5065edf65ccf94a8f961df",
+        "android_client_info": {
+          "package_name": "com.example.dd_study2022_ui"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "216647436430-p37g4tu3kjlsmlp4f77vdntjkmm7ggmc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCkT4lme8tm-Mnu0WqkQWH03MdlsBhThnE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "216647436430-p37g4tu3kjlsmlp4f77vdntjkmm7ggmc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

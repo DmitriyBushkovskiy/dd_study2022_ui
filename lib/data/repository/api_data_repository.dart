@@ -12,6 +12,7 @@ import 'package:dd_study2022_ui/domain/models/data_by_userid_request.dart';
 import 'package:dd_study2022_ui/domain/models/get_posts_request_model.dart';
 import 'package:dd_study2022_ui/domain/models/like_data_model.dart';
 import 'package:dd_study2022_ui/domain/models/post_model.dart';
+import 'package:dd_study2022_ui/domain/models/push_token.dart';
 import 'package:dd_study2022_ui/domain/models/refresh_token_request.dart';
 import 'package:dd_study2022_ui/domain/models/register_user_request.dart';
 import 'package:dd_study2022_ui/domain/models/relation_state_model.dart';
@@ -167,4 +168,12 @@ class ApiDataRepository extends ApiRepository {
 
   @override
   Future<UserProfile?> getUserProfile() => _api.getUserProfile();
+
+  //Push
+
+  @override
+  Future subscribe(PushToken model) => _api.subscribe(model);
+
+  @override
+  Future unsubscribe() => _api.unsubscribe();
 }

@@ -33,7 +33,7 @@ class ProfileViewModel extends ChangeNotifier {
     var appModel = context.read<AppViewModel>();
     appModel.addListener(() {
       user = appModel.user;
-      if(user!.id == targetUserId){
+      if (user!.id == targetUserId) {
         targetUser = appModel.user;
       }
     });
@@ -121,8 +121,7 @@ class ProfileViewModel extends ChangeNotifier {
     headers = {"Authorization": "Bearer $token"};
     user = await SharedPrefs.getStoredUser();
     targetUserId ??= user!.id;
-    targetUser =
-        await _dataService.getUser(targetUserId!);
+    targetUser = await _dataService.getUser(targetUserId!);
     relationStateModel = await _authService.getRelations(targetUserId!);
     targetUser = await _authService.getUser(targetUserId ?? user!.id);
     postFeed = await _authService
@@ -243,6 +242,19 @@ class ProfileViewModel extends ChangeNotifier {
   }
 
   void toRelations() {
-    Navigator.of(context).pushNamed(TabNavigatorRoutes.relations, arguments: targetUserId);
+    Navigator.of(context)
+        .pushNamed(TabNavigatorRoutes.relations, arguments: targetUserId);
+  }
+
+  void likePost(String postId) async {
+    var likeData = await _authService.likePost(postId);
+    var index = postFeed!
+        .indexOf(postFeed!.firstWhere((element) => element.id == postId));
+    var post = postFeed![index];
+    post.likedByMe = likeData.likedByMe;
+    post.likes = likeData.likesAmount;
+    postFeed![index] = post;
+    _syncService.syncPosts([post]);
+    notifyListeners();
   }
 }

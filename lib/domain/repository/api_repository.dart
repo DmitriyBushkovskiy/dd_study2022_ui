@@ -10,6 +10,7 @@ import 'package:dd_study2022_ui/domain/models/data_by_userid_request.dart';
 import 'package:dd_study2022_ui/domain/models/get_posts_request_model.dart';
 import 'package:dd_study2022_ui/domain/models/like_data_model.dart';
 import 'package:dd_study2022_ui/domain/models/post_model.dart';
+import 'package:dd_study2022_ui/domain/models/push_token.dart';
 import 'package:dd_study2022_ui/domain/models/register_user_request.dart';
 import 'package:dd_study2022_ui/domain/models/relation_state_model.dart';
 import 'package:dd_study2022_ui/domain/models/search_users_request.dart';
@@ -90,9 +91,17 @@ abstract class ApiRepository {
   Future addAvatarToUser(AttachMeta model);
 
   Future<bool> changeAvatarColor();
+
   Future<User?> getUser(String targetUserId);
 
   Future<User?> getCurrentUser();
 
   Future<UserProfile?> getUserProfile();
+
+  // Push
+  @override
+  Future subscribe(PushToken model);
+
+  @override
+  Future unsubscribe();
 }

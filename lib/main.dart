@@ -1,3 +1,4 @@
+import 'package:dd_study2022_ui/internal/init_app.dart';
 import 'package:dd_study2022_ui/ui/navigation/app_navigator.dart';
 import 'package:dd_study2022_ui/ui/widgets/roots/loader/loader_widget.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +6,7 @@ import 'data/services/database.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await DB.instance.init();
+  await initApp();
   
   runApp(const MyApp());
 }

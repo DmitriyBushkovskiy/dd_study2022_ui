@@ -123,7 +123,7 @@ class HomeViewModel extends ChangeNotifier {
   }
 
   void logout() async {
-    await _authService.logout().then((value) => AppNavigator.toLoader());
+    await _authService.cleanToken().then((value) => AppNavigator.toLoader());
   }
 
   Future toPostDetail(String postId) async {

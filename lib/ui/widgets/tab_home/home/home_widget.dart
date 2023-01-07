@@ -15,6 +15,7 @@ class HomeWidget extends StatelessWidget {
     var itemCount = viewModel.postFeed?.length ?? 0;
 
     return Scaffold(
+      backgroundColor: Colors.grey,
       appBar: AppBar(
         leadingWidth: 200,
         leading: PopupMenuButton<PopUpMenuValues>(
@@ -62,7 +63,7 @@ class HomeWidget extends StatelessWidget {
         children: [
           Expanded(
             child: viewModel.postFeed == null
-                ? const Center(child: CircularProgressIndicator())
+                ? const Center(child: CircularProgressIndicator(color: Colors.black,))
                 : ListView.separated(
                     controller: viewModel.lvc,
                     itemBuilder: (_, listIndex) {
