@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dd_study2022_ui/domain/models/attach_meta.dart';
 import 'package:dd_study2022_ui/domain/models/change_comment_model.dart';
 import 'package:dd_study2022_ui/domain/models/change_post_description_model.dart';
+import 'package:dd_study2022_ui/domain/models/change_user_data_model.dart';
 import 'package:dd_study2022_ui/domain/models/comment_model.dart';
 import 'package:dd_study2022_ui/domain/models/create_comment_model.dart';
 import 'package:dd_study2022_ui/domain/models/create_post_model.dart';
@@ -97,6 +98,12 @@ abstract class ApiRepository {
   Future<User?> getCurrentUser();
 
   Future<UserProfile?> getUserProfile();
+
+  Future<bool> checkEmailIsNotTaken(String email);
+
+  Future<bool> checkUsernameIsNotTaken(String username);
+
+  Future changeUserData(ChangeUserDataModel model);
 
   // Push
   @override

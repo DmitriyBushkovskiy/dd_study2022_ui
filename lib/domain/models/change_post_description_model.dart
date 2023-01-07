@@ -12,7 +12,7 @@ class ChangePostDescriptionModel {
     required this.description,
   });
 
-    factory ChangePostDescriptionModel.fromJson(Map<String, dynamic> json) =>
+  factory ChangePostDescriptionModel.fromJson(Map<String, dynamic> json) =>
       _$ChangePostDescriptionModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$ChangePostDescriptionModelToJson(this);

@@ -86,9 +86,9 @@ class PostDetailViewModel extends ChangeNotifier {
     isChanging = false;
   }
 
-  void deletePost() {
-    _authService.deletePost(postId!);
-    Navigator.of(context).pop();
+  void deletePost() async {
+    await _authService.deletePost(postId!);
+    await _dataService.deletePost(postId!).then((value) =>  Navigator.of(context).pop());
   }
 
   Future<void> showAlertDialogConfirmDeletingPost() {

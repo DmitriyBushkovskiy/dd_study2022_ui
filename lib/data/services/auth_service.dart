@@ -5,6 +5,7 @@ import 'package:dd_study2022_ui/data/services/sync_service.dart';
 import 'package:dd_study2022_ui/domain/enums/relation_state.dart';
 import 'package:dd_study2022_ui/domain/models/change_comment_model.dart';
 import 'package:dd_study2022_ui/domain/models/change_post_description_model.dart';
+import 'package:dd_study2022_ui/domain/models/change_user_data_model.dart';
 import 'package:dd_study2022_ui/domain/models/comment_model.dart';
 import 'package:dd_study2022_ui/domain/models/create_comment_model.dart';
 import 'package:dd_study2022_ui/domain/models/data_by_userid_request.dart';
@@ -224,6 +225,18 @@ class AuthService {
   Future<UserProfile?> getUserProfile() async {
     //TODO: save data to DB
     return await _api.getUserProfile();
+  }
+
+  Future<bool> checkEmailIsNotTaken(String email) async {
+    return await _api.checkEmailIsNotTaken(email);
+  }
+
+  Future<bool> checkUsernameIsNotTaken(String username) async {
+    return await _api.checkUsernameIsNotTaken(username);
+  }
+
+  Future changeUserData(ChangeUserDataModel model) async {
+    await _api.changeUserData(model);
   }
 
   //Push

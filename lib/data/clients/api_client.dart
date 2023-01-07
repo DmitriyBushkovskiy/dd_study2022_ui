@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dd_study2022_ui/domain/models/attach_meta.dart';
 import 'package:dd_study2022_ui/domain/models/change_comment_model.dart';
 import 'package:dd_study2022_ui/domain/models/change_post_description_model.dart';
+import 'package:dd_study2022_ui/domain/models/change_user_data_model.dart';
 import 'package:dd_study2022_ui/domain/models/comment_model.dart';
 import 'package:dd_study2022_ui/domain/models/create_comment_model.dart';
 import 'package:dd_study2022_ui/domain/models/create_post_model.dart';
@@ -129,6 +130,15 @@ abstract class ApiClient {
 
   @GET("/api/User/GetCurrentUserData")
   Future<UserProfile?> getUserProfile();
+
+  @GET("/api/User/EmailIsNotTaken/{email}")
+  Future<bool> checkEmailIsNotTaken(@Path("email") String email);
+
+  @GET("/api/User/UsernameIsNotTaken/{username}")
+  Future<bool> checkUsernameIsNotTaken(@Path("username") String username);
+
+  @PUT("/api/User/ChangeUserData")
+  Future changeUserData(@Body() ChangeUserDataModel model);
 
   // Push
   @POST("/api/Push/Subscribe")

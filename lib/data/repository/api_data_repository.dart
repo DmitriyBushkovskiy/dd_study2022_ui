@@ -5,6 +5,7 @@ import 'package:dd_study2022_ui/data/clients/auth_client.dart';
 import 'package:dd_study2022_ui/domain/models/attach_meta.dart';
 import 'package:dd_study2022_ui/domain/models/change_comment_model.dart';
 import 'package:dd_study2022_ui/domain/models/change_post_description_model.dart';
+import 'package:dd_study2022_ui/domain/models/change_user_data_model.dart';
 import 'package:dd_study2022_ui/domain/models/comment_model.dart';
 import 'package:dd_study2022_ui/domain/models/create_comment_model.dart';
 import 'package:dd_study2022_ui/domain/models/create_post_model.dart';
@@ -168,6 +169,18 @@ class ApiDataRepository extends ApiRepository {
 
   @override
   Future<UserProfile?> getUserProfile() => _api.getUserProfile();
+
+  @override
+  Future<bool> checkEmailIsNotTaken(String email) =>
+      _api.checkEmailIsNotTaken(email);
+
+  @override
+  Future<bool> checkUsernameIsNotTaken(String username) =>
+      _api.checkUsernameIsNotTaken(username);
+
+  @override
+  Future changeUserData(ChangeUserDataModel model) =>
+      _api.changeUserData(model);
 
   //Push
 

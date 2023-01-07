@@ -49,17 +49,7 @@ class RegistrationWidget extends StatelessWidget {
                   },
                   decoration: InputDecoration(
                     suffixIcon: GestureDetector(
-                        onTap: () {
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                return const AlertDialog(
-                                  title: Center(child: Text("Hint!")),
-                                  content: Text(
-                                      "It is allowed to use only Latin letters, numbers, underscores and dots"),
-                                );
-                              });
-                        },
+                        onTap: viewModel.showModal,
                         child: const Icon(
                           Icons.question_mark_rounded,
                           color: Colors.black,
@@ -278,9 +268,9 @@ class RegistrationWidget extends StatelessWidget {
                         viewModel.state.copyWith(registrationInProcess: true);
                       }
                     : null,
-                child: viewModel.state.registrationInProcess? 
-                const CircularProgressIndicator():
-                const Text("Register"),
+                child: viewModel.state.registrationInProcess
+                    ? const CircularProgressIndicator()
+                    : const Text("Register"),
               ),
             )
           ],

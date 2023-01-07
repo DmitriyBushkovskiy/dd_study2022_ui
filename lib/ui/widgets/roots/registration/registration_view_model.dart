@@ -1,5 +1,6 @@
 import 'package:dd_study2022_ui/domain/models/register_user_request.dart';
 import 'package:dd_study2022_ui/internal/dependencies/repository_module.dart';
+import 'package:dd_study2022_ui/ui/navigation/app_navigator.dart';
 import 'package:dd_study2022_ui/ui/widgets/roots/auth/auth_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -43,7 +44,8 @@ class _RegistrationViewModelState {
       obscurePassword: obscurePassword ?? this.obscurePassword,
       pickedDate: pickedDate ?? this.pickedDate,
       errorText: errorText ?? this.errorText,
-      registrationInProcess: registrationInProcess ?? this.registrationInProcess,
+      registrationInProcess:
+          registrationInProcess ?? this.registrationInProcess,
     );
   }
 }
@@ -117,5 +119,28 @@ class RegistratinViewModel extends ChangeNotifier {
         validPassword &&
         state.pickedDate != null;
     return result;
+  }
+
+  void showModal() {
+    var ctx = AppNavigator.key.currentContext;
+    if (ctx != null) {
+      showDialog(
+        context: ctx,
+        builder: (context) {
+          return AlertDialog(
+            title: const Center(child: Text("Hint!")),
+            content: const Text(
+                "It is allowed to use only Latin letters, numbers, underscores and dots"),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("Ok"))
+            ],
+          );
+        },
+      );
+    }
   }
 }
