@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       navigatorKey: AppNavigator.key,
       onGenerateRoute: (settings) =>
-          AppNavigator.onGeneratedRoutes(settings, context),
+          AppNavigator.onGeneratedRoutes(settings, context, arg: settings.arguments),
       theme: ThemeData(
         textSelectionTheme: TextSelectionThemeData(
             selectionColor: Colors.grey[300],

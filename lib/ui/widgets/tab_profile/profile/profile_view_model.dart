@@ -40,6 +40,13 @@ class ProfileViewModel extends ChangeNotifier {
     lvc.addListener(() {
       var max = lvc.position.maxScrollExtent;
       var current = lvc.offset;
+      if (current < 0 && !isUpdating) {
+        isUpdating = true;
+        asyncInit();
+      }
+      if (current >= 0.0) {
+        isUpdating = false;
+      }
       var distanceToEnd = max - current;
       if (distanceToEnd < 1000) {
         if (!isLoading) {
@@ -59,6 +66,8 @@ class ProfileViewModel extends ChangeNotifier {
       }
     });
   }
+
+  bool isUpdating = false;
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -124,6 +133,7 @@ class ProfileViewModel extends ChangeNotifier {
     targetUser = await _dataService.getUser(targetUserId!);
     relationStateModel = await _authService.getRelations(targetUserId!);
     targetUser = await _authService.getUser(targetUserId ?? user!.id);
+    await _dataService.cuUser(targetUser!);
     postFeed = await _authService
         .getPosts(GetPostsRequestModel(userId: targetUserId, postsAmount: 10));
   }

@@ -4,18 +4,23 @@ import 'package:dd_study2022_ui/domain/models/attach_meta.dart';
 import 'package:dd_study2022_ui/domain/models/change_comment_model.dart';
 import 'package:dd_study2022_ui/domain/models/change_post_description_model.dart';
 import 'package:dd_study2022_ui/domain/models/change_user_data_model.dart';
+import 'package:dd_study2022_ui/domain/models/chat_model.dart';
+import 'package:dd_study2022_ui/domain/models/chat_request.dart';
 import 'package:dd_study2022_ui/domain/models/comment_model.dart';
 import 'package:dd_study2022_ui/domain/models/create_comment_model.dart';
+import 'package:dd_study2022_ui/domain/models/create_message_model.dart';
 import 'package:dd_study2022_ui/domain/models/create_post_model.dart';
 import 'package:dd_study2022_ui/domain/models/data_by_userid_request.dart';
 import 'package:dd_study2022_ui/domain/models/get_posts_request_model.dart';
 import 'package:dd_study2022_ui/domain/models/like_data_model.dart';
+import 'package:dd_study2022_ui/domain/models/message_model.dart';
 import 'package:dd_study2022_ui/domain/models/post_model.dart';
 import 'package:dd_study2022_ui/domain/models/push_token.dart';
 import 'package:dd_study2022_ui/domain/models/relation_state_model.dart';
 import 'package:dd_study2022_ui/domain/models/search_users_request.dart';
 import 'package:dd_study2022_ui/domain/models/user.dart';
 import 'package:dd_study2022_ui/domain/models/user_profile.dart';
+import 'package:dd_study2022_ui/ui/widgets/roots/chat.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -32,6 +37,18 @@ abstract class ApiClient {
       {@Part(name: "files") required List<File> files});
 
 //Chat
+
+  @GET("/api/Chat/GetChats")
+  Future<List<ChatModel>> getChats(
+    @Query("skip") int skip,
+    @Query("take") int take,
+  );
+
+  @PUT("/api/Chat/GetChat")
+  Future<List<MessageModel>> getChat(@Body() ChatRequest model);
+
+  @PUT("/api/Chat/SendMessage")
+  Future sendMessage(@Body() CreateMessageModel model);
 
 //Post
 

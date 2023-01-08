@@ -4,12 +4,16 @@ import 'package:dd_study2022_ui/domain/models/attach_meta.dart';
 import 'package:dd_study2022_ui/domain/models/change_comment_model.dart';
 import 'package:dd_study2022_ui/domain/models/change_post_description_model.dart';
 import 'package:dd_study2022_ui/domain/models/change_user_data_model.dart';
+import 'package:dd_study2022_ui/domain/models/chat_model.dart';
+import 'package:dd_study2022_ui/domain/models/chat_request.dart';
 import 'package:dd_study2022_ui/domain/models/comment_model.dart';
 import 'package:dd_study2022_ui/domain/models/create_comment_model.dart';
+import 'package:dd_study2022_ui/domain/models/create_message_model.dart';
 import 'package:dd_study2022_ui/domain/models/create_post_model.dart';
 import 'package:dd_study2022_ui/domain/models/data_by_userid_request.dart';
 import 'package:dd_study2022_ui/domain/models/get_posts_request_model.dart';
 import 'package:dd_study2022_ui/domain/models/like_data_model.dart';
+import 'package:dd_study2022_ui/domain/models/message_model.dart';
 import 'package:dd_study2022_ui/domain/models/post_model.dart';
 import 'package:dd_study2022_ui/domain/models/push_token.dart';
 import 'package:dd_study2022_ui/domain/models/register_user_request.dart';
@@ -30,6 +34,12 @@ abstract class ApiRepository {
   Future<List<AttachMeta>> uploadTemp({required List<File> files});
 
 //Chat
+
+Future<List<ChatModel>> getChats(int skip, int take);
+
+Future<List<MessageModel>> getChat(ChatRequest model);
+
+Future sendMessage(CreateMessageModel model);
 
 //Post
 

@@ -1,3 +1,4 @@
+import 'package:dd_study2022_ui/ui/navigation/app_navigator.dart';
 import 'package:dd_study2022_ui/ui/widgets/common/avatar_with_name_widget.dart';
 import 'package:dd_study2022_ui/ui/widgets/tab_home/home/home_view_model.dart';
 import 'package:dd_study2022_ui/ui/widgets/tab_home/post_widget.dart';
@@ -17,6 +18,12 @@ class HomeWidget extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.grey,
       appBar: AppBar(
+        actions: [
+          IconButton(
+            onPressed: AppNavigator.toChatsList,
+            icon: Icon(Icons.message),
+          )
+        ],
         leadingWidth: 200,
         leading: PopupMenuButton<PopUpMenuValues>(
           onSelected: (value) {
@@ -59,39 +66,41 @@ class HomeWidget extends StatelessWidget {
           ),
         ),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: viewModel.postFeed == null
-                ? const Center(child: CircularProgressIndicator(color: Colors.black,))
-                : ListView.separated(
-                    controller: viewModel.lvc,
-                    itemBuilder: (_, listIndex) {
-                      if (listIndex == 0) {
-                        return GestureDetector(
-                          onTap: () =>
-                              viewModel.toProfile(context, viewModel.user!.id),
-                          child: AvatarWithNameWidget(
-                            avatarRadius: 34,
-                            user: viewModel.user,
-                          ),
-                        );
-                      } else {
-                        return PostWidget(
-                          viewModel: viewModel,
-                          listIndex: listIndex,
-                        );
-                      }
-                    },
-                    separatorBuilder: (context, index) => Container(
-                      height: 1,
-                      color: Colors.black,
+      body: viewModel.postFeed == null
+          ? const Center(
+              child: CircularProgressIndicator(
+              color: Colors.black,
+            ))
+          : ListView.separated(
+              physics: const BouncingScrollPhysics(),
+              controller: viewModel.lvc,
+              itemBuilder: (_, listIndex) {
+                if (listIndex == 0) {
+                  return GestureDetector(
+                    onTap: () =>
+                        viewModel.toProfile(context, viewModel.user!.id),
+                    child: AvatarWithNameWidget(
+                      avatarRadius: 34,
+                      user: viewModel.user,
                     ),
-                    itemCount: itemCount,
-                  ),
-          ),
-          if (viewModel.isLoading) const LinearProgressIndicator(),
-        ],
+                  );
+                } else {
+                  return PostWidget(
+                    viewModel: viewModel,
+                    listIndex: listIndex,
+                  );
+                }
+              },
+              separatorBuilder: (context, index) => Container(
+                height: 1,
+                color: Colors.black,
+              ),
+              itemCount: itemCount,
+            ),
+      bottomNavigationBar: BottomAppBar(
+        child: viewModel.isLoading
+            ? const LinearProgressIndicator()
+            : const SizedBox.shrink(),
       ),
     );
   }

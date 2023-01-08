@@ -99,6 +99,8 @@ class RelationsViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  bool isUpdating = false;
+  
   final BuildContext context;
   String? targetUserId;
   RelationsViewModel({required this.context, required this.targetUserId}) {
@@ -107,6 +109,13 @@ class RelationsViewModel extends ChangeNotifier {
     followersController.addListener(() {
       var max = followersController.position.maxScrollExtent;
       var current = followersController.offset;
+      if (current < 0 && !isUpdating) {
+        isUpdating = true;
+        asyncInit();
+      }
+      if (current >= 0.0) {
+        isUpdating = false;
+      }
       var distanceToEnd = max - current;
       if (distanceToEnd < 1000) {
         if (!followersIsLoading) {
@@ -130,6 +139,9 @@ class RelationsViewModel extends ChangeNotifier {
     followedController.addListener(() {
       var max = followedController.position.maxScrollExtent;
       var current = followedController.offset;
+      if (current < 0) {
+        asyncInit();
+      }
       var distanceToEnd = max - current;
       if (distanceToEnd < 1000) {
         if (!followedIsLoading) {
@@ -153,6 +165,9 @@ class RelationsViewModel extends ChangeNotifier {
     bannedController.addListener(() {
       var max = bannedController.position.maxScrollExtent;
       var current = bannedController.offset;
+      if (current < 0) {
+        asyncInit();
+      }
       var distanceToEnd = max - current;
       if (distanceToEnd < 1000) {
         if (!bannedIsLoading) {
@@ -176,6 +191,9 @@ class RelationsViewModel extends ChangeNotifier {
     requestsController.addListener(() {
       var max = requestsController.position.maxScrollExtent;
       var current = requestsController.offset;
+      if (current < 0) {
+        asyncInit();
+      }
       var distanceToEnd = max - current;
       if (distanceToEnd < 1000) {
         if (!requestsIsLoading) {

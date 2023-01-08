@@ -21,6 +21,13 @@ class FavoritesViewModel extends ChangeNotifier {
     lvc.addListener(() {
       var max = lvc.position.maxScrollExtent;
       var current = lvc.offset;
+      if (current < 0 && !isUpdating) {
+        isUpdating = true;
+        asyncInit();
+      }
+      if (current >= 0.0) {
+        isUpdating = false;
+      }
       var distanceToEnd = max - current;
       if (distanceToEnd < 1000) {
         if (!isLoading) {
@@ -38,6 +45,8 @@ class FavoritesViewModel extends ChangeNotifier {
       }
     });
   }
+
+  bool isUpdating = false;
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;

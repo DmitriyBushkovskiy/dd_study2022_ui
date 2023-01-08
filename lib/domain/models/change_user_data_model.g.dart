@@ -11,9 +11,9 @@ ChangeUserDataModel _$ChangeUserDataModelFromJson(Map<String, dynamic> json) =>
       birthDate: DateTime.parse(json['birthDate'] as String),
       email: json['email'] as String,
       username: json['username'] as String,
-      fullName: json['fullName'] as String,
-      bio: json['bio'] as String,
-      phone: json['phone'] as String,
+      fullName: json['fullName'] as String?,
+      bio: json['bio'] as String?,
+      phone: json['phone'] as String?,
       privateAccount: json['privateAccount'] as bool,
     );
 

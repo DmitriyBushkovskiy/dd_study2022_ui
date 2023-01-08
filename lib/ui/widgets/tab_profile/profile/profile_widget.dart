@@ -23,116 +23,116 @@ class ProfileWidget extends StatelessWidget {
               : viewModel.targetUser!.username)),
       body: viewModel.user == null
           ? const SizedBox.shrink()
-          : GestureDetector(
-              child: ListView(controller: viewModel.lvc, children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          UserAvatarWidget(
-                            user: viewModel.targetUser,
-                            radius: 41,
-                          ),
-                          Center(
-                            child: Column(
-                              children: [
-                                const Text('Posts'),
-                                Text(
-                                  viewModel.targetUser?.postsAmount
-                                          .toString() ??
-                                      "no data",
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () => viewModel.toRelations(),
-                            child: Center(
-                              child: Column(
-                                children: [
-                                  const Text('Followers'),
-                                  Text(
-                                    viewModel.targetUser?.followersAmount
-                                            .toString() ??
-                                        "no data",
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () => viewModel.toRelations(),
-                            child: Center(
-                              child: Column(
-                                children: [
-                                  const Text('Followed'),
-                                  Text(
-                                    viewModel.targetUser?.followedAmount
-                                            .toString() ??
-                                        "no data",
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
+          : ListView(
+            physics: const BouncingScrollPhysics(),
+            controller: viewModel.lvc, children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      UserAvatarWidget(
+                        user: viewModel.targetUser,
+                        radius: 41,
                       ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: viewModel.targetUserId != viewModel.user!.id
-                          ? Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                FollowButtonWidget(
-                                    relationStateModel:
-                                        viewModel.relationStateModel),
-                                BanButtonWidget(
-                                    relationStateModel:
-                                        viewModel.relationStateModel)
-                              ],
-                            )
-                          : Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                ElevatedButton(
-                                    onPressed: viewModel.toAccount,
-                                    child: const Text("Account")),
-                              ],
+                      Center(
+                        child: Column(
+                          children: [
+                            const Text('Posts'),
+                            Text(
+                              viewModel.targetUser?.postsAmount
+                                      .toString() ??
+                                  "no data",
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                    ),
-                    viewModel.postFeed == null
-                        ? const Center(child: CircularProgressIndicator())
-                        : ListView.separated(
-                            physics: const  ScrollPhysics(),
-                            shrinkWrap: true,
-                            itemBuilder: (_, listIndex) => PostWidget(
-                              viewModel: viewModel,
-                              listIndex: listIndex,
-                            ),
-                            separatorBuilder: (context, index) => const Divider(
-                              color: Colors.black,
-                            ),
-                            itemCount: itemCount,
+                          ],
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () => viewModel.toRelations(),
+                        child: Center(
+                          child: Column(
+                            children: [
+                              const Text('Followers'),
+                              Text(
+                                viewModel.targetUser?.followersAmount
+                                        .toString() ??
+                                    "no data",
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
                           ),
-                    if (viewModel.isLoading) const LinearProgressIndicator(),
-                  ],
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () => viewModel.toRelations(),
+                        child: Center(
+                          child: Column(
+                            children: [
+                              const Text('Followed'),
+                              Text(
+                                viewModel.targetUser?.followedAmount
+                                        .toString() ??
+                                    "no data",
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ]),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  child: viewModel.targetUserId != viewModel.user!.id
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            FollowButtonWidget(
+                                relationStateModel:
+                                    viewModel.relationStateModel),
+                            BanButtonWidget(
+                                relationStateModel:
+                                    viewModel.relationStateModel)
+                          ],
+                        )
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ElevatedButton(
+                                onPressed: viewModel.toAccount,
+                                child: const Text("Account")),
+                          ],
+                        ),
+                ),
+                viewModel.postFeed == null
+                    ? const Center(child: CircularProgressIndicator())
+                    : ListView.separated(
+                        physics: const ScrollPhysics(),
+                        shrinkWrap: true,
+                        itemBuilder: (_, listIndex) => PostWidget(
+                          viewModel: viewModel,
+                          listIndex: listIndex,
+                        ),
+                        separatorBuilder: (context, index) => const Divider(
+                          color: Colors.black,
+                        ),
+                        itemCount: itemCount,
+                      ),
+                if (viewModel.isLoading) const LinearProgressIndicator(),
+              ],
             ),
+          ]),
     );
   }
 

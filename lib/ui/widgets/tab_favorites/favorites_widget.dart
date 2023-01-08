@@ -12,12 +12,14 @@ class FavoritesWidget extends StatelessWidget {
     var itemCount = viewModel.postFeed?.length ?? 0;
 
     return Scaffold(
+      backgroundColor: Colors.grey,
       appBar: AppBar(
         title: const Text("Favorites"),
       ),
       body: viewModel.postFeed == null
           ? const Center(child: CircularProgressIndicator())
           : ListView.separated(
+              physics: const BouncingScrollPhysics(),
               controller: viewModel.lvc,
               itemBuilder: (_, listIndex) => PostWidget(
                 viewModel: viewModel,
@@ -29,6 +31,11 @@ class FavoritesWidget extends StatelessWidget {
               ),
               itemCount: itemCount,
             ),
+      bottomNavigationBar: BottomAppBar(
+        child: viewModel.isLoading
+            ? const LinearProgressIndicator()
+            : const SizedBox.shrink(),
+      ),
     );
   }
 

@@ -11,6 +11,7 @@ class SearchWidget extends StatelessWidget {
     var viewModel = context.watch<SearchViewModel>();
 
     return Scaffold(
+      backgroundColor: Colors.grey,
         appBar: AppBar(actions: <Widget>[
           if (viewModel.isSearching)
             const Padding(

@@ -17,7 +17,7 @@ class DB {
   Future init() async {
     if (!_initialized) {
       var databasePath = await getDatabasesPath();
-      var path = join(databasePath, "db_v1.0.5.db");
+      var path = join(databasePath, "db_v1.0.6.db");
 
       _db = await openDatabase(path, version: 1, onCreate: _createDB);
       _initialized = true;
@@ -44,7 +44,7 @@ class DB {
     if (type == DbModel) {
       throw Exception("Type is REQUIRED");
     }
-    return ("t_${(type).toString()}");
+    return "t_" + (type).toString();
   }
 
   Future<Iterable<T>> getAll<T extends DbModel>(
@@ -93,10 +93,10 @@ class DB {
 
   Future<int> update<T extends DbModel>(T model) async =>
       await _db.update(_dbName(T), model.toMap(),
-          where: 'id = ?', whereArgs: [model.id]);
+          where: 'id = ? ', whereArgs: [model.id]);
 
   Future<int> delete<T extends DbModel>(T model) async =>
-      await _db.delete(_dbName(T), where: 'id = ?', whereArgs: [model.id]);
+      await _db.delete(_dbName(T), where: 'id = ? ', whereArgs: [model.id]);
 
   Future<int> cleanTable<T extends DbModel>() async =>
       await _db.delete(_dbName(T));
@@ -133,7 +133,7 @@ class DB {
       if (dbItem == null) {
         batch.insert(_dbName(T), data);
       } else if (updateCond == null || updateCond(dbItem, row)) {
-        batch.update(_dbName(T), data, where: "id = ?", whereArgs: [row.id]);
+        batch.update(_dbName(T), data, where: "id = ? ", whereArgs: [row.id]);
       }
     }
     await batch.commit(noResult: true);

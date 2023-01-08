@@ -42,11 +42,11 @@ class AppNavigator {
     return await key.currentState?.pushNamed(NavigationRoutes.chatsList);
   }
 
-  static Future toChat() async {
-    return await key.currentState?.pushNamed(NavigationRoutes.chat);
+  static Future toChat(Object? arg) async {
+    return await key.currentState?.pushNamed(NavigationRoutes.chat, arguments: arg);
   }
 
-  static Route<dynamic>? onGeneratedRoutes(RouteSettings settings, context) {
+  static Route<dynamic>? onGeneratedRoutes(RouteSettings settings, context, {Object? arg}) {
     switch (settings.name) {
       case NavigationRoutes.loaderWidget:
         return PageRouteBuilder(
@@ -73,7 +73,7 @@ class AppNavigator {
 
       case NavigationRoutes.chat:
         return PageRouteBuilder(
-          pageBuilder: (_, __, ___) => Chat.create(),
+          pageBuilder: (_, __, ___) => Chat.create(arg),
           transitionsBuilder: (_, a, __, c) => SlideTransition(
               position: Tween<Offset>(begin: const Offset(1, 0), end: Offset.zero)
                   .animate(a),

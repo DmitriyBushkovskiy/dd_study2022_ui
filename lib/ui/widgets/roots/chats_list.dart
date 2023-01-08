@@ -1,24 +1,34 @@
+import 'package:dd_study2022_ui/data/services/auth_service.dart';
+import 'package:dd_study2022_ui/domain/models/chat_model.dart';
 import 'package:dd_study2022_ui/domain/models/user.dart';
 import 'package:dd_study2022_ui/internal/config/app_config.dart';
 import 'package:dd_study2022_ui/internal/config/shared_prefs.dart';
 import 'package:dd_study2022_ui/internal/config/token_storage.dart';
+import 'package:dd_study2022_ui/ui/navigation/app_navigator.dart';
+import 'package:dd_study2022_ui/ui/widgets/common/avatar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class _ViewModel extends ChangeNotifier {
   BuildContext context;
+  final AuthService _authService = AuthService();
 
   _ViewModel({required this.context}) {
     asyncInit();
   }
 
   User? _user;
-
   User? get user => _user;
-
   set user(User? val) {
     _user = val;
+    notifyListeners();
+  }
+
+  List<ChatModel>? _chats;
+  List<ChatModel>? get chats => _chats;
+  set chats(List<ChatModel>? val) {
+    _chats = val;
     notifyListeners();
   }
 
@@ -28,6 +38,8 @@ class _ViewModel extends ChangeNotifier {
     var token = await TokenStorage.getAccessToken();
     headers = {"Authorization": "Bearer $token"};
     user = await SharedPrefs.getStoredUser();
+    chats = await _authService.getChats(0, 10);
+    var r = 1;
   }
 }
 
@@ -36,13 +48,29 @@ class ChatsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var viewModel = context.watch<_ViewModel>();
+    var itemCount = viewModel.chats?.length ?? 0;
+
     return Scaffold(
-        appBar: AppBar(
-          title: const Text("Chats"),
+      backgroundColor: Colors.grey,
+      appBar: AppBar(
+        title: const Text("Chats"),
+      ),
+      body: ListView.separated(
+        physics: const BouncingScrollPhysics(),
+        itemBuilder: (context, index) {
+          return ChatPreview(
+            index,
+            chat: viewModel.chats![index],
+          );
+        },
+        separatorBuilder: (context, index) => Container(
+          height: 1,
+          color: Colors.black,
         ),
-        body: ListView.builder(itemBuilder: (context, index) {
-          return ChatPreview(index);
-        }));
+        itemCount: itemCount,
+      ),
+    );
   }
 
   static create() {
@@ -55,38 +83,41 @@ class ChatsList extends StatelessWidget {
 
 class ChatPreview extends StatelessWidget {
   final int index;
+  final ChatModel chat;
 
-  const ChatPreview(this.index, {Key? key}) : super(key: key);
+  const ChatPreview(this.index, {Key? key, required this.chat})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     var viewModel = context.watch<_ViewModel>();
-    return Container(
-      //height: 106,
-      color: Colors.grey,
-      padding: const EdgeInsets.symmetric(vertical: 10),
+    return GestureDetector(
+      onTap: () {
+        AppNavigator.toChat(chat.id);
+      },
       child: Container(
         height: 86,
-        padding: const EdgeInsets.all(10),
-        //color: Colors.blue,
+        color: Colors.grey,
+        padding: const EdgeInsets.all( 10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CircleAvatar(
-              radius: 33,
-              backgroundColor: Colors.black,
-              child: (viewModel.user != null && viewModel.headers != null)
-                  ? CircleAvatar(
-                      radius: 32,
-                      backgroundImage: viewModel.user == null
-                          ? null
-                          : NetworkImage(
-                              "$baseUrl${viewModel.user!.avatarLink}",
-                              headers: viewModel.headers),
-                    )
-                  : null,
-            ),
+            UserAvatarWidget(user: chat.lastMessage?.author, radius: 33),
+            // CircleAvatar(
+            //   radius: 33,
+            //   backgroundColor: Colors.black,
+            //   child: (viewModel.user != null && viewModel.headers != null)
+            //       ? CircleAvatar(
+            //           radius: 32,
+            //           backgroundImage: viewModel.user == null
+            //               ? null
+            //               : NetworkImage(
+            //                   "$baseUrl${viewModel.user!.avatarLink}",
+            //                   headers: viewModel.headers),
+            //         )
+            //       : null,
+            // ),
             const SizedBox(
               width: 8,
             ),
@@ -99,14 +130,14 @@ class ChatPreview extends StatelessWidget {
                     //color: Colors.yellow,
                     padding: const EdgeInsets.only(bottom: 5),
                     child: Text(
-                      "Name ${index.toString()}",
-                      style:
-                          const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                      chat.lastMessage?.author.username ?? "",
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 13),
                     ),
                   ),
                   Expanded(
                     child: Text(
-                      "О выводе российских войск с Украины до конца года «не может быть и речи», заявил пресс-секретарь президента России Дмитрий Песков, передает корреспондент РБК.",
+                      chat.lastMessage?.text ?? "",
                       style: TextStyle(
                         fontSize: 12,
                         height: 1.3,
@@ -121,10 +152,10 @@ class ChatPreview extends StatelessWidget {
             ),
             //Expanded(child: Container(width: double.infinity, height: 50 , color: Colors.green,)),
             Container(
-              child: viewModel.user != null
+              child: chat.lastMessage != null
                   ? Text(
-                      DateFormat("dd.MM.yyyy")
-                          .format(DateTime.parse(viewModel.user!.birthDate)
+                      DateFormat("H:m dd.MM.yy")
+                          .format(DateTime.parse(chat.lastMessage!.created)
                               .toLocal())
                           .toString(),
                       style: TextStyle(
