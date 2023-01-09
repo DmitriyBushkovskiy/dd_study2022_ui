@@ -29,7 +29,8 @@ class AccountWidget extends StatelessWidget {
                   children: [
                     GestureDetector(
                         onTap: () {
-                          viewModel.changePhoto();
+                          viewModel.showChangeAvatarDialog();
+                          //viewModel.changePhoto();
                         },
                         onLongPress: () {
                           viewModel.changeAvatarColor();

@@ -1,5 +1,6 @@
 import 'package:dd_study2022_ui/ui/widgets/tab_create_post/create_post_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class CreatePostWidget extends StatelessWidget {
@@ -20,6 +21,11 @@ class CreatePostWidget extends StatelessWidget {
                   : null,
               icon: const Icon(Icons.add_a_photo_outlined)),
           IconButton(
+              onPressed: viewModel.imagesWithPath.length < 9
+                  ? () => viewModel.addImageFromGallery()
+                  : null,
+              icon: const Icon(Icons.add_photo_alternate_outlined)),
+          IconButton(
               onPressed: viewModel.selectedImages.isEmpty
                   ? null
                   : viewModel.removeSelected,
@@ -29,7 +35,9 @@ class CreatePostWidget extends StatelessWidget {
       body: ListView(
         children: [
           SizedBox(
-            height: size.width / 3 * (((viewModel.imagesWithPath.length - 1) ~/ 3) + 1),
+            height: size.width /
+                3 *
+                (((viewModel.imagesWithPath.length - 1) ~/ 3) + 1),
             child: GridView.builder(
               itemCount: viewModel.imagesWithPath.length,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

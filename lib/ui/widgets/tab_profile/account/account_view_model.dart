@@ -2,9 +2,12 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dd_study2022_ui/domain/models/change_user_data_model.dart';
+import 'package:dd_study2022_ui/ui/widgets/common/image_with_path.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:image_cropper/image_cropper.dart';
 
 import 'package:dd_study2022_ui/data/services/auth_service.dart';
 import 'package:dd_study2022_ui/data/services/sync_service.dart';
@@ -230,7 +233,7 @@ class AccountViewModel extends ChangeNotifier {
     bioTec.text = currentState!.bio ?? "";
   }
 
-  Future changePhoto() async {
+  Future makePhoto() async {
     var appModel = context.read<AppViewModel>();
     await Navigator.of(AppNavigator.key.currentState!.context)
         .push(MaterialPageRoute(
@@ -264,6 +267,32 @@ class AccountViewModel extends ChangeNotifier {
     imageCache.clear();
     imageCache.clearLiveImages();
     appModel.user = user;
+  }
+
+  Future addImageFromGallery() async {
+    var appModel = context.read<AppViewModel>();
+    var image = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (image?.path != null) {
+      File? img = File(image!.path);
+      img = await _cropImage(imageFile: img);
+      var t = await _api.uploadTemp(files: [img!]);
+      if (t.isNotEmpty) {
+        await _api.addAvatarToUser(t.first);
+      }
+    }
+    var user = await _api.getCurrentUser();
+    _syncService.syncCurrentUser();
+
+    imageCache.clear();
+    imageCache.clearLiveImages();
+    appModel.user = user;
+  }
+
+  Future<File?> _cropImage({required File imageFile}) async {
+    CroppedFile? croppedImage =
+        await ImageCropper().cropImage(sourcePath: imageFile.path);
+    if (croppedImage == null) return null;
+    return File(croppedImage.path);
   }
 
   void changeAvatarColor() async {
@@ -305,6 +334,41 @@ class AccountViewModel extends ChangeNotifier {
                     Navigator.of(context).pop();
                   },
                   child: const Text("Ok"))
+            ],
+          );
+        },
+      );
+    }
+  }
+
+  void showChangeAvatarDialog() {
+    var ctx = AppNavigator.key.currentContext;
+    if (ctx != null) {
+      showDialog(
+        context: ctx,
+        builder: (context) {
+          return AlertDialog(
+            //alignment: AlignmentDirectional.center,
+            actionsAlignment: MainAxisAlignment.spaceAround,
+            //title: const Center(child: Text("")),
+            content: Container(
+                alignment: AlignmentDirectional.topCenter,
+                height: 20,
+                width: 300,
+                child: const Text("Upload from:")),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    addImageFromGallery();
+                  },
+                  child: const Text("Gallery")),
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    makePhoto();
+                  },
+                  child: const Text("Camera"))
             ],
           );
         },
