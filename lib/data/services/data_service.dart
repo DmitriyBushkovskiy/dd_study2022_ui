@@ -20,9 +20,9 @@ class DataService {
     await DB.instance.deleteRange(elems);
   }
 
-  Future<List<PostModel>> getPosts() async { //TODO: rename to getPostFeed
+  Future<List<PostModel>> getPosts() async {
     var res = <PostModel>[];
-    var posts = await DB.instance.getAll<Post>(); //TODO: itterations
+    var posts = await DB.instance.getAll<Post>();
     for (var post in posts) {
       var author = await DB.instance.get<User>(post.authorId);
       var contents =

@@ -73,6 +73,14 @@ class ApiDataRepository extends ApiRepository {
   @override
   Future sendMessage(CreateMessageModel model) => _api.sendMessage(model);
 
+  @override
+  Future<String> getIdOrCreatePrivateChat(String? targetUserId) =>
+      _api.getIdOrCreatePrivateChat(targetUserId);
+
+  @override
+  Future<List<User>> getChatParticipants(String? chatId) =>
+      _api.getChatParticipants(chatId);
+
 //Post
 
   @override

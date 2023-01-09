@@ -146,45 +146,7 @@ class ProfileViewModel extends ChangeNotifier {
     _syncService.syncPosts([postFeed![listIndex]]);
     notifyListeners();
   }
-
-  Future changePhoto() async {
-    var appModel = context.read<AppViewModel>();
-    await Navigator.of(context).push(MaterialPageRoute(
-      builder: (newContext) => Scaffold(
-        backgroundColor: Colors.black,
-        appBar: AppBar(
-          backgroundColor: Colors.grey,
-          foregroundColor: Colors.black,
-        ),
-        body: SafeArea(
-          child: CamWidget(
-            shape: CameraShape.circle,
-            onFile: (file) {
-              _imagePath = file.path;
-              Navigator.of(newContext).pop();
-            },
-          ),
-        ),
-      ),
-    ));
-    if (_imagePath != null) {
-      var t = await _api.uploadTemp(files: [File(_imagePath!)]);
-      if (t.isNotEmpty) {
-        await _api.addAvatarToUser(t.first);
-      }
-    }
-
-    var user = await _api.getCurrentUser();
-    _syncService.syncCurrentUser();
-
-    var img = await NetworkAssetBundle(Uri.parse("$baseUrl${user!.avatarLink}"))
-        .load("$baseUrl${user.avatarLink}?v=1");
-    appModel.avatar = Image.memory(
-      img.buffer.asUint8List(),
-      fit: BoxFit.cover,
-    );
-  }
-
+  
   Future follow() async {
     relationStateModel = relationStateModel!
         .copyWith(relationAsFollower: await _authService.follow(targetUserId!));

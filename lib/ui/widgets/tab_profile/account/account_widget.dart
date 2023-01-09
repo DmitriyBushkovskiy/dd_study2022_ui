@@ -348,9 +348,7 @@ class AccountWidget extends StatelessWidget {
                         ),
                       ),
                     ElevatedButton(
-                      onPressed: viewModel.usernameIsNotTaken &&
-                              viewModel.emailIsNotTaken &&
-                              viewModel.currentState != viewModel.initialState
+                      onPressed: viewModel.checkNewData()
                           ? viewModel.changeUserData
                           : null,
                       style: ButtonStyle(

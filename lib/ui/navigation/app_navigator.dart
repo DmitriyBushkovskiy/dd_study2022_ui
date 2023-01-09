@@ -1,8 +1,8 @@
 import 'package:dd_study2022_ui/ui/widgets/tab_create_post/create_post_widget.dart';
 import 'package:dd_study2022_ui/ui/widgets/roots/app/app.dart';
 import 'package:dd_study2022_ui/ui/widgets/roots/auth/auth.dart';
-import 'package:dd_study2022_ui/ui/widgets/roots/chat.dart';
-import 'package:dd_study2022_ui/ui/widgets/roots/chats_list.dart';
+import 'package:dd_study2022_ui/ui/widgets/roots/chats/chat_widget.dart';
+import 'package:dd_study2022_ui/ui/widgets/roots/chats/chats_list_widget.dart';
 import 'package:dd_study2022_ui/ui/widgets/roots/loader/loader_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -64,7 +64,7 @@ class AppNavigator {
 
       case NavigationRoutes.chatsList:
         return PageRouteBuilder(
-          pageBuilder: (_, __, ___) => ChatsList.create(),
+          pageBuilder: (_, __, ___) => ChatsListWidget.create(),
           transitionsBuilder: (_, a, __, c) => SlideTransition(
               position: Tween<Offset>(begin: const Offset(1, 0), end: Offset.zero)
                   .animate(a),
@@ -73,7 +73,7 @@ class AppNavigator {
 
       case NavigationRoutes.chat:
         return PageRouteBuilder(
-          pageBuilder: (_, __, ___) => Chat.create(arg),
+          pageBuilder: (_, __, ___) => ChatWidget.create(arg),
           transitionsBuilder: (_, a, __, c) => SlideTransition(
               position: Tween<Offset>(begin: const Offset(1, 0), end: Offset.zero)
                   .animate(a),

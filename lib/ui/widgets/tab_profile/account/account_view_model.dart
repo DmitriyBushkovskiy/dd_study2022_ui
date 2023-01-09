@@ -188,13 +188,6 @@ class AccountViewModel extends ChangeNotifier {
 
   String? _imagePath;
 
-  Image? _avatar;
-  Image? get avatar => _avatar;
-  set avatar(Image? val) {
-    _avatar = val;
-    notifyListeners();
-  }
-
   bool _disposed = false;
 
   @override
@@ -219,13 +212,6 @@ class AccountViewModel extends ChangeNotifier {
   void asyncInit() async {
     user = await SharedPrefs.getStoredUser();
     userProfile = await _api.getUserProfile();
-
-    var img = await NetworkAssetBundle(Uri.parse("$baseUrl${user!.avatarLink}"))
-        .load("$baseUrl${user!.avatarLink}?v=1");
-    avatar = Image.memory(
-      img.buffer.asUint8List(),
-      fit: BoxFit.cover,
-    );
 
     initialState = AccountViewModelState(
         birthdate: DateTime.parse(user!.birthDate),
@@ -331,13 +317,20 @@ class AccountViewModel extends ChangeNotifier {
         birthDate: currentState!.birthdate.toUtc(),
         email: currentState!.email,
         username: currentState!.username,
-        fullName: currentState!.fullname,
-        bio: currentState!.bio,
-        phone: currentState!.phone,
+        fullName: currentState!.fullname == "" ? null : currentState!.fullname,
+        bio: currentState!.bio == "" ? null : currentState!.bio,
+        phone: currentState!.phone == "" ? null : currentState!.phone,
         privateAccount: currentState!.privateAccount);
     await _authService
         .changeUserData(model)
         .then((value) => asyncInit())
         .then((value) => showModal());
+  }
+
+  bool checkNewData() {
+    return usernameIsNotTaken ||
+        currentState!.username == initialState!.username && emailIsNotTaken ||
+        currentState!.email == initialState!.email &&
+            currentState != initialState;
   }
 }

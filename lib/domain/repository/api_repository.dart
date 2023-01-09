@@ -35,11 +35,15 @@ abstract class ApiRepository {
 
 //Chat
 
-Future<List<ChatModel>> getChats(int skip, int take);
+  Future<List<ChatModel>> getChats(int skip, int take);
 
-Future<List<MessageModel>> getChat(ChatRequest model);
+  Future<List<MessageModel>> getChat(ChatRequest model);
 
-Future sendMessage(CreateMessageModel model);
+  Future sendMessage(CreateMessageModel model);
+
+  Future<String> getIdOrCreatePrivateChat(String? targetUserId);
+
+  Future<List<User>> getChatParticipants(String? chatId);
 
 //Post
 
@@ -116,9 +120,7 @@ Future sendMessage(CreateMessageModel model);
   Future changeUserData(ChangeUserDataModel model);
 
   // Push
-  @override
   Future subscribe(PushToken model);
 
-  @override
   Future unsubscribe();
 }

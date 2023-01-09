@@ -20,7 +20,6 @@ import 'package:dd_study2022_ui/domain/models/relation_state_model.dart';
 import 'package:dd_study2022_ui/domain/models/search_users_request.dart';
 import 'package:dd_study2022_ui/domain/models/user.dart';
 import 'package:dd_study2022_ui/domain/models/user_profile.dart';
-import 'package:dd_study2022_ui/ui/widgets/roots/chat.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -40,15 +39,21 @@ abstract class ApiClient {
 
   @GET("/api/Chat/GetChats")
   Future<List<ChatModel>> getChats(
-    @Query("skip") int skip,
-    @Query("take") int take,
-  );
+      @Query("skip") int skip, @Query("take") int take);
 
   @PUT("/api/Chat/GetChat")
   Future<List<MessageModel>> getChat(@Body() ChatRequest model);
 
   @PUT("/api/Chat/SendMessage")
   Future sendMessage(@Body() CreateMessageModel model);
+
+  @GET("/api/Chat/GetIdOrCreatePrivateChat/{targetUserId}")
+  Future<String> getIdOrCreatePrivateChat(
+      @Path("targetUserId") String? targetUserId);
+
+  @GET("/api/Chat/GetChatParticipants/{chatId}")
+  Future<List<User>> getChatParticipants(
+      @Path("chatId") String? chatId);
 
 //Post
 

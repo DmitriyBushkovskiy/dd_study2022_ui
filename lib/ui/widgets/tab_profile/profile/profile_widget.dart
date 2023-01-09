@@ -24,7 +24,7 @@ class ProfileWidget extends StatelessWidget {
       body: viewModel.user == null
           ? const SizedBox.shrink()
           : ListView(
-            physics: const BouncingScrollPhysics(),
+            physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
             controller: viewModel.lvc, children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,

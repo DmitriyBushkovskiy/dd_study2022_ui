@@ -103,6 +103,16 @@ class AuthService {
     _api.sendMessage(model);
   }
 
+  Future<String> getIdOrCreatePrivateChat(String? targetUserId) async {
+    var result = _api.getIdOrCreatePrivateChat(targetUserId);
+    return result;
+  }
+
+  Future<List<User>> getChatParticipants(String? chatId) async {
+    var result = _api.getChatParticipants(chatId);
+    return result;
+  }
+
 //Post
   Future<PostModel> getPost(String? postId) async {
     var postModel = await _api.getPost(postId);
@@ -243,7 +253,6 @@ class AuthService {
   }
 
   Future<UserProfile?> getUserProfile() async {
-    //TODO: save data to DB
     return await _api.getUserProfile();
   }
 

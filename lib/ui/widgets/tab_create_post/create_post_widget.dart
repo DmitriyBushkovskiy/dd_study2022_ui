@@ -9,8 +9,6 @@ class CreatePostWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     var viewModel = context.watch<CreatePostViewModel>();
     var size = MediaQuery.of(context).size;
-    //TODO: add opportunity to add images from library
-    //TODO:make scrollable screen
     return Scaffold(
       backgroundColor: Colors.grey,
       appBar: AppBar(

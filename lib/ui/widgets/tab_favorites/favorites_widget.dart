@@ -19,7 +19,7 @@ class FavoritesWidget extends StatelessWidget {
       body: viewModel.postFeed == null
           ? const Center(child: CircularProgressIndicator())
           : ListView.separated(
-              physics: const BouncingScrollPhysics(),
+              physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
               controller: viewModel.lvc,
               itemBuilder: (_, listIndex) => PostWidget(
                 viewModel: viewModel,

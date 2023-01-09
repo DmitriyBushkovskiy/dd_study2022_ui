@@ -24,7 +24,7 @@ class _UsersListWidgetState extends State<UsersListWidget> {
     var itemCount = widget.usersList.length;
 
     return ListView.separated(
-      physics: BouncingScrollPhysics(),
+      physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
       addAutomaticKeepAlives: true,
       controller: widget.controller,
       itemBuilder: (_, listIndex) => GestureDetector(

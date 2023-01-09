@@ -72,7 +72,7 @@ class HomeWidget extends StatelessWidget {
               color: Colors.black,
             ))
           : ListView.separated(
-              physics: const BouncingScrollPhysics(),
+              physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
               controller: viewModel.lvc,
               itemBuilder: (_, listIndex) {
                 if (listIndex == 0) {

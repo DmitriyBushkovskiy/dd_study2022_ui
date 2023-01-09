@@ -14,6 +14,9 @@ ChatModel _$ChatModelFromJson(Map<String, dynamic> json) => ChatModel(
       lastMessage: json['lastMessage'] == null
           ? null
           : MessageModel.fromJson(json['lastMessage'] as Map<String, dynamic>),
+      participants: (json['participants'] as List<dynamic>)
+          .map((e) => User.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$ChatModelToJson(ChatModel instance) => <String, dynamic>{
@@ -22,4 +25,5 @@ Map<String, dynamic> _$ChatModelToJson(ChatModel instance) => <String, dynamic>{
       'creatorId': instance.creatorId,
       'isPrivate': instance.isPrivate,
       'lastMessage': instance.lastMessage,
+      'participants': instance.participants,
     };

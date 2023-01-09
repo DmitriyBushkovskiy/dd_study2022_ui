@@ -29,7 +29,7 @@ class FavoritesViewModel extends ChangeNotifier {
         isUpdating = false;
       }
       var distanceToEnd = max - current;
-      if (distanceToEnd < 1000) {
+      if (distanceToEnd < 500) {
         if (!isLoading) {
           isLoading = true;
           var newPosts = <PostModel>[];
