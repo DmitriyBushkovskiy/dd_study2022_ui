@@ -11,6 +11,8 @@ SearchUserRequest _$SearchUserRequestFromJson(Map<String, dynamic> json) =>
       username: json['username'] as String,
       skip: json['skip'] as int,
       take: json['take'] as int,
+      selection:
+          $enumDecodeNullable(_$SearchSelectionEnumEnumMap, json['selection']),
     );
 
 Map<String, dynamic> _$SearchUserRequestToJson(SearchUserRequest instance) =>
@@ -18,4 +20,10 @@ Map<String, dynamic> _$SearchUserRequestToJson(SearchUserRequest instance) =>
       'username': instance.username,
       'skip': instance.skip,
       'take': instance.take,
+      'selection': _$SearchSelectionEnumEnumMap[instance.selection],
     };
+
+const _$SearchSelectionEnumEnumMap = {
+  SearchSelectionEnum.avalable: 'avalable',
+  SearchSelectionEnum.all: 'all',
+};

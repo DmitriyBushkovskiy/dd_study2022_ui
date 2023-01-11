@@ -10,6 +10,7 @@ class ChatModel {
   final String created;
   final String creatorId;
   final bool isPrivate;
+  final String? name;
   final MessageModel? lastMessage;
   final List<User> participants;
 
@@ -18,6 +19,7 @@ class ChatModel {
     required this.created,
     required this.creatorId,
     required this.isPrivate,
+    this.name,
     this.lastMessage,
     required this.participants,
   });

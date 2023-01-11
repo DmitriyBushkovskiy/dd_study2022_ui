@@ -43,7 +43,7 @@ class SearchWidget extends StatelessWidget {
 
   static create() {
     return ChangeNotifierProvider(
-      create: (context) => SearchViewModel(context: context),
+      create: (context) => SearchViewModel(context: context,),
       child: const SearchWidget(),
     );
   }

@@ -1,5 +1,4 @@
 import 'package:dd_study2022_ui/domain/models/chat_model.dart';
-import 'package:dd_study2022_ui/ui/navigation/app_navigator.dart';
 import 'package:dd_study2022_ui/ui/widgets/common/avatar_widget.dart';
 import 'package:dd_study2022_ui/ui/widgets/roots/chats/chats_list_view_model.dart';
 import 'package:flutter/material.dart';
@@ -16,11 +15,8 @@ class ChatPreview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var viewModel = context.watch<ChatsListViewModel>();
-    return GestureDetector(
-      onTap: () {
-        AppNavigator.toChat(chat.id);
-      },
-      child: Container(
+    return 
+      Container(
         height: 86,
         color: Colors.grey,
         padding: const EdgeInsets.all(10),
@@ -51,7 +47,7 @@ class ChatPreview extends StatelessWidget {
                               .firstWhere(
                                   (element) => element.id != viewModel.user?.id)
                               .username
-                          : "Group chat",
+                          : chat.name ?? "Group chat",
                       style: const TextStyle(
                           fontWeight: FontWeight.bold, fontSize: 13),
                     ),
@@ -74,9 +70,10 @@ class ChatPreview extends StatelessWidget {
             Container(
               child: chat.lastMessage != null
                   ? Text(
-                      DateFormat("H:m dd.MM.yy")
+                      DateFormat("H:mm dd.MM.yy")
                           .format(DateTime.parse(chat.lastMessage!.created)
-                              .toLocal())
+                              .toLocal()
+                              )
                           .toString(),
                       style: const TextStyle(
                         fontSize: 12,
@@ -87,7 +84,6 @@ class ChatPreview extends StatelessWidget {
             ),
           ],
         ),
-      ),
     );
   }
 }

@@ -18,6 +18,7 @@ import 'package:dd_study2022_ui/domain/models/message_model.dart';
 import 'package:dd_study2022_ui/domain/models/post_model.dart';
 import 'package:dd_study2022_ui/domain/models/push_token.dart';
 import 'package:dd_study2022_ui/domain/models/relation_state_model.dart';
+import 'package:dd_study2022_ui/domain/models/renew_users_in_chat_request.dart';
 import 'package:dd_study2022_ui/domain/models/search_users_request.dart';
 import 'package:dd_study2022_ui/domain/models/user.dart';
 import 'package:dd_study2022_ui/domain/models/user_profile.dart';
@@ -111,6 +112,20 @@ class AuthService {
   Future<List<User>> getChatParticipants(String? chatId) async {
     var result = _api.getChatParticipants(chatId);
     return result;
+  }
+
+  Future<String> createGroupChat(String chatName) async {
+    var result = _api.createGroupChat(chatName);
+    return result;
+  }
+
+  Future<ChatModel> getChatData(String chatId) async {
+    var result = _api.getChatData(chatId);
+    return result;
+  }
+
+  Future renewGroupChatUsersList(RenewUsersInChatRequest model) async {
+    _api.renewGroupChatUsersList(model);
   }
 
 //Post
@@ -210,6 +225,11 @@ class AuthService {
 
   Future<List<User>> searchUsers(SearchUserRequest model) async {
     var result = _api.searchUsers(model);
+    return result;
+  }
+
+  Future<List<User>> searchAvalableUsers(SearchUserRequest model) async {
+    var result = _api.searchAvalableUsers(model);
     return result;
   }
 

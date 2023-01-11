@@ -20,6 +20,7 @@ import 'package:dd_study2022_ui/domain/models/push_token.dart';
 import 'package:dd_study2022_ui/domain/models/refresh_token_request.dart';
 import 'package:dd_study2022_ui/domain/models/register_user_request.dart';
 import 'package:dd_study2022_ui/domain/models/relation_state_model.dart';
+import 'package:dd_study2022_ui/domain/models/renew_users_in_chat_request.dart';
 import 'package:dd_study2022_ui/domain/models/search_users_request.dart';
 import 'package:dd_study2022_ui/domain/models/user.dart';
 import 'package:dd_study2022_ui/domain/models/user_profile.dart';
@@ -80,6 +81,17 @@ class ApiDataRepository extends ApiRepository {
   @override
   Future<List<User>> getChatParticipants(String? chatId) =>
       _api.getChatParticipants(chatId);
+
+  @override
+  Future<String> createGroupChat(String chatName) =>
+      _api.createGroupChat(chatName);
+
+  @override
+  Future<ChatModel> getChatData(String chatId) => _api.getChatData(chatId);
+
+  @override
+  Future renewGroupChatUsersList(RenewUsersInChatRequest model) =>
+      _api.renewGroupChatUsersList(model);
 
 //Post
 
@@ -155,6 +167,10 @@ class ApiDataRepository extends ApiRepository {
   @override
   Future<List<User>> searchUsers(SearchUserRequest model) =>
       _api.searchUsers(model);
+
+  @override
+  Future<List<User>> searchAvalableUsers(SearchUserRequest model) =>
+      _api.searchAvalableUsers(model);
 
   @override
   Future<String> acceptRequest(String targetUserId) =>

@@ -1,10 +1,12 @@
 import 'package:dd_study2022_ui/data/services/auth_service.dart';
+import 'package:dd_study2022_ui/domain/models/chat_model.dart';
 import 'package:dd_study2022_ui/domain/models/chat_request.dart';
 import 'package:dd_study2022_ui/domain/models/create_message_model.dart';
 import 'package:dd_study2022_ui/domain/models/message_model.dart';
 import 'package:dd_study2022_ui/domain/models/user.dart';
 import 'package:dd_study2022_ui/internal/config/shared_prefs.dart';
 import 'package:dd_study2022_ui/internal/config/token_storage.dart';
+import 'package:dd_study2022_ui/ui/widgets/roots/chats/add_users_to_group_chat_widget.dart';
 import 'package:flutter/material.dart';
 
 class ChatViewModel extends ChangeNotifier {
@@ -44,6 +46,13 @@ class ChatViewModel extends ChangeNotifier {
     });
   }
 
+  ChatModel? _chat;
+  ChatModel? get chat => _chat;
+  set chat(ChatModel? val) {
+    _chat = val;
+    notifyListeners();
+  }
+
   bool isUpdating = false;
 
   bool _isLoading = false;
@@ -57,13 +66,6 @@ class ChatViewModel extends ChangeNotifier {
   User? get user => _user;
   set user(User? val) {
     _user = val;
-    notifyListeners();
-  }
-
-  List<User>? _participants;
-  List<User>? get participants => _participants;
-  set participants(List<User>? val) {
-    _participants = val;
     notifyListeners();
   }
 
@@ -82,7 +84,7 @@ class ChatViewModel extends ChangeNotifier {
     user = await SharedPrefs.getStoredUser();
     messages = await _authService
         .getChat(ChatRequest(chatId: chatId!, skip: 0, take: 10));
-    participants = await _authService.getChatParticipants(chatId);
+    chat = await _authService.getChatData(chatId!);
   }
 
   void sendMessage() async {
@@ -90,5 +92,10 @@ class ChatViewModel extends ChangeNotifier {
     await _authService.sendMessage(newMessage);
     messageTec.clear();
     asyncInit();
+  }
+
+  void addUsersToGroupChat() {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => AddUsersToGroupChatWidget.create(arg: chatId)));
   }
 }

@@ -75,6 +75,13 @@ class MessageWidget extends StatelessWidget {
                         height: 1.3,
                       ),
                     ),
+                    if (message.author.id == viewModel.user?.id) 
+                    Container(
+                        alignment: AlignmentDirectional.topEnd,
+                        width: 270,
+                        child: message.state
+                            ? const Icon(Icons.done_all_outlined, size: 20,)
+                            : const SizedBox.shrink())
                   ],
                 ),
               ),

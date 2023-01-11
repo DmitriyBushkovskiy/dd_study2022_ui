@@ -297,10 +297,6 @@ class AccountWidget extends StatelessWidget {
                                 child: IntrinsicHeight(
                                   child: TextFormField(
                                     controller: viewModel.bioTec,
-                                    //focusNode: FocusNode(),
-                                    // key: Key(viewModel.userProfile?.bio ??
-                                    //     "no data"),
-                                    // initialValue: viewModel.userProfile?.bio,
                                     style: const TextStyle(fontSize: 15),
                                     maxLength: 200,
                                     keyboardType: TextInputType.multiline,

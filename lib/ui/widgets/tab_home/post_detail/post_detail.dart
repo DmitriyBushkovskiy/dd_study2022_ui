@@ -30,8 +30,8 @@ class PostDetail extends StatelessWidget {
                   shrinkWrap: true,
                   children: <Widget>[
                     GestureDetector(
-                      onTap: () =>
-                          viewModel.toProfile(context, viewModel.post!.author.id),
+                      onTap: () => viewModel.toProfile(
+                          context, viewModel.post!.author.id),
                       child: AvatarWithNameWidget(
                         avatarRadius: 20,
                         user: viewModel.post!.author,
@@ -167,8 +167,8 @@ class PostDetail extends StatelessWidget {
                     ]),
                     viewModel.post!.comments.isNotEmpty
                         ? const Padding(
-                            padding: EdgeInsets.only(
-                                left: 8, bottom: 16, top: 16),
+                            padding:
+                                EdgeInsets.only(left: 8, bottom: 16, top: 16),
                             child: Text("Comments:"),
                           )
                         : const SizedBox.shrink(),
@@ -191,39 +191,50 @@ class PostDetail extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(10),
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Flexible(
-                            child: TextField(
-                              controller: viewModel.newCommentTec,
-                              decoration: const InputDecoration(
-                                contentPadding: EdgeInsets.all(8),
-                                enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Colors.black,
-                                    ),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10))),
-                                focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: Color.fromARGB(255, 212, 212, 212),
-                                    ),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10))),
+                            child: Container(
+                              constraints: const BoxConstraints(
+                                minHeight: 40,
+                                maxWidth: 320,
+                                maxHeight: 150,
+                              ),
+                              child: TextField(
+                                keyboardType: TextInputType.multiline,
+                                maxLines: null,
+                                controller: viewModel.newCommentTec,
+                                decoration: const InputDecoration(
+                                  isDense: true,
+                                  contentPadding: EdgeInsets.all(8),
+                                  enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Colors.black,
+                                      ),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(10))),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color:
+                                            Color.fromARGB(255, 212, 212, 212),
+                                      ),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(10))),
+                                ),
                               ),
                             ),
                           ),
-                          viewModel.comment != ""
-                              ? Padding(
+                          Padding(
                                   padding: const EdgeInsets.only(left: 8.0),
                                   child: IconButton(
                                     icon: const Icon(
                                       Icons.send,
-                                      size: 37,
+                                      size: 30,
                                     ),
                                     onPressed: viewModel.createComment,
                                   ),
                                 )
-                              : const SizedBox.shrink(),
                         ],
                       ),
                     ),

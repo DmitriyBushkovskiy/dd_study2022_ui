@@ -1,5 +1,5 @@
 import 'package:dd_study2022_ui/data/services/auth_service.dart';
-import 'package:dd_study2022_ui/domain/models/user.dart';
+import 'package:dd_study2022_ui/domain/enums/search_selection.dart';
 import 'package:dd_study2022_ui/ui/navigation/app_navigator.dart';
 import 'package:dd_study2022_ui/ui/widgets/common/avatar_with_name_widget.dart';
 import 'package:dd_study2022_ui/ui/widgets/tab_search/search_view_model.dart';
@@ -16,7 +16,9 @@ class CreateNewChatWidget extends StatelessWidget {
     return Scaffold(
         backgroundColor: Colors.grey,
         appBar: AppBar(actions: <Widget>[
-          const SizedBox(width: 40,),
+          const SizedBox(
+            width: 40,
+          ),
           if (viewModel.isSearching)
             const Padding(
               padding: EdgeInsets.all(8.0),
@@ -34,39 +36,24 @@ class CreateNewChatWidget extends StatelessWidget {
                   : viewModel.showSearchField,
               icon: Icon(viewModel.isSearching ? Icons.close : Icons.search))
         ]),
-        body: Container(
-            child: viewModel.users == null
-                ? const Center(child: CircularProgressIndicator())
-                : UsersListForChatWidget(
-                    relationsViewModel: viewModel,
-                    controller: viewModel.lvc,
-                    usersList: viewModel.users!,
-                  )));
+        body: viewModel.users == null
+            ? const Center(child: CircularProgressIndicator())
+            : const UsersListForChatWidget());
   }
 
   static create() {
     return ChangeNotifierProvider(
-      create: (context) => SearchViewModel(context: context),
+      create: (context) => SearchViewModel(context: context, selection: SearchSelectionEnum.avalable),
       child: const CreateNewChatWidget(),
     );
   }
 }
 
 class UsersListForChatWidget extends StatefulWidget {
-  final dynamic relationsViewModel;
-  final List<User> usersList;
-  final ScrollController controller;
+  const UsersListForChatWidget({super.key});
 
-  const UsersListForChatWidget({
-    super.key,
-    required this.relationsViewModel,
-    required this.usersList,
-    required this.controller,
-  });
-
-  void getChatId(int listIndex) async {
+  void toChat(String targetUserId) async {
     final AuthService _authService = AuthService();
-    var targetUserId = usersList[listIndex].id;
     var result = await _authService.getIdOrCreatePrivateChat(targetUserId);
     AppNavigator.toChat(result);
   }
@@ -78,18 +65,19 @@ class UsersListForChatWidget extends StatefulWidget {
 class _UsersListForChatWidgetState extends State<UsersListForChatWidget> {
   @override
   Widget build(BuildContext context) {
-    var itemCount = widget.usersList.length;
+    var viewModel = context.watch<SearchViewModel>();
+    var itemCount = viewModel.users!.length;
 
     return ListView.separated(
       physics:
           const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
       addAutomaticKeepAlives: true,
-      controller: widget.controller,
+      controller: viewModel.lvc,
       itemBuilder: (_, listIndex) => GestureDetector(
-        onTap: () => widget.getChatId(listIndex),
-        child:AvatarWithNameWidget(
+        onTap: () => widget.toChat(viewModel.users![listIndex].id),
+        child: AvatarWithNameWidget(
           avatarRadius: 30,
-          user: widget.usersList[listIndex],
+          user: viewModel.users![listIndex],
         ),
       ),
       separatorBuilder: (context, index) => const Divider(

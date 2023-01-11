@@ -193,7 +193,7 @@ class PostDetailViewModel extends ChangeNotifier {
 
   void deleteComment(String commentId) async {
     if (post!.comments.any((element) => element.id == commentId)) {
-      _authService.deleteComment(commentId);
+      await _authService.deleteComment(commentId);
       post!.comments = await _authService.getComments(post!.id);
       await _syncService.syncComments(post!.comments, post!.id);
       notifyListeners();

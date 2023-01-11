@@ -213,7 +213,8 @@ class AccountViewModel extends ChangeNotifier {
   }
 
   void asyncInit() async {
-    user = await SharedPrefs.getStoredUser();
+    user = await _api.getCurrentUser();
+    await SharedPrefs.setStoredUser(user);
     userProfile = await _api.getUserProfile();
 
     initialState = AccountViewModelState(

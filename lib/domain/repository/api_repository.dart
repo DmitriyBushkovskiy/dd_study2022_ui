@@ -18,6 +18,7 @@ import 'package:dd_study2022_ui/domain/models/post_model.dart';
 import 'package:dd_study2022_ui/domain/models/push_token.dart';
 import 'package:dd_study2022_ui/domain/models/register_user_request.dart';
 import 'package:dd_study2022_ui/domain/models/relation_state_model.dart';
+import 'package:dd_study2022_ui/domain/models/renew_users_in_chat_request.dart';
 import 'package:dd_study2022_ui/domain/models/search_users_request.dart';
 import 'package:dd_study2022_ui/domain/models/token_response.dart';
 import 'package:dd_study2022_ui/domain/models/user.dart';
@@ -44,6 +45,12 @@ abstract class ApiRepository {
   Future<String> getIdOrCreatePrivateChat(String? targetUserId);
 
   Future<List<User>> getChatParticipants(String? chatId);
+
+  Future<String> createGroupChat(String chatName);
+
+  Future<ChatModel> getChatData(String chatId);
+
+  Future renewGroupChatUsersList(RenewUsersInChatRequest model);
 
 //Post
 
@@ -90,6 +97,8 @@ abstract class ApiRepository {
   Future<String> unban(String targetUserId);
 
   Future<List<User>> searchUsers(SearchUserRequest model);
+
+  Future<List<User>> searchAvalableUsers(SearchUserRequest model);
 
   Future<String> acceptRequest(String targetUserId);
 

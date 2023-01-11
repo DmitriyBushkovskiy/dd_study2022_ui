@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dd_study2022_ui/domain/enums/search_selection.dart';
 import 'package:dd_study2022_ui/domain/models/search_users_request.dart';
 import 'package:dd_study2022_ui/domain/models/user.dart';
 import 'package:dd_study2022_ui/data/services/auth_service.dart';
@@ -20,7 +21,9 @@ class SearchViewModel extends ChangeNotifier {
   }
 
   final BuildContext context;
+  final SearchSelectionEnum? selection;
   SearchViewModel({
+    this.selection,
     required this.context,
   }) {
     asyncInit();
@@ -41,10 +44,10 @@ class SearchViewModel extends ChangeNotifier {
           var newUsersList = <User>[];
           _authService
               .searchUsers(SearchUserRequest(
-                username: searchTec.text,
-                skip: users!.length,
-                take: 10,
-              ))
+                  username: searchTec.text,
+                  skip: users!.length,
+                  take: 10,
+                  selection: selection))
               .then((value) => newUsersList = value);
           Future.delayed(const Duration(seconds: 1)).then((value) {
             users = <User>[...users!, ...newUsersList];
@@ -93,13 +96,13 @@ class SearchViewModel extends ChangeNotifier {
   }
 
   void sendQuery() async {
-    users = await _authService.searchUsers(
-        SearchUserRequest(username: searchTec.text, skip: 0, take: 10));
+    users = await _authService.searchUsers(SearchUserRequest(
+        username: searchTec.text, skip: 0, take: 10, selection: selection));
   }
 
   void asyncInit() async {
-    users = await _authService.searchUsers(
-        SearchUserRequest(username: searchField, skip: 0, take: 10));
+    users = await _authService.searchUsers(SearchUserRequest(
+        username: searchField, skip: 0, take: 10, selection: selection));
   }
 
   void toProfile(BuildContext bc, String userId) {

@@ -179,6 +179,74 @@ class _ApiClient implements ApiClient {
   }
 
   @override
+  Future<String> createGroupChat(chatName) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'chatName': chatName};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.fetch<String>(_setStreamType<String>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/api/Chat/CreateGroupChat',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = _result.data!;
+    return value;
+  }
+
+  @override
+  Future<ChatModel> getChatData(chatId) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'chatId': chatId};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<ChatModel>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/api/Chat/GetChatData',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = ChatModel.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<dynamic> renewGroupChatUsersList(model) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(model.toJson());
+    final _result = await _dio.fetch(_setStreamType<dynamic>(Options(
+      method: 'PUT',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/api/Chat/RenewGroupChatUsersList',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = _result.data;
+    return value;
+  }
+
+  @override
   Future<dynamic> createPost(model) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -641,6 +709,32 @@ class _ApiClient implements ApiClient {
             .compose(
               _dio.options,
               '/api/Relation/SearchUsers',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    var value = _result.data!
+        .map((dynamic i) => User.fromJson(i as Map<String, dynamic>))
+        .toList();
+    return value;
+  }
+
+  @override
+  Future<List<User>> searchAvalableUsers(model) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(model.toJson());
+    final _result =
+        await _dio.fetch<List<dynamic>>(_setStreamType<List<User>>(Options(
+      method: 'PUT',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/api/Relation/SearchAvalableUsers',
               queryParameters: queryParameters,
               data: _data,
             )

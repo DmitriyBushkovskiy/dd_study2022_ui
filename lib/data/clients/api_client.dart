@@ -17,6 +17,7 @@ import 'package:dd_study2022_ui/domain/models/message_model.dart';
 import 'package:dd_study2022_ui/domain/models/post_model.dart';
 import 'package:dd_study2022_ui/domain/models/push_token.dart';
 import 'package:dd_study2022_ui/domain/models/relation_state_model.dart';
+import 'package:dd_study2022_ui/domain/models/renew_users_in_chat_request.dart';
 import 'package:dd_study2022_ui/domain/models/search_users_request.dart';
 import 'package:dd_study2022_ui/domain/models/user.dart';
 import 'package:dd_study2022_ui/domain/models/user_profile.dart';
@@ -52,8 +53,16 @@ abstract class ApiClient {
       @Path("targetUserId") String? targetUserId);
 
   @GET("/api/Chat/GetChatParticipants/{chatId}")
-  Future<List<User>> getChatParticipants(
-      @Path("chatId") String? chatId);
+  Future<List<User>> getChatParticipants(@Path("chatId") String? chatId);
+
+  @POST("/api/Chat/CreateGroupChat")
+  Future<String> createGroupChat(@Query("chatName") String chatName);
+
+  @GET("/api/Chat/GetChatData")
+  Future<ChatModel> getChatData(@Query("chatId") String chatId);
+
+  @PUT("/api/Chat/RenewGroupChatUsersList")
+  Future renewGroupChatUsersList(@Body() RenewUsersInChatRequest model);
 
 //Post
 
@@ -120,6 +129,9 @@ abstract class ApiClient {
 
   @PUT("/api/Relation/SearchUsers")
   Future<List<User>> searchUsers(@Body() SearchUserRequest model);
+
+  @PUT("/api/Relation/SearchAvalableUsers")
+  Future<List<User>> searchAvalableUsers(@Body() SearchUserRequest model);
 
   @PUT("/api/Relation/AcceptRequest/{targetUserId}")
   Future<String> acceptRequest(@Path("targetUserId") String targetUserId);

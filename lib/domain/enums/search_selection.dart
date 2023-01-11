@@ -1,0 +1,5 @@
+enum SearchSelectionEnum
+{
+    avalable,
+    all,
+}
