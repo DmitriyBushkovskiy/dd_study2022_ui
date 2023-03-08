@@ -66,7 +66,7 @@ class AuthService {
       var user = await _api.getCurrentUser();
       if (user != null) {
         var token = await FirebaseMessaging.instance.getToken();
-        if (token != null) await _api.subscribe(PushToken(token: token));
+        //if (token != null) await _api.subscribe(PushToken(token: token));
         await SharedPrefs.setStoredUser(user);
         await _dataService.cuUser(user);
       }
@@ -80,11 +80,11 @@ class AuthService {
   }
 
   Future logout() async {
-    try {
-      await _api.unsubscribe();
-    } on Exception catch (e, _) {
-      e.toString().console();
-    }
+    // try { 
+    //   await _api.unsubscribe();
+    // } on Exception catch (e, _) {
+    //   e.toString().console();
+    // }
     await cleanToken();
   }
 

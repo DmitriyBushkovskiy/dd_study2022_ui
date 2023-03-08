@@ -24,20 +24,6 @@ class ChatsListWidget extends StatelessWidget {
             highlightColor: Colors.transparent,
             onPressed: () {
               viewModel.showModal();
-
-              // return PageRouteBuilder(
-              //   pageBuilder: (_, __, ___) => ChatsListWidget.create(),
-              //   transitionsBuilder: (_, a, __, c) => SlideTransition(
-              //       position: Tween<Offset>(begin: const Offset(1, 0), end: Offset.zero)
-              //           .animate(a),
-              //       child: c),
-              // );
-
-              // Navigator.of(context).push(PageRouteBuilder(
-              //     pageBuilder: (_, __, ___) => GroupChatName(), transitionsBuilder: (_, a, __, c) => SlideTransition(
-              // position: Tween<Offset>(begin: const Offset(0, -1), end: const Offset(0, -0.5))
-              //     .animate(a),
-              // child: c)));
             },
             icon: const Icon(Icons.group_add_outlined),
           ),

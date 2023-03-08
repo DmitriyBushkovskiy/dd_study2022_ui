@@ -1,3 +1,4 @@
+import 'package:dd_study2022_ui/domain/enums/tab_item.dart';
 import 'package:dd_study2022_ui/ui/widgets/tab_create_post/create_post_widget.dart';
 import 'package:dd_study2022_ui/ui/widgets/roots/app/app.dart';
 import 'package:dd_study2022_ui/ui/widgets/roots/auth/auth.dart';
@@ -18,6 +19,13 @@ class NavigationRoutes {
 
 class AppNavigator {
   static final key = GlobalKey<NavigatorState>();
+  static final navigationKeys = {
+    TabItemEnum.home: GlobalKey<NavigatorState>(),
+    TabItemEnum.search: GlobalKey<NavigatorState>(),
+    TabItemEnum.newPost: GlobalKey<NavigatorState>(),
+    TabItemEnum.favorites: GlobalKey<NavigatorState>(),
+    TabItemEnum.profile: GlobalKey<NavigatorState>(),
+  };
 
   static Future toLoader() async {
     return await key.currentState?.pushNamedAndRemoveUntil(
@@ -43,17 +51,20 @@ class AppNavigator {
   }
 
   static Future toChat(Object? arg) async {
-    return await key.currentState?.pushNamed(NavigationRoutes.chat, arguments: arg);
+    return await key.currentState
+        ?.pushNamed(NavigationRoutes.chat, arguments: arg);
   }
 
-  static Route<dynamic>? onGeneratedRoutes(RouteSettings settings, context, {Object? arg}) {
+  static Route<dynamic>? onGeneratedRoutes(RouteSettings settings, context,
+      {Object? arg}) {
     switch (settings.name) {
       case NavigationRoutes.loaderWidget:
         return PageRouteBuilder(
             pageBuilder: (_, __, ___) => LoaderWidget.create());
 
       case NavigationRoutes.auth:
-        return PageRouteBuilder(pageBuilder: (_, __, ___) => AuthWidget.create());
+        return PageRouteBuilder(
+            pageBuilder: (_, __, ___) => AuthWidget.create());
 
       case NavigationRoutes.app:
         return PageRouteBuilder(pageBuilder: (_, __, ___) => App.create());
@@ -66,8 +77,9 @@ class AppNavigator {
         return PageRouteBuilder(
           pageBuilder: (_, __, ___) => ChatsListWidget.create(),
           transitionsBuilder: (_, a, __, c) => SlideTransition(
-              position: Tween<Offset>(begin: const Offset(1, 0), end: Offset.zero)
-                  .animate(a),
+              position:
+                  Tween<Offset>(begin: const Offset(1, 0), end: Offset.zero)
+                      .animate(a),
               child: c),
         );
 
@@ -75,8 +87,9 @@ class AppNavigator {
         return PageRouteBuilder(
           pageBuilder: (_, __, ___) => ChatWidget.create(arg),
           transitionsBuilder: (_, a, __, c) => SlideTransition(
-              position: Tween<Offset>(begin: const Offset(1, 0), end: Offset.zero)
-                  .animate(a),
+              position:
+                  Tween<Offset>(begin: const Offset(1, 0), end: Offset.zero)
+                      .animate(a),
               child: c),
         );
     }

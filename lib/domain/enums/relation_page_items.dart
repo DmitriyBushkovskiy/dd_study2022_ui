@@ -16,3 +16,9 @@ class RelationPageNamesEnum {
     RelationPageItemsEnum.requests: "Requests",
   };
 }
+
+extension RelationPageItemsExtension on RelationPageItemsEnum {
+  int get getIndex {
+    return this.index + 1;
+  }
+}

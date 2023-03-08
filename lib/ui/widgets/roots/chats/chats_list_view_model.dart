@@ -89,19 +89,6 @@ class ChatsListViewModel extends ChangeNotifier {
                       keyboardType: TextInputType.multiline,
                       maxLines: null,
                       autovalidateMode: AutovalidateMode.always,
-                      // validator: (value) {
-                      //   RegExp range1 = RegExp(r'^[a-zA-Z0-9._]+$');
-                      //   if (value == "") {
-                      //     viewModel.validUsername = false;
-                      //     return "";
-                      //   } else if (range1.hasMatch(value!)) {
-                      //     viewModel.validUsername = true;
-                      //     return null;
-                      //   } else {
-                      //     viewModel.validUsername = false;
-                      //     return "Wrong format!";
-                      //   }
-                      // },
                       decoration: InputDecoration(
                         suffixIcon: GestureDetector(
                             onTap: () {} //viewModel.showModal,
@@ -113,7 +100,6 @@ class ChatsListViewModel extends ChangeNotifier {
                             )),
                         isDense: true,
                         contentPadding: const EdgeInsets.all(6),
-                        //hintText: "enter username",
                         focusedBorder: const OutlineInputBorder(
                           borderSide: BorderSide(
                             color: Color.fromARGB(255, 212, 212, 212),
@@ -140,7 +126,7 @@ class ChatsListViewModel extends ChangeNotifier {
                     ),
                   ),
                   ElevatedButton(
-                    onPressed: chatNameTec.text != "" ? createGroupChat : null,
+                    onPressed: createGroupChat,
                     child: Text("Create group chat"),
                   )
                 ],
